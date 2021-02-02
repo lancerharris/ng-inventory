@@ -1,0 +1,15 @@
+
+table {
+  width: 100%;
+}
+
+.top-tools {
+  display: flex;
+  flex: 1 1 auto;
+}
+
+.sidenav-container {
+  display: flex;
+  flex: 1 1 auto;
+}
+
