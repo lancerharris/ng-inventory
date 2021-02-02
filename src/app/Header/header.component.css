@@ -1,4 +1,7 @@
 
+.brand {
+  font-size: 22px;
+}
 .flex-spacer {
   flex-grow: 1;
 }
