@@ -4,6 +4,7 @@ import { HeaderComponent } from './header.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatRippleModule} from '@angular/material/core';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -12,6 +13,7 @@ import {MatRippleModule} from '@angular/material/core';
   ],
   imports: [
     CommonModule,
+    RouterModule,
     MatToolbarModule,
     MatButtonModule,
     MatRippleModule

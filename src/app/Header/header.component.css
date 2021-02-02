@@ -2,6 +2,11 @@
 .brand {
   font-size: 22px;
 }
+
 .flex-spacer {
   flex-grow: 1;
+}
+
+.isActive {
+  color: #69f0ae;
 }

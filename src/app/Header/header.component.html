@@ -2,40 +2,49 @@
   <mat-toolbar-row class="mat-elevation-z6">
     <nav role="navigation" class="docs-navbar-header">
       <a
+        routerLink="/items"
         mat-button
         class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
       >
         <span class="brand">Dott's Items</span>
       </a>
-
       <a
+        routerLink="/items"
+        routerLinkActive="isActive"
+        [routerLinkActiveOptions]="{ exact: true }"
+        mat-button
+        class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+      >
+        <span>Items</span>
+      </a>
+      <a
+        routerLink="/items/add-item"
+        routerLinkActive="isActive"
+        [routerLinkActiveOptions]="{ exact: true }"
         mat-button
         class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
       >
         <span>Add Item</span>
       </a>
       <a
+        routerLink="/items/add-template"
+        routerLinkActive="isActive"
+        [routerLinkActiveOptions]="{ exact: true }"
         mat-button
         class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
       >
         <span>Add Template</span>
       </a>
-      <a
-        mat-button
-        class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
-      >
-        <span>Items</span>
-      </a>
     </nav>
     <div class="flex-spacer"></div>
     <a
-        mat-button
-        class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
-        href="https://www.ebay.com/sh/ovw"
-      >
-        <span>Ebay</span>
-      </a>
-      <a
+      mat-button
+      class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+      href="https://www.ebay.com/sh/ovw"
+    >
+      <span>Ebay</span>
+    </a>
+    <a
       mat-button
       class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
       href="https://poshmark.com/feed"
