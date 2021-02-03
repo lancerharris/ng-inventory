@@ -38,7 +38,28 @@
 
 <mat-divider></mat-divider>
 <mat-sidenav-container>
-  <mat-sidenav #drawer mode="side">I'm a drawer</mat-sidenav>
+  <mat-sidenav #drawer mode="side" opened=true>
+    <h4>Category</h4>  
+    <mat-divider></mat-divider>
+    <h4>Brand</h4>  
+    <mat-divider></mat-divider>
+    <h4>Size</h4>  
+    <mat-divider></mat-divider>
+    <h4>Color</h4>  
+    <mat-divider></mat-divider>
+    <h4>Price</h4>  
+    <mat-divider></mat-divider>
+    <h4>Condition</h4>  
+    <mat-divider></mat-divider>
+    <h4>Fields Included</h4> 
+    <ul>
+      <li *ngFor="let header of displayedColumns">
+        <mat-checkbox color='accent' disableRipple>
+          {{header}}
+        </mat-checkbox>
+      </li>
+    </ul>
+  </mat-sidenav>
   <mat-sidenav-content>
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
       <!-- Checkbox Column -->

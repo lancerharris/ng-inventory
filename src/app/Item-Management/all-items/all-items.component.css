@@ -1,7 +1,18 @@
 
 table {
-  width: 96%;
+  width: 98%;
   margin: 0 auto;
+}
+
+ul {
+  list-style-type: none;
+  /* margin-top: 4px; */
+  padding: 0;
+}
+
+mat-sidenav {
+  padding: 0 .75rem;
+  width: 12%;
 }
 
 .top-tools {
@@ -16,12 +27,12 @@ table {
 }
 
 .left-tools {
-  width: 10%;
+  width: 7%;
   margin-left: .5rem;
 }
 
 .search-tools {
-  width: 65%;
+  width: 68%;
   display: flex;
   flex-wrap: wrap;
   align-items: center; 
@@ -54,3 +65,5 @@ table {
 .mat-divider {
   padding-bottom: 1rem;
 }
+
+
