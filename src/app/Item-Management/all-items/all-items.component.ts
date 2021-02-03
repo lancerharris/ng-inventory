@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatTableDataSource} from '@angular/material/table';
 
+
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -22,12 +23,16 @@ const ELEMENT_DATA: PeriodicElement[] = [
   {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
 ];
 
+
+
 @Component({
   selector: 'app-all-items',
   templateUrl: './all-items.component.html',
   styleUrls: ['./all-items.component.css'],
 })
 export class AllItemsComponent implements OnInit {
+  value: string = '';
+
   displayedColumns: string[] = [
     'select',
     'position',

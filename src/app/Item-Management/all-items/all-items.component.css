@@ -1,15 +1,56 @@
 
 table {
-  width: 100%;
+  width: 96%;
+  margin: 0 auto;
 }
 
 .top-tools {
   display: flex;
   flex: 1 1 auto;
+  align-items: center; 
+  justify-content: space-around;
 }
 
-.sidenav-container {
+.top-tools button {
+  margin: .25rem;
+}
+
+.left-tools {
+  width: 10%;
+  margin-left: .5rem;
+}
+
+.search-tools {
+  width: 65%;
   display: flex;
-  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center; 
+  
 }
 
+.search-tools > * {
+  margin: 0 2rem;
+  width: 90%;
+}
+
+.search-tools mat-form-field {
+  width: 100%;
+}
+
+.search-chips {
+  display: flex;
+  width: 100%;
+}
+
+.search-chips > mat-chip-list {
+  margin: 0 .5rem;
+}
+
+.right-tools {
+  margin-left: auto;
+  margin-right: 1rem;
+}
+
+.mat-divider {
+  padding-bottom: 1rem;
+}

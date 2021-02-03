@@ -1,11 +1,42 @@
 <div class="top-tools">
-  <button mat-raised-button (click)="drawer.toggle()">Filters</button>
-  <mat-icon aria-hidden="false">search</mat-icon>
-  
-  <button mat-raised-button>Save Changes</button>
-  <button mat-raised-button>Review Items</button>
-  <button mat-raised-button>Delete</button>
+  <div class="left-tools">
+    <button mat-raised-button (click)="drawer.toggle()">Filters</button>
+  </div>
+  <div class="search-tools">
+    <mat-form-field class="search-field">
+      <button mat-button matPrefix mat-icon-button>
+        <mat-icon>search</mat-icon>
+      </button>
+      <input matInput type="text" [(ngModel)]="value" />
+      <button
+        mat-button
+        *ngIf="value"
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        (click)="value = ''"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <div class="search-chips">
+      <h2>Search Fields:</h2>
+      <mat-chip-list aria-label="Fish selection">
+        <mat-chip>One fish</mat-chip>
+        <mat-chip>Two fish</mat-chip>
+        <mat-chip color="primary" selected>Primary fish</mat-chip>
+        <mat-chip color="accent" selected>Accent fish</mat-chip>
+      </mat-chip-list>
+    </div>
+  </div>
+  <div class="right-tools">
+    <button mat-raised-button>Save Changes</button>
+    <button mat-raised-button>Review Items</button>
+    <button mat-raised-button color="warn">Delete</button>
+  </div>
 </div>
+
+<mat-divider></mat-divider>
 <mat-sidenav-container>
   <mat-sidenav #drawer mode="side">I'm a drawer</mat-sidenav>
   <mat-sidenav-content>
