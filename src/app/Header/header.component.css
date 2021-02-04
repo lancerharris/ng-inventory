@@ -1,12 +1,20 @@
+nav {
+  display: flex;
+}
+
+mat-divider {
+  height: 70%
+}
 
 .brand {
   font-size: 22px;
 }
 
-.flex-spacer {
+.flex-spacer:nth-of-type(1) {
   flex-grow: 1;
 }
 
 .isActive {
   color: #69f0ae;
 }
+

@@ -5,6 +5,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatRippleModule} from '@angular/material/core';
 import { RouterModule } from '@angular/router';
+import {MatDividerModule} from '@angular/material/divider';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { RouterModule } from '@angular/router';
     RouterModule,
     MatToolbarModule,
     MatButtonModule,
-    MatRippleModule
+    MatRippleModule, 
+    MatDividerModule
   ],
   exports: [
     HeaderComponent
