@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../Auth/auth.service';
+import { AuthService } from '../auth/auth.service';
+
 
 @Component({
   selector: 'app-header',
@@ -15,9 +16,9 @@ export class HeaderComponent implements OnInit {
   }
 
   onSignUp(): void {
-    this.authService.isSigningUp = true;
+    this.authService.setIsSigningUpTo(true);
   }
   onLogin(): void {
-    this.authService.isSigningUp = false;
+    this.authService.setIsSigningUpTo(false);
   }
 }

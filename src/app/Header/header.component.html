@@ -39,7 +39,7 @@
     <div class="flex-spacer"></div>
     <mat-divider vertical="true"></mat-divider>
     <a
-      routerLink="/authenticate"
+      routerLink="/auth"
       routerLinkActive="isActive"
       [routerLinkActiveOptions]="{ exact: true }"
       *ngIf="!isAuthenticated"
@@ -50,12 +50,13 @@
       <span>Sign Up</span>
     </a>
     <a
-      routerLink="/authenticate"
+      routerLink="/auth"
       routerLinkActive="isActive"
       [routerLinkActiveOptions]="{ exact: true }"
       *ngIf="!isAuthenticated"
       mat-button
       class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+      (click)="onLogin()"
     >
       <span>Login</span>
     </a>
