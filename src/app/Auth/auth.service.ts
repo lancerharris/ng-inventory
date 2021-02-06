@@ -52,6 +52,41 @@ export class AuthService {
       );
   }
 
+
+  login(email: string, password: string) {
+    const graphqlQuery = {
+      query: `
+        query UserLogin($email: String!, $password: String!) {
+          login(email: $email, password: $password) {
+            token
+            userId
+          }
+        }
+      `,
+      variables: {
+        email: email,
+        password: password
+      }
+    }
+    return this.http
+      .post<{ token: string; userId: string }>(
+        'http://localhost:3000/graphql',
+        JSON.stringify(graphqlQuery),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      .pipe(
+        catchError(this.handleError),
+        tap((resData) => {
+          console.log(resData);
+        })
+      );
+  }
+
+  
   private handleError(errorRes: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred!';
     if (!errorRes.error || !errorRes.error.error) {
