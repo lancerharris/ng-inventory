@@ -50,7 +50,6 @@ export class AuthComponent implements OnInit, OnDestroy {
         this.router.navigate(['/items']);
       },
       (errorMessage) => {
-        console.log(this.error);
         this.error = errorMessage;
         this.authService.setIsSigningUpTo(false);
       }

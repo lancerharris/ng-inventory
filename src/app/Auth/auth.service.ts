@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 
 @Injectable({
@@ -45,10 +45,7 @@ export class AuthService {
         }
       )
       .pipe(
-        catchError(this.handleError),
-        tap((resData) => {
-          console.log('Signup response: ' + resData);
-        })
+        catchError(this.handleError.bind(null, true))
       );
   }
 
@@ -79,20 +76,21 @@ export class AuthService {
         }
       )
       .pipe(
-        catchError(this.handleError),
-        tap((resData) => {
-          console.log(resData);
-        })
+        catchError(this.handleError.bind(null, false))
       );
   }
 
   
-  private handleError(errorRes: HttpErrorResponse) {
-    let errorMessage = 'An unknown error occurred!';
-    if (!errorRes.error || !errorRes.error.error) {
+  private handleError( isSigningUp: boolean, errorRes: HttpErrorResponse) {
+    let errorMessage = isSigningUp ? 'unknown error. user creation failed': 'unknown error. login failed';
+    if (!errorRes.error || !errorRes.error.errors) {
       return throwError(errorMessage);
     }
-    console.log(errorRes.error.error.message);
+    if (errorRes.error.errors[0].status === 422) {
+      errorMessage = errorRes.error.errors[0].message
+    } else if (errorRes.error.errors[0].status === 401) {
+      errorMessage = errorRes.error.errors[0].message
+    }
     return throwError(errorMessage);
   }
 }
