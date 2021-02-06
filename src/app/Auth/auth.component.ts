@@ -1,6 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
+
 import { AuthService } from './auth.service';
 
 @Component({
@@ -11,8 +14,9 @@ import { AuthService } from './auth.service';
 export class AuthComponent implements OnInit, OnDestroy {
   isSigningUp: boolean;
   authSub: Subscription;
+  error: string = null;
   
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     this.authSub = this.authService.authModeChanged.subscribe(
@@ -21,29 +25,38 @@ export class AuthComponent implements OnInit, OnDestroy {
       }
     )
     this.isSigningUp = this.authService.isSigningUp;
-    console.log('component starting with ' + this.isSigningUp);
   }
 
   onSubmit(form: NgForm) {
     if (!form.valid) {
       return;
     }
+
+    const username = form.value.username;
     const email = form.value.email;
     const password = form.value.password;
 
-    // let authObs: Observable<AuthResponseData>;
+    let authObs: Observable<{_id: string, email: string}>;
 
-    // authObs.subscribe(
-    //   (resData) => {
-    //     console.log(resData);
-    //     this.isLoading = false;
-    //     this.router.navigate(['/recipes']);
-    //   },
-    //   (errorMessage) => {
-    //     this.error = errorMessage;
-    //     this.isLoading = false;
-    //   }
-    // );
+    if (this.isSigningUp) {
+      authObs = this.authService.signUp(username, email, password);
+    } else {
+      // authObs = this.authService.login(username, email, password);
+      console.log('no login setup yet');
+    }
+
+    authObs.subscribe(
+      (resData) => {
+        console.log(resData);
+        this.authService.setIsSigningUpTo(false);
+        // this.router.navigate(['/items']);
+      },
+      (errorMessage) => {
+        console.log(this.error);
+        this.error = errorMessage;
+        this.authService.setIsSigningUpTo(false);
+      }
+    );
 
     form.reset();
   }
