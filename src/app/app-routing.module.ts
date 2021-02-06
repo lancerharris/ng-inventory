@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     path: 'items',
     loadChildren: () =>
-      import('./Item-Management/item-management.module').then(
+      import('./item-management/item-management.module').then(
         (module) => module.ItemManagementModule
       ),
   }, // implementation of lazy loading
