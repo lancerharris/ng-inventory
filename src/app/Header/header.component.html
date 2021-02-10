@@ -60,6 +60,17 @@
     >
       <span>Login</span>
     </a>
+    <a
+    routerLink="/auth"
+    routerLinkActive="isActive"
+    [routerLinkActiveOptions]="{ exact: true }"
+    *ngIf="isAuthenticated"
+    mat-button
+    class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+    (click)="onLogout()"
+  >
+    <span>Logout</span>
+  </a>
     <mat-divider vertical="true"></mat-divider>
     <a
       mat-button

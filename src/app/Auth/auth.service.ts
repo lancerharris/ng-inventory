@@ -10,12 +10,20 @@ import { catchError } from 'rxjs/operators';
 export class AuthService {
   isSigningUp: boolean = false;
   authModeChanged = new Subject<boolean>();
+  isAuthenticated: boolean = false;
+  authenticationChanged = new Subject<boolean>();
+  autoLogoutMinutes = 120
 
   constructor(private http: HttpClient) {}
 
   setIsSigningUpTo(signingUp) {
     this.isSigningUp = signingUp;
     this.authModeChanged.next(this.isSigningUp);
+  }
+
+  setIsAuthenticatedTo(authenticated) {
+    this.isAuthenticated = authenticated;
+    this.authenticationChanged.next(this.isAuthenticated);
   }
 
   signUp(username: string, email: string, password: string) {
@@ -35,7 +43,7 @@ export class AuthService {
       },
     };
     return this.http
-      .post<{ _id: string; email: string }>(
+      .post<{ data: {createUser: {_id: string; email: string }}}>(
         'http://localhost:3000/graphql',
         JSON.stringify(graphqlQuery),
         {
@@ -66,7 +74,7 @@ export class AuthService {
       }
     }
     return this.http
-      .post<{ token: string; userId: string }>(
+      .post<{ data: {login: {token: string; userId: string }}}>(
         'http://localhost:3000/graphql',
         JSON.stringify(graphqlQuery),
         {
@@ -82,6 +90,7 @@ export class AuthService {
 
   
   private handleError( isSigningUp: boolean, errorRes: HttpErrorResponse) {
+    console.log(errorRes);
     let errorMessage = isSigningUp ? 'unknown error. user creation failed': 'unknown error. login failed';
     if (!errorRes.error || !errorRes.error.errors) {
       return throwError(errorMessage);
@@ -93,4 +102,25 @@ export class AuthService {
     }
     return throwError(errorMessage);
   }
+
+  setLocalStorage(token: string, userId: string) {
+    localStorage.setItem('token', token);
+    localStorage.setItem('userId', userId);
+    const remainingMilliseconds = 60 * 60 * 1000;
+    const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
+    localStorage.setItem('expiryDate', expiryDate.toISOString());
+  }
+
+  setAutoLogout = () => {
+    setTimeout(() => {
+      this.logoutHandler();
+    }, this.autoLogoutMinutes * 60 * 1000);
+  };
+
+  logoutHandler = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('expiryDate');
+    localStorage.removeItem('userId');
+    this.setIsAuthenticatedTo(false);
+  };
 }

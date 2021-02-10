@@ -15,15 +15,13 @@ export class AuthComponent implements OnInit, OnDestroy {
   isSigningUp: boolean;
   authSub: Subscription;
   error: string = null;
-  
+
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    this.authSub = this.authService.authModeChanged.subscribe(
-      (signingUp) => {
-        this.isSigningUp = signingUp;
-      }
-    )
+    this.authSub = this.authService.authModeChanged.subscribe((signingUp) => {
+      this.isSigningUp = signingUp;
+    });
     this.isSigningUp = this.authService.isSigningUp;
   }
 
@@ -36,30 +34,49 @@ export class AuthComponent implements OnInit, OnDestroy {
     const email = form.value.email;
     const password = form.value.password;
 
-    let authObs: Observable<{_id: string, email: string} | {token: string, userId: string}>;
+    let loginObs: Observable<{
+      data: { login: { token: string; userId: string } };
+    }> = this.authService.login(email, password);
 
-    if (this.isSigningUp) {
-      authObs = this.authService.signUp(username, email, password);
+    if (this.authService.isSigningUp) {
+      let signupObs: Observable<{
+        data: { createUser: { _id: string; email: string } };
+      }> = this.authService.signUp(username, email, password);
+      signupObs.subscribe(
+        () => {
+          this.authService.setIsSigningUpTo(false);
+          loginObs.subscribe((resData) => {
+            this.authService.setLocalStorage(
+              resData.data.login.token,
+              resData.data.login.userId
+            );
+            this.authService.setIsAuthenticatedTo(true);
+            this.authService.setAutoLogout()
+            this.router.navigate(['/items']);
+          });
+        },
+        (errorMessage) => {
+          this.error = errorMessage;
+          console.log(errorMessage);
+        }
+      );
     } else {
-      authObs = this.authService.login(email, password);
+      loginObs.subscribe((resData) => {
+        this.authService.setLocalStorage(
+          resData.data.login.token,
+          resData.data.login.userId
+        );
+        this.authService.setIsAuthenticatedTo(true);
+        this.authService.setAutoLogout()
+        this.router.navigate(['/items']);
+      });
     }
 
-    authObs.subscribe(
-      (resData) => {
-        this.authService.setIsSigningUpTo(false);
-        this.router.navigate(['/items']);
-      },
-      (errorMessage) => {
-        this.error = errorMessage;
-        this.authService.setIsSigningUpTo(false);
-      }
-    );
-
-    form.reset();
+    // form.reset();
   }
 
   onSwitchMode() {
-    this.authService.setIsSigningUpTo(!this.isSigningUp)
+    this.authService.setIsSigningUpTo(!this.isSigningUp);
   }
 
   ngOnDestroy() {
