@@ -19,6 +19,7 @@ import { AddItemComponent } from './add-item/add-item.component';
 import { AllItemsComponent } from './all-items/all-items.component';
 import { ReviewItemComponent } from './review-item/review-item.component';
 import { ItemManagementRoutingModule } from './item-management-routing.module';
+import { ItemInputComponent } from './item-input/item-input.component';
 
 
 
@@ -28,7 +29,8 @@ import { ItemManagementRoutingModule } from './item-management-routing.module';
     ItemManagementComponent,
     AddItemComponent,
     AllItemsComponent,
-    ReviewItemComponent
+    ReviewItemComponent,
+    ItemInputComponent
   ],
   imports: [
     CommonModule,

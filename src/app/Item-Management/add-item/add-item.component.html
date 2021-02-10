@@ -1,1 +1,22 @@
-<p>add-item works!</p>
+<mat-sidenav-container>
+  <mat-sidenav #drawer mode="side" opened="true">
+    <h2>Templates</h2>
+    <mat-divider></mat-divider>
+    <a mat-button *ngFor="let template of templates; let i = index">{{ templates[i] }}</a>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div class="item-form">
+      <h2>Fields</h2>
+      <h2>Values</h2>
+    </div>
+    <form>
+      <app-item-input
+        *ngFor="let input of totalInputs; let i = index"
+        [inputIndex]="i"
+      ></app-item-input>
+    </form>
+    <button id="add-item-input" mat-mini-fab>
+      <mat-icon color="primary" (click)="onAdd()">add</mat-icon>
+    </button>
+  </mat-sidenav-content>
+</mat-sidenav-container>

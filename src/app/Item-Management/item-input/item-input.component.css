@@ -1,0 +1,18 @@
+
+
+#item-input {
+  display: flex;
+  flex-wrap:wrap;
+  align-items: center;
+  justify-content: space-around;
+}
+
+
+
+#item-input:hover #item-clear {
+  visibility: visible;
+}
+
+#item-clear {
+  visibility: hidden;
+}
