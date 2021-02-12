@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 import { ItemManagementService } from '../item-management.service';
 
 @Component({
@@ -10,11 +10,14 @@ import { ItemManagementService } from '../item-management.service';
 export class AddItemComponent implements OnInit {
   totalInputs: number[];
   templates: string[] = ["Tops", "Dresses", "Bottoms"]
+  addingTemplate: boolean;
 
-  constructor(private itemManager: ItemManagementService) { }
+  constructor(private itemManager: ItemManagementService, private router: Router) { }
 
   ngOnInit(): void {
     this.totalInputs = this.itemManager.totalInputs
+    this.addingTemplate = this.router.url === '/items/add-template';
+    this.itemManager.addingTemplate = this.addingTemplate
   }
 
   onAdd() {

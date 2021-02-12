@@ -12,6 +12,8 @@ import { FormsModule } from '@angular/forms';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatChipsModule} from '@angular/material/chips';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {MatListModule} from '@angular/material/list';
+
 
 
 import { ItemManagementComponent } from './item-management.component';
@@ -46,7 +48,8 @@ import { ItemInputComponent } from './item-input/item-input.component';
     MatInputModule,
     MatDividerModule,
     MatChipsModule,
-    DragDropModule
+    DragDropModule,
+    MatListModule
   ]
 })
 export class ItemManagementModule { }

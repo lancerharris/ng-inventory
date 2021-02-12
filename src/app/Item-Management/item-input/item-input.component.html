@@ -1,12 +1,12 @@
 <div id="item-input">
   <mat-form-field class="example-full-width">
-    <input matInput maxlength="30" />
+    <input matInput maxlength="30" [value]="templateName"/>
   </mat-form-field>
   <mat-form-field class="example-full-width">
     <input matInput #message maxlength="250" />
     <!-- <mat-hint align="end">{{ message.value.length }} / 250</mat-hint> -->
   </mat-form-field>
-  <button id="item-clear" mat-icon-button color='warn' (click)="onClearItem()" tabIndex="-1">
+  <button *ngIf="!addingTemplate" id="item-clear" mat-icon-button color='warn' (click)="onClearItem()" tabIndex="-1">
     <mat-icon>clear</mat-icon>
   </button>
 </div>

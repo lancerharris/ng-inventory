@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 })
 export class ItemManagementService {
   totalInputs: [number] = [0];
-
+  addingTemplate: boolean = false;
   constructor() { }
 
   removeInput(inputIndex) {

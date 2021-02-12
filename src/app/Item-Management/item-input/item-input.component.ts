@@ -7,16 +7,19 @@ import { ItemManagementService } from '../item-management.service';
   styleUrls: ['./item-input.component.css']
 })
 export class ItemInputComponent implements OnInit {
-  @Input() inputIndex: number = 1;
+  @Input() inputIndex: number;
+  @Input() templateName: string;
+  @Input() nameLength: number;
+  addingTemplate: boolean;
 
   constructor(private itemManager: ItemManagementService) { }
 
   ngOnInit(): void {
+    this.addingTemplate = this.itemManager.addingTemplate
   }
 
   onClearItem() {
     this.itemManager.removeInput(this.inputIndex);
-    console.log(this.inputIndex)
   }
 
 }
