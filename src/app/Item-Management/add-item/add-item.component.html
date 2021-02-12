@@ -1,7 +1,36 @@
+<div class="top-tools">
+  <div class="left-tools">
+    <button mat-raised-button (click)="drawer.toggle()">Templates</button>
+  </div>
+  <div class="middle-tools">
+    <div *ngIf="addingTemplate">
+    <h1>Template Name</h1>
+    <mat-form-field>
+      <input matInput type="text" [(ngModel)]="value" />
+      <button
+        mat-button
+        *ngIf="value"
+        matSuffix
+        mat-icon-button
+        color="warn"
+        aria-label="Clear"
+        (click)="value = ''"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+  </div>
+  <div class="right-tools">
+    <button mat-raised-button>{{ addingTemplate ? "Save Template" : "Save" }}</button>
+    <button mat-raised-button>Review</button>
+    <button mat-raised-button color="warn">Delete</button>
+  </div>
+</div>
+
+<mat-divider></mat-divider>
 <mat-sidenav-container>
   <mat-sidenav #drawer mode="side" opened="true">
-    <h2>Templates</h2>
-    <mat-divider></mat-divider>
     <mat-selection-list [multiple]="false">
       <mat-list-option *ngFor="let template of templates" [value]="template">
         {{ template }}
@@ -9,28 +38,13 @@
     </mat-selection-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <div>
-      <app-item-input
-        *ngIf="addingTemplate"
-        [templateName]="'Template Name'"
-        [nameLength]="30"
-      ></app-item-input>
-    </div>
-    <div class="item-form">
-      <h2>Fields</h2>
-      <h2>Values</h2>
-      <button id="add-item-input" mat-mini-fab>
+    <div id="add-item-input">
+      <button mat-mini-fab>
         <mat-icon color="primary" (click)="onAdd()">add</mat-icon>
       </button>
     </div>
     <form>
-      <app-item-input
-        *ngFor="let input of totalInputs; let i = index"
-        [inputIndex]="i"
-      ></app-item-input>
+      <app-item-input></app-item-input>
     </form>
-    <button mat-raised-button>
-      {{ addingTemplate ? "Save Template" : "Save" }}
-    </button>
   </mat-sidenav-content>
 </mat-sidenav-container>

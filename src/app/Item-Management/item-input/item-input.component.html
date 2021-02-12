@@ -1,12 +1,28 @@
-<div id="item-input">
-  <mat-form-field class="example-full-width">
-    <input matInput maxlength="30" [value]="templateName"/>
-  </mat-form-field>
-  <mat-form-field class="example-full-width">
-    <input matInput #message maxlength="250" />
-    <!-- <mat-hint align="end">{{ message.value.length }} / 250</mat-hint> -->
-  </mat-form-field>
-  <button *ngIf="!addingTemplate" id="item-clear" mat-icon-button color='warn' (click)="onClearItem()" tabIndex="-1">
-    <mat-icon>clear</mat-icon>
-  </button>
+
+
+<div class="input-rows">
+  <div class="header-row">
+    <h2 class=".col-1">Fields</h2>
+    <h2 class=".col-2">Values</h2>
+    <h2 class="col-3"></h2>
+  </div>
+  <div class="input-row" *ngFor="let input of totalInputs; let i = index">
+    <mat-form-field class=".col-1">
+      <input matInput maxlength="30" />
+    </mat-form-field>
+    <mat-form-field class=".col-2">
+      <input matInput #message maxlength="80" />
+      <!-- <mat-hint align="end">{{ message.value.length }} / 250</mat-hint> -->
+    </mat-form-field>
+    <button
+      id="item-clear"
+      mat-icon-button
+      color="warn"
+      (click)="onClearItem(i)"
+      tabIndex="-1"
+      class="col-3"
+    >
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
 </div>

@@ -15,6 +15,47 @@ mat-sidenav .mat-button {
 }
 
 #add-item-input {
+  padding: .5rem;
+}
+
+.top-tools {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center; 
+  justify-content: space-around;
+}
+
+.top-tools button {
+  margin: .25rem;
+}
+
+.left-tools {
+  width: 7%;
+  margin-left: .5rem;
+}
+
+.middle-tools {
+  width: 68%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center; 
+  
+}
+
+.middle-tools > * {
+  margin: 0 2rem;
+  width: 90%;
+}
+
+.middle-tools mat-form-field {
+  width: 100%;
+}
+
+.right-tools {
   margin-left: auto;
-  float: right;
+  margin-right: 1rem;
+}
+
+.mat-divider {
+  padding-bottom: 1rem;
 }

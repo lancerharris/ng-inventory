@@ -8,14 +8,13 @@ import { ItemManagementService } from '../item-management.service';
 })
 export class ItemInputComponent implements OnInit {
   @Input() inputIndex: number;
-  @Input() templateName: string;
-  @Input() nameLength: number;
   addingTemplate: boolean;
+  totalInputs: number[];
 
   constructor(private itemManager: ItemManagementService) { }
 
   ngOnInit(): void {
-    this.addingTemplate = this.itemManager.addingTemplate
+    this.totalInputs = this.itemManager.totalInputs
   }
 
   onClearItem() {

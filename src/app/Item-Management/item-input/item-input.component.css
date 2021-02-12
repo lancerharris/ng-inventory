@@ -1,18 +1,23 @@
+#item-clear {
+  visibility: hidden;
+}
 
+.input-rows {
+  display: flex;
+  flex-wrap:wrap;
+  justify-content: space-around;
+  flex-direction: column;
+}
 
-#item-input {
+.header-row,
+.input-row {
   display: flex;
   flex-wrap:wrap;
   align-items: center;
   justify-content: space-around;
+  flex-direction: row;
 }
 
-
-
-#item-input:hover #item-clear {
+.input-row:hover #item-clear {
   visibility: visible;
-}
-
-#item-clear {
-  visibility: hidden;
 }
