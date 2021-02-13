@@ -8,15 +8,16 @@
   </div>
   <div class="input-row" *ngFor="let input of totalInputs; let i = index">
     <mat-form-field class=".col-1">
-      <input matInput maxlength="30" />
+      <input matInput maxlength="30" id="{{'field_' + i}}" name="{{'field_' + i}}"/>
     </mat-form-field>
     <mat-form-field class=".col-2">
-      <input matInput #message maxlength="80" />
+      <input matInput #message maxlength="80" id="{{'value_' + i}}" name="{{'value_' + i}}"/>
       <!-- <mat-hint align="end">{{ message.value.length }} / 250</mat-hint> -->
     </mat-form-field>
     <button
-      id="item-clear"
+      class="item-clear"
       mat-icon-button
+      type="button"
       color="warn"
       (click)="onClearItem(i)"
       tabIndex="-1"

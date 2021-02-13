@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
+
 import { ItemManagementService } from '../item-management.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-add-item',
@@ -19,7 +22,7 @@ export class AddItemComponent implements OnInit {
     this.addingTemplate = this.router.url === '/items/add-template';
   }
 
-  onAdd() {
+  onAddInput() {
     const currentLength = this.itemManager.totalInputs.length
     if (currentLength <= 19) {
       // to keep track of the indices of the input elements
@@ -28,4 +31,29 @@ export class AddItemComponent implements OnInit {
     // else pop up to tell user no
   }
 
+  onSubmit(form: NgForm) {
+    const fields: string[] = [];
+    const values: string[] = [];
+
+    this.itemManager.totalInputs.forEach(index => {
+      const fieldInput =  document.getElementById('field_' + index) as HTMLInputElement;
+      const valueInput = document.getElementById('value_' + index) as HTMLInputElement
+      fields[index] = fieldInput.value;
+      values[index] = valueInput.value;
+    });
+    
+    const gemInput = {fields: fields, values: values };
+    const longField = form.value.longField ? form.value.longField : null;
+
+    console.log(gemInput);
+
+    let addItemObs: Observable<{
+      data: { createGem: { fields: string[]; values: string[] } };
+    }> = this.itemManager.addItem(gemInput, longField);
+    
+    addItemObs.subscribe((resData) => {
+    });
+
+    // form.reset();
+  }
 }

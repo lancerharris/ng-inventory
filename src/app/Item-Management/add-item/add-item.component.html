@@ -22,7 +22,7 @@
   </div>
   </div>
   <div class="right-tools">
-    <button mat-raised-button>{{ addingTemplate ? "Save Template" : "Save" }}</button>
+    <button mat-raised-button (click)="onSubmit(addItemForm)">{{ addingTemplate ? "Save Template" : "Save" }}</button>
     <button mat-raised-button>Review</button>
     <button mat-raised-button color="warn">Delete</button>
   </div>
@@ -40,10 +40,10 @@
   <mat-sidenav-content>
     <div id="add-item-input">
       <button mat-mini-fab>
-        <mat-icon color="primary" (click)="onAdd()">add</mat-icon>
+        <mat-icon color="primary" (click)="onAddInput()">add</mat-icon>
       </button>
     </div>
-    <form>
+    <form #addItemForm="ngForm">
       <app-item-input></app-item-input>
     </form>
   </mat-sidenav-content>

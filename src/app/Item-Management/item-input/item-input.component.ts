@@ -7,7 +7,6 @@ import { ItemManagementService } from '../item-management.service';
   styleUrls: ['./item-input.component.css']
 })
 export class ItemInputComponent implements OnInit {
-  @Input() inputIndex: number;
   addingTemplate: boolean;
   totalInputs: number[];
 
@@ -17,8 +16,8 @@ export class ItemInputComponent implements OnInit {
     this.totalInputs = this.itemManager.totalInputs
   }
 
-  onClearItem() {
-    this.itemManager.removeInput(this.inputIndex);
+  onClearItem(index) {
+    this.itemManager.removeInput(index);
   }
 
 }
