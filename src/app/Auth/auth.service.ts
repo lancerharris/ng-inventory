@@ -12,7 +12,6 @@ export class AuthService {
   authModeChanged = new Subject<boolean>();
   isAuthenticated: boolean = false;
   authenticationChanged = new Subject<boolean>();
-  autoLogoutMinutes = 120
 
   constructor(private http: HttpClient) {}
 
@@ -65,6 +64,7 @@ export class AuthService {
           login(email: $email, password: $password) {
             token
             userId
+            minsToExpiration
           }
         }
       `,
@@ -74,7 +74,7 @@ export class AuthService {
       }
     }
     return this.http
-      .post<{ data: {login: {token: string; userId: string }}}>(
+      .post<{ data: {login: {token: string; userId: string; minsToExpiration: string}}}>(
         'http://localhost:3000/graphql',
         JSON.stringify(graphqlQuery),
         {
@@ -103,18 +103,18 @@ export class AuthService {
     return throwError(errorMessage);
   }
 
-  setLocalStorage(token: string, userId: string) {
+  setLocalStorage(token: string, userId: string, minsToExpiration: string) {
     localStorage.setItem('token', token);
     localStorage.setItem('userId', userId);
-    const remainingMilliseconds = 60 * 60 * 1000;
+    const remainingMilliseconds = +minsToExpiration * 60 * 1000;
     const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
     localStorage.setItem('expiryDate', expiryDate.toISOString());
   }
 
-  setAutoLogout = () => {
+  setAutoLogout = (minsToExpiration) => {
     setTimeout(() => {
       this.logoutHandler();
-    }, this.autoLogoutMinutes * 60 * 1000);
+    }, +minsToExpiration * 60 * 1000);
   };
 
   logoutHandler = () => {
