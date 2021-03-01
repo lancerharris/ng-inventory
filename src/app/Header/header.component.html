@@ -10,7 +10,7 @@
       </a>
       <a
         routerLink="/items"
-        routerLinkActive="isActive"
+        routerLinkActive="mat-accent"
         [routerLinkActiveOptions]="{ exact: true }"
         mat-button
         class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
@@ -19,7 +19,7 @@
       </a>
       <a
         routerLink="/items/add-item"
-        routerLinkActive="isActive"
+        routerLinkActive="mat-accent"
         [routerLinkActiveOptions]="{ exact: true }"
         mat-button
         class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
@@ -28,7 +28,7 @@
       </a>
       <a
         routerLink="/items/add-template"
-        routerLinkActive="isActive"
+        routerLinkActive="mat-accent"
         [routerLinkActiveOptions]="{ exact: true }"
         mat-button
         class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
@@ -40,7 +40,7 @@
     <mat-divider vertical="true"></mat-divider>
     <a
       routerLink="/auth"
-      routerLinkActive="isActive"
+      routerLinkActive="mat-accent"
       [routerLinkActiveOptions]="{ exact: true }"
       *ngIf="!isAuthenticated"
       mat-button
@@ -51,7 +51,7 @@
     </a>
     <a
       routerLink="/auth"
-      routerLinkActive="isActive"
+      routerLinkActive="mat-accent"
       [routerLinkActiveOptions]="{ exact: true }"
       *ngIf="!isAuthenticated"
       mat-button
@@ -62,7 +62,7 @@
     </a>
     <a
     routerLink="/auth"
-    routerLinkActive="isActive"
+    routerLinkActive="mat-accent"
     [routerLinkActiveOptions]="{ exact: true }"
     *ngIf="isAuthenticated"
     mat-button
