@@ -4,28 +4,42 @@
   </div>
   <div class="middle-tools">
     <div *ngIf="addingTemplate">
-    <h1>Template Name</h1>
-    <mat-form-field>
-      <input matInput type="text" [(ngModel)]="value" />
+      <h1>Template Name</h1>
+      <mat-form-field>
+        <input matInput type="text" [(ngModel)]="value" />
+        <button
+          mat-button
+          *ngIf="value"
+          matSuffix
+          mat-icon-button
+          color="warn"
+          aria-label="Clear"
+          (click)="value = ''"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+  </div>
+    <div class="add-input">
       <button
-        mat-button
-        *ngIf="value"
-        matSuffix
-        mat-icon-button
-        color="warn"
-        aria-label="Clear"
-        (click)="value = ''"
+        mat-raised-button
+        class="add-input__button"
+        color="primary"
+        (click)="onAddInput()"
       >
-        <mat-icon>close</mat-icon>
+        Add Input
+        <span class="spacer"></span>
+        <mat-icon class="add-icon" color="accent">add_circle</mat-icon>
       </button>
-    </mat-form-field>
-  </div>
-  </div>
-  <div class="right-tools">
-    <button mat-raised-button (click)="onSubmit(addItemForm)">{{ addingTemplate ? "Save Template" : "Save" }}</button>
-    <button mat-raised-button>Review</button>
-    <button mat-raised-button color="warn">Clear</button>
-  </div>
+    </div>
+    <div class="right-tools">
+      <button mat-raised-button (click)="onSubmit(addItemForm)">
+        {{ addingTemplate ? "Save Template" : "Save" }}
+      </button>
+      <button mat-raised-button>Review</button>
+      <button mat-raised-button color="warn">Clear</button>
+    </div>
 </div>
 
 <mat-divider></mat-divider>
@@ -38,11 +52,7 @@
     </mat-selection-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <div id="add-item-input">
-      <button mat-mini-fab>
-        <mat-icon color="primary" (click)="onAddInput()">add</mat-icon>
-      </button>
-    </div>
+    <div id="add-item-input"></div>
     <form #addItemForm="ngForm">
       <app-item-input></app-item-input>
     </form>
