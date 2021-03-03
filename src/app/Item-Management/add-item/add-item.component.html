@@ -1,6 +1,8 @@
 <div class="top-tools">
   <div class="left-tools">
-    <button mat-raised-button (click)="drawer.toggle()">Templates</button>
+    <button mat-raised-button #sidenavToggle (click)="sidenav.toggle()">
+      Templates
+    </button>
   </div>
   <div class="middle-tools">
     <div *ngIf="addingTemplate">
@@ -21,32 +23,41 @@
       </mat-form-field>
     </div>
   </div>
-    <div class="add-input">
-      <button
-        mat-raised-button
-        class="add-input__button"
-        color="primary"
-        (click)="onAddInput()"
-      >
-        Add Input
-        <span class="spacer"></span>
-        <mat-icon class="add-icon" color="accent">add_circle</mat-icon>
-      </button>
-    </div>
-    <div class="right-tools">
-      <button mat-raised-button (click)="onSubmit(addItemForm)">
-        {{ addingTemplate ? "Save Template" : "Save" }}
-      </button>
-      <button mat-raised-button>Review</button>
-      <button mat-raised-button color="warn">Clear</button>
-    </div>
+  <div class="add-input">
+    <button
+      mat-raised-button
+      class="add-input__button"
+      color="primary"
+      (click)="onAddInput()"
+    >
+      Add Input
+      <span class="spacer"></span>
+      <mat-icon class="add-icon" color="accent">add_circle</mat-icon>
+    </button>
+  </div>
+  <div class="right-tools">
+    <button mat-raised-button (click)="onSubmit(addItemForm)">
+      {{ addingTemplate ? "Save Template" : "Save" }}
+    </button>
+    <button mat-raised-button>Review</button>
+    <button mat-raised-button color="warn">Clear</button>
+  </div>
 </div>
 
 <mat-divider></mat-divider>
-<mat-sidenav-container>
-  <mat-sidenav #drawer mode="side" opened="true">
+<mat-sidenav-container (backdropClick)="sidenav.close()">
+  <mat-sidenav
+    #sidenav
+    (keydown.escape)="sidenav.close()"
+    autoFocus="false"
+    opened="false"
+  >
     <mat-selection-list [multiple]="false">
-      <mat-list-option *ngFor="let template of templates" [value]="template">
+      <mat-list-option
+        *ngFor="let template of templates"
+        [value]="template"
+        (click)="sidenav.close()"
+      >
         {{ template }}
       </mat-list-option>
     </mat-selection-list>
