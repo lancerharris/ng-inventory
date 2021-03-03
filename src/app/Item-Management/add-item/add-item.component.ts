@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 import { MatSidenav } from '@angular/material/sidenav';
 
 import { ItemManagementService } from '../item-management.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-add-item',
@@ -17,22 +19,22 @@ export class AddItemComponent implements OnInit {
   public templates: string[] = ['Tops', 'Dresses', 'Bottoms'];
   public addingTemplate: boolean;
   public value: string = '';
-  public reason: string = '';
+  private templatName: string;
 
   constructor(
     private itemManager: ItemManagementService,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
     this.addingTemplate = this.router.url === '/items/add-template';
   }
 
-  onClick(event) {
+  onTopToolsClick(event) {
     if (event.target instanceof HTMLDivElement) {
       this.sidenav.close();
     }
-    console.log(event);
   }
 
   onAddInput() {
@@ -73,6 +75,20 @@ export class AddItemComponent implements OnInit {
 
     // form.reset();
 
+    this.sidenav.close();
+  }
+
+  onSaveTemplate(): void {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '250px',
+      restoreFocus: false,
+      data: { templateName: this.templatName },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      this.templatName = result;
+      console.log(result);
+    });
     this.sidenav.close();
   }
 }
