@@ -1,9 +1,12 @@
-<div class="top-tools">
+<div
+  class="top-tools"
+  (keydown.escape)="sidenav.close()"
+  (click)="onClick($event)"
+>
   <div class="left-tools">
-    <button mat-raised-button #sidenavToggle (click)="sidenav.toggle()">
-      Templates
-    </button>
+    <button mat-raised-button (click)="sidenav.toggle()">Templates</button>
   </div>
+  <div class="non-template-button"></div>
   <div class="middle-tools">
     <div *ngIf="addingTemplate">
       <h1>Template Name</h1>
@@ -22,19 +25,20 @@
         </button>
       </mat-form-field>
     </div>
+    <div class="add-input">
+      <button
+        mat-raised-button
+        class="add-input__button"
+        color="primary"
+        (click)="onAddInput()"
+      >
+        Add Input
+        <span class="spacer"></span>
+        <mat-icon class="add-icon" color="accent">add_circle</mat-icon>
+      </button>
+    </div>
   </div>
-  <div class="add-input">
-    <button
-      mat-raised-button
-      class="add-input__button"
-      color="primary"
-      (click)="onAddInput()"
-    >
-      Add Input
-      <span class="spacer"></span>
-      <mat-icon class="add-icon" color="accent">add_circle</mat-icon>
-    </button>
-  </div>
+
   <div class="right-tools">
     <button mat-raised-button (click)="onSubmit(addItemForm)">
       {{ addingTemplate ? "Save Template" : "Save" }}
@@ -45,13 +49,11 @@
 </div>
 
 <mat-divider></mat-divider>
-<mat-sidenav-container (backdropClick)="sidenav.close()">
-  <mat-sidenav
-    #sidenav
-    (keydown.escape)="sidenav.close()"
-    autoFocus="false"
-    opened="false"
-  >
+<mat-sidenav-container
+  (backdropClick)="sidenav.close()"
+  (keydown.escape)="sidenav.close()"
+>
+  <mat-sidenav #sidenav autoFocus="false" opened="false">
     <mat-selection-list [multiple]="false">
       <mat-list-option
         *ngFor="let template of templates"

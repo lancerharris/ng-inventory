@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -12,6 +12,8 @@ import { ItemManagementService } from '../item-management.service';
   styleUrls: ['./add-item.component.css'],
 })
 export class AddItemComponent implements OnInit {
+  @ViewChild('sidenav') sidenav: MatSidenav;
+
   public templates: string[] = ['Tops', 'Dresses', 'Bottoms'];
   public addingTemplate: boolean;
   public value: string = '';
@@ -26,13 +28,21 @@ export class AddItemComponent implements OnInit {
     this.addingTemplate = this.router.url === '/items/add-template';
   }
 
+  onClick(event) {
+    if (event.target instanceof HTMLDivElement) {
+      this.sidenav.close();
+    }
+    console.log(event);
+  }
+
   onAddInput() {
     const currentLength = this.itemManager.totalInputs.length;
     if (currentLength <= 19) {
       // to keep track of the indices of the input elements
       this.itemManager.totalInputs.push(currentLength);
-    }
-    // else pop up to tell user no
+    } // else pop up to tell user no
+
+    this.sidenav.close();
   }
 
   onSubmit(form: NgForm) {
@@ -62,5 +72,7 @@ export class AddItemComponent implements OnInit {
     addItemObs.subscribe((resData) => {});
 
     // form.reset();
+
+    this.sidenav.close();
   }
 }
