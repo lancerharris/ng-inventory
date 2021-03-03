@@ -1,4 +1,4 @@
-.col-3 {
+.input__content-options {
   visibility: hidden;
 }
 
@@ -9,8 +9,8 @@
   flex-direction: column;
 }
 
-.header-row,
-.input-row {
+.header-row {
+  grid-column-start: span 2;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -18,11 +18,33 @@
   flex-direction: row;
 }
 
-.input-row:hover .col-3 {
+.input-grid,
+.input__content {
+  display: grid;
+  grid-template-columns: 30% 60% 1fr;
+}
+
+.input-grid {
+  padding: 1rem 2rem;
+}
+
+.input__content {
+  grid-column-start: span 3;
+}
+
+.input__content-field,
+.input__content-value,
+.input__content-options {
+  justify-self: center;
+  align-self: center;
+}
+
+.input__content:hover .input__content-options {
   visibility: visible;
 }
 
-.input-item {
+.input__content-field,
+.input__content-value {
   border: none;
   box-shadow: 2px 2px 2px rgb(0, 0, 0, 0.5);
   border-radius: 3px;
@@ -32,8 +54,24 @@
   padding: 0 0.75rem;
 }
 
-.input-item:focus {
+.input__content-field:focus .input__content-value:focus {
   outline: transparent;
   box-shadow: 2px 2px 2px rgb(103, 58, 183, 0.5);
   transform: scale(1.1);
+}
+
+.title,
+.input__content-field,
+.input__content-value,
+.input__content-options {
+  justify-self: center;
+  align-self: center;
+}
+
+.input__content-field {
+  width: 80%;
+}
+
+.input__content-value {
+  width: 80%;
 }

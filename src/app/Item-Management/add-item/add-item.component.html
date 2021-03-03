@@ -23,7 +23,7 @@
   </div>
 
   <div class="right-tools">
-    <button mat-raised-button (click)="onSubmit(addItemForm)">Save</button>
+    <button mat-raised-button (click)="onSubmit()">Save</button>
     <button mat-raised-button (click)="onSaveTemplate()">
       Save As Template
     </button>
@@ -48,9 +48,6 @@
     </mat-selection-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <div id="add-item-input"></div>
-    <form #addItemForm="ngForm">
-      <app-item-input></app-item-input>
-    </form>
+    <app-item-input></app-item-input>
   </mat-sidenav-content>
 </mat-sidenav-container>

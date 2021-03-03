@@ -1,22 +1,21 @@
-<div class="input-rows">
-  <div class="header-row">
-    <h2 class=".col-1">Fields</h2>
-    <h2 class=".col-2">Values</h2>
-    <h2 class="col-3"></h2>
-  </div>
-  <div class="input-row" *ngFor="let input of totalInputs; let i = index">
+<div class="input-grid">
+  <h2 class="title">Fields</h2>
+  <h2 class="title">Values</h2>
+  <div class="input__content" *ngFor="let input of totalInputs; let i = index">
     <input
       maxlength="30"
-      class="input-item"
+      class="input__content-field"
       id="{{ 'field_' + i }}"
       name="{{ 'field_' + i }}"
     />
+
     <input
       maxlength="80"
-      class="input-item"
+      class="input__content-value"
       id="{{ 'value_' + i }}"
       name="{{ 'value_' + i }}"
     />
+
     <!-- <mat-form-field class=".col-1">
       <input matInput maxlength="30" id="{{'field_' + i}}" name="{{'field_' + i}}"/>
     </mat-form-field>
@@ -24,15 +23,17 @@
       <input matInput #message maxlength="80" id="{{'value_' + i}}" name="{{'value_' + i}}"/>
       <mat-hint align="end">{{ message.value.length }} / 250</mat-hint>
     </mat-form-field> -->
-    <button
-      mat-icon-button
-      type="button"
-      color="warn"
-      (click)="onClearItem(i)"
-      tabIndex="-1"
-      class="col-3"
-    >
-      <mat-icon>clear</mat-icon>
-    </button>
+    <div class="input__content-options">
+      <button
+        mat-icon-button
+        type="button"
+        color="warn"
+        (click)="onClearItem(i)"
+        tabIndex="-1"
+        class="input__c"
+      >
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
   </div>
 </div>
