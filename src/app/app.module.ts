@@ -11,20 +11,16 @@ import { HeaderModule } from './header/header.module';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    AuthComponent,
-    PageNotFoundComponent
-  ],
+  declarations: [AppComponent, AuthComponent, PageNotFoundComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HeaderModule,
-    FormsModule, 
-    HttpClientModule
+    FormsModule,
+    HttpClientModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

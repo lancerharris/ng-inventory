@@ -2,14 +2,51 @@ nav {
   display: flex;
 }
 
-mat-divider {
-  height: 70%
+.mat-divider-vertical {
+  height: 2.5rem;
 }
 
-.brand {
-  font-size: 22px;
+mat-toolbar-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.toolbar__items {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.toolbar__brand {
+  font-size: 1.5rem;
+  padding: 0 0.5rem;
+}
+
+.toolbar__brand-large {
+  display: none;
 }
 
 .flex-spacer:nth-of-type(1) {
   flex-grow: 1;
+}
+
+.toolbar__items {
+  display: none;
+}
+
+@media (min-width: 40rem) {
+  .toolbar__menu-button {
+    display: none;
+  }
+  .toolbar__items {
+    display: flex;
+  }
+
+  .toolbar__brand-large {
+    display: inline-block;
+  }
+
+  .toolbar__brand-small {
+    display: none;
+  }
 }

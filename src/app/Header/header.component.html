@@ -1,40 +1,125 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row class="mat-elevation-z6">
-    <nav role="navigation" class="docs-navbar-header">
+    <a
+      routerLink="/items"
+      mat-button
+      class="toolbar__brand toolbar__brand-small mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+    >
+      <span>Dott's Items</span>
+    </a>
+    <div class="toolbar__items">
+      <nav role="navigation" class="docs-navbar-header">
+        <a
+          routerLink="/items"
+          mat-button
+          class="toolbar__brand toolbar__brand-large mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+        >
+          <span>Dott's Items</span>
+        </a>
+        <a
+          routerLink="/items"
+          routerLinkActive="mat-accent"
+          [routerLinkActiveOptions]="{ exact: true }"
+          mat-button
+          class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+        >
+          <span>Items</span>
+        </a>
+        <a
+          routerLink="/items/add-item"
+          routerLinkActive="mat-accent"
+          [routerLinkActiveOptions]="{ exact: true }"
+          mat-button
+          class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+        >
+          <span>Add Item</span>
+        </a>
+      </nav>
+      <div class="flex-spacer"></div>
+      <mat-divider vertical="true"></mat-divider>
       <a
-        routerLink="/items"
-        mat-button
-        class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
-      >
-        <span class="brand">Dott's Items</span>
-      </a>
-      <a
-        routerLink="/items"
+        routerLink="/auth"
         routerLinkActive="mat-accent"
         [routerLinkActiveOptions]="{ exact: true }"
+        *ngIf="!isAuthenticated"
         mat-button
         class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+        (click)="onSignUp()"
       >
-        <span>Items</span>
+        <span>Sign Up</span>
       </a>
       <a
-        routerLink="/items/add-item"
+        routerLink="/auth"
         routerLinkActive="mat-accent"
         [routerLinkActiveOptions]="{ exact: true }"
+        *ngIf="!isAuthenticated"
         mat-button
         class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+        (click)="onLogin()"
       >
-        <span>Add Item</span>
+        <span>Login</span>
       </a>
-    </nav>
-    <div class="flex-spacer"></div>
-    <mat-divider vertical="true"></mat-divider>
+      <a
+        routerLink="/auth"
+        routerLinkActive="mat-accent"
+        [routerLinkActiveOptions]="{ exact: true }"
+        *ngIf="isAuthenticated"
+        mat-button
+        class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+        (click)="onLogout()"
+      >
+        <span>Logout</span>
+      </a>
+      <mat-divider vertical="true"></mat-divider>
+      <a
+        mat-button
+        class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+        href="https://www.ebay.com/sh/ovw"
+      >
+        <span>Ebay</span>
+      </a>
+      <a
+        mat-button
+        class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+        href="https://poshmark.com/feed"
+      >
+        <span>Poshmark</span>
+      </a>
+    </div>
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="toolbarMenu"
+      class="toolbar__menu-button"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
+  </mat-toolbar-row>
+  <mat-menu #toolbarMenu="matMenu">
+    <a
+      routerLink="/items"
+      routerLinkActive="mat-primary"
+      [routerLinkActiveOptions]="{ exact: true }"
+      mat-menu-item
+      class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+    >
+      <span>Items</span>
+    </a>
+    <a
+      routerLink="/items/add-item"
+      routerLinkActive="mat-primary"
+      [routerLinkActiveOptions]="{ exact: true }"
+      mat-menu-item
+      class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+    >
+      <span>Add Item</span>
+    </a>
+    <mat-divider></mat-divider>
     <a
       routerLink="/auth"
-      routerLinkActive="mat-accent"
+      routerLinkActive="mat-primary"
       [routerLinkActiveOptions]="{ exact: true }"
       *ngIf="!isAuthenticated"
-      mat-button
+      mat-menu-item
       class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
       (click)="onSignUp()"
     >
@@ -42,10 +127,10 @@
     </a>
     <a
       routerLink="/auth"
-      routerLinkActive="mat-accent"
+      routerLinkActive="mat-primary"
       [routerLinkActiveOptions]="{ exact: true }"
       *ngIf="!isAuthenticated"
-      mat-button
+      mat-menu-item
       class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
       (click)="onLogin()"
     >
@@ -53,29 +138,29 @@
     </a>
     <a
       routerLink="/auth"
-      routerLinkActive="mat-accent"
+      routerLinkActive="mat-primary"
       [routerLinkActiveOptions]="{ exact: true }"
       *ngIf="isAuthenticated"
-      mat-button
+      mat-menu-item
       class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
       (click)="onLogout()"
     >
       <span>Logout</span>
     </a>
-    <mat-divider vertical="true"></mat-divider>
+    <mat-divider></mat-divider>
     <a
-      mat-button
+      mat-menu-item
       class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
       href="https://www.ebay.com/sh/ovw"
     >
       <span>Ebay</span>
     </a>
     <a
-      mat-button
+      mat-menu-item
       class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
       href="https://poshmark.com/feed"
     >
       <span>Poshmark</span>
     </a>
-  </mat-toolbar-row>
+  </mat-menu>
 </mat-toolbar>
