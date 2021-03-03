@@ -26,15 +26,6 @@
       >
         <span>Add Item</span>
       </a>
-      <a
-        routerLink="/items/add-template"
-        routerLinkActive="mat-accent"
-        [routerLinkActiveOptions]="{ exact: true }"
-        mat-button
-        class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
-      >
-        <span>Add Template</span>
-      </a>
     </nav>
     <div class="flex-spacer"></div>
     <mat-divider vertical="true"></mat-divider>
@@ -61,16 +52,16 @@
       <span>Login</span>
     </a>
     <a
-    routerLink="/auth"
-    routerLinkActive="mat-accent"
-    [routerLinkActiveOptions]="{ exact: true }"
-    *ngIf="isAuthenticated"
-    mat-button
-    class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
-    (click)="onLogout()"
-  >
-    <span>Logout</span>
-  </a>
+      routerLink="/auth"
+      routerLinkActive="mat-accent"
+      [routerLinkActiveOptions]="{ exact: true }"
+      *ngIf="isAuthenticated"
+      mat-button
+      class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+      (click)="onLogout()"
+    >
+      <span>Logout</span>
+    </a>
     <mat-divider vertical="true"></mat-divider>
     <a
       mat-button
