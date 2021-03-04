@@ -1,6 +1,13 @@
 <div class="input-grid">
-  <h2 class="title">Fields</h2>
-  <h2 class="title">Values</h2>
+  <div class="input__header">
+    <h2 class="input__header-small">Fields & Values</h2>
+    <div class="input__header-field">
+      <h2>Fields</h2>
+    </div>
+    <div class="input__header-value">
+      <h2>Values</h2>
+    </div>
+  </div>
   <div class="input__content" *ngFor="let input of totalInputs; let i = index">
     <input
       maxlength="30"
@@ -10,10 +17,11 @@
     />
 
     <input
-      maxlength="80"
+      maxlength="30"
       class="input__content-value"
       id="{{ 'value_' + i }}"
       name="{{ 'value_' + i }}"
+      matPrefix
     />
 
     <!-- <mat-form-field class=".col-1">
@@ -23,7 +31,7 @@
       <input matInput #message maxlength="80" id="{{'value_' + i}}" name="{{'value_' + i}}"/>
       <mat-hint align="end">{{ message.value.length }} / 250</mat-hint>
     </mat-form-field> -->
-    <div class="input__content-options">
+    <!-- <div class="input__content-options">
       <button
         mat-icon-button
         type="button"
@@ -34,6 +42,6 @@
       >
         <mat-icon>clear</mat-icon>
       </button>
-    </div>
+    </div> -->
   </div>
 </div>

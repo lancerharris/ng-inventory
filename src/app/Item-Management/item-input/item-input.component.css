@@ -1,42 +1,15 @@
-.input__content-options {
-  visibility: hidden;
+.input-grid {
+  display: grid;
+  padding: 0.5rem;
 }
 
-.input-rows {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  flex-direction: column;
-}
-
-.header-row {
-  grid-column-start: span 2;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-around;
-  flex-direction: row;
-}
-
-.input-grid,
 .input__content {
   display: grid;
-  grid-template-columns: 30% 60% 1fr;
+  margin-bottom: 0.5rem;
 }
 
-.input-grid {
-  padding: 1rem 2rem;
-}
-
-.input__content {
-  grid-column-start: span 3;
-}
-
-.input__content-field,
-.input__content-value,
 .input__content-options {
-  justify-self: center;
-  align-self: center;
+  visibility: hidden;
 }
 
 .input__content:hover .input__content-options {
@@ -50,28 +23,78 @@
   border-radius: 3px;
   height: 1.5rem;
   background-color: hsl(262deg 52% 93%) !important;
-
   padding: 0 0.75rem;
+  margin: 0 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
-.input__content-field:focus .input__content-value:focus {
+.input__content-field:focus,
+.input__content-value:focus {
   outline: transparent;
   box-shadow: 2px 2px 2px rgb(103, 58, 183, 0.5);
-  transform: scale(1.1);
-}
-
-.title,
-.input__content-field,
-.input__content-value,
-.input__content-options {
-  justify-self: center;
-  align-self: center;
+  transform: scale(1.05);
 }
 
 .input__content-field {
-  width: 80%;
+  width: 50%;
 }
 
 .input__content-value {
-  width: 80%;
+  margin-left: 1.5rem;
+}
+
+.input__header-small {
+  display: inline-block;
+}
+
+.input__header-field,
+.input__header-value {
+  display: none;
+}
+
+@media (min-width: 27rem) {
+  .input__header-small {
+    display: inline-block;
+  }
+
+  .input__header,
+  .input__content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .input__header-small {
+    display: none;
+  }
+
+  .input__header-field,
+  .input__header-value {
+    display: inline-block;
+  }
+
+  .input__content-field,
+  .input__header-field {
+    flex-basis: 20%;
+    min-width: 8rem;
+  }
+
+  .input__content-value,
+  .input__header-value {
+    flex-grow: 1;
+    max-width: 40rem;
+  }
+
+  .input__header-field,
+  .input__header-value {
+    margin: 0 1rem;
+    padding: 0 0.75rem;
+    text-align: center;
+  }
+
+  .input__content-field,
+  .input__content-value {
+    margin: 0 1rem;
+    /* margin-bottom: 0.5rem; */
+  }
 }
