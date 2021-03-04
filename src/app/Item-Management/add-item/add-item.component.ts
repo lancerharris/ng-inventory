@@ -47,6 +47,8 @@ export class AddItemComponent implements OnInit {
     this.sidenav.close();
   }
 
+  onEditInput() {}
+
   onSubmit() {
     let form: NgForm;
     const fields: string[] = [];

@@ -4,30 +4,40 @@
   (click)="onTopToolsClick($event)"
 >
   <div class="left-tools">
-    <button mat-raised-button (click)="sidenav.toggle()">Templates</button>
+    <button mat-stroked-button color="primary" (click)="sidenav.toggle()">
+      Templates
+    </button>
   </div>
 
   <div class="middle-tools">
-    <div class="add-input">
-      <button
-        mat-raised-button
-        class="add-input__button"
-        color="primary"
-        (click)="onAddInput()"
-      >
-        Add Input
-        <span class="spacer"></span>
-        <mat-icon class="add-icon" color="accent">add_circle</mat-icon>
-      </button>
-    </div>
+    <button
+      mat-stroked-button
+      class="add-input__button"
+      color="primary"
+      (click)="onAddInput()"
+    >
+      <!-- <span class="spacer"></span> -->
+      <mat-icon class="top-tools__icon" color="primary">add_circle</mat-icon>
+    </button>
+
+    <button
+      mat-stroked-button
+      class="edit-input__button"
+      color="primary"
+      (click)="onEditInput()"
+    >
+      <mat-icon class="top-tools__icon" color="primary">edit</mat-icon>
+    </button>
+    <button mat-stroked-button color="warn">
+      <mat-icon class="top-tools__icon">delete</mat-icon>
+    </button>
   </div>
 
   <div class="right-tools">
-    <button mat-raised-button (click)="onSubmit()">Save</button>
-    <button mat-raised-button (click)="onSaveTemplate()">
-      Save As Template
+    <button mat-flat-button color="accent" (click)="onSubmit()">Save</button>
+    <button mat-stroked-button color="primary" (click)="onSaveTemplate()">
+      Add to Templates
     </button>
-    <button mat-raised-button color="warn">Clear</button>
   </div>
 </div>
 
