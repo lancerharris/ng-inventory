@@ -8,30 +8,34 @@
       <h2>Values</h2>
     </div>
   </div>
-  <div class="input__content" *ngFor="let input of totalInputs; let i = index">
-    <input
-      maxlength="30"
-      class="input__content-field"
-      id="{{ 'field_' + i }}"
-      name="{{ 'field_' + i }}"
-    />
+  <div
+    class="input__content__options"
+    *ngFor="let input of totalInputs; let i = index"
+  >
+    <div class="input__content">
+      <input
+        maxlength="30"
+        class="input__content-field"
+        id="{{ 'field_' + i }}"
+        name="{{ 'field_' + i }}"
+      />
 
-    <input
-      maxlength="30"
-      class="input__content-value"
-      id="{{ 'value_' + i }}"
-      name="{{ 'value_' + i }}"
-      matPrefix
-    />
+      <input
+        maxlength="30"
+        class="input__content-value"
+        id="{{ 'value_' + i }}"
+        name="{{ 'value_' + i }}"
+        matPrefix
+      />
 
-    <!-- <mat-form-field class=".col-1">
+      <!-- <mat-form-field class=".col-1">
       <input matInput maxlength="30" id="{{'field_' + i}}" name="{{'field_' + i}}"/>
     </mat-form-field>
     <mat-form-field class=".col-2">
       <input matInput #message maxlength="80" id="{{'value_' + i}}" name="{{'value_' + i}}"/>
       <mat-hint align="end">{{ message.value.length }} / 250</mat-hint>
     </mat-form-field> -->
-    <!-- <div class="input__content-options">
+      <!-- <div class="input__content-options">
       <button
         mat-icon-button
         type="button"
@@ -43,5 +47,17 @@
         <mat-icon>clear</mat-icon>
       </button>
     </div> -->
+    </div>
+    <mat-card class="input__content-edit" *ngIf="editMode">
+      <button
+        mat-flat-button
+        color="warn"
+        value="Delete"
+        (click)="onClearItem(i)"
+      >
+        <mat-icon>clear</mat-icon>
+      </button>
+      <button mat-flat-button color="primary" value="Long">L</button>
+    </mat-card>
   </div>
 </div>

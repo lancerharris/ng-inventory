@@ -24,7 +24,7 @@
       mat-stroked-button
       class="edit-input__button"
       color="primary"
-      (click)="onEditInput()"
+      (click)="editMode = !editMode"
     >
       <mat-icon class="top-tools__icon" color="primary">edit</mat-icon>
     </button>
@@ -58,6 +58,6 @@
     </mat-selection-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <app-item-input></app-item-input>
+    <app-item-input [editMode]="editMode"></app-item-input>
   </mat-sidenav-content>
 </mat-sidenav-container>

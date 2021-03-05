@@ -19,6 +19,7 @@ export class AddItemComponent implements OnInit {
   public templates: string[] = ['Tops', 'Dresses', 'Bottoms'];
   public addingTemplate: boolean;
   public value: string = '';
+  public editMode: boolean = false;
   private templatName: string;
 
   constructor(
@@ -46,9 +47,6 @@ export class AddItemComponent implements OnInit {
 
     this.sidenav.close();
   }
-
-  onEditInput() {}
-
   onSubmit() {
     let form: NgForm;
     const fields: string[] = [];

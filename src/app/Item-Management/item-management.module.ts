@@ -14,6 +14,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatListModule } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
 
 import { ItemManagementComponent } from './item-management.component';
 import { AddItemComponent } from './add-item/add-item.component';
@@ -49,6 +51,8 @@ import { DialogComponent } from './dialog/dialog.component';
     DragDropModule,
     MatListModule,
     MatDialogModule,
+    MatButtonToggleModule,
+    MatCardModule,
   ],
 })
 export class ItemManagementModule {}
