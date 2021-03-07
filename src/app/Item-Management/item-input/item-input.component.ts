@@ -157,7 +157,10 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (this.priorLongFieldIndex > -1) {
       (document.getElementById(
         'value_' + this.priorLongFieldIndex
-      ) as HTMLInputElement).value = this.longFieldValue;
+      ) as HTMLInputElement).value = this.longFieldValue.substring(
+        0,
+        this.itemInputService.MAX_VALUE_LENGTH
+      );
       this.priorLongFieldIndex = -1;
     }
 

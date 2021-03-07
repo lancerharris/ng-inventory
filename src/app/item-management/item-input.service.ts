@@ -9,6 +9,7 @@ export class ItemInputService {
   itemValues: string[] = [];
   totalInputs: number[] = [0];
   MAX_INPUTS: number = 20;
+  MAX_VALUE_LENGTH: number = 80;
   private longFieldIndex: number;
   longFieldSubject = new Subject<number>();
   inputAdded = new Subject<number>();
