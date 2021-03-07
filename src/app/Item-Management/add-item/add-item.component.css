@@ -24,8 +24,7 @@ mat-sidenav .mat-button {
 .left-tools,
 .middle-tools,
 .right-tools {
-  margin: 0.5rem;
-  margin-bottom: 0;
+  margin: 0.25rem;
 }
 
 .middle-tools,
@@ -47,6 +46,10 @@ mat-sidenav .mat-button {
 .spacer {
   display: inline-block;
   width: 0.5rem;
+}
+
+.mat-list-base {
+  padding: 0;
 }
 
 @media (min-width: 40rem) {
