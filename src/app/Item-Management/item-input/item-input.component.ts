@@ -137,7 +137,7 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
-    if (this.priorLongFieldIndex) {
+    if (this.priorLongFieldIndex > -1) {
       (document.getElementById(
         'value_' + this.priorLongFieldIndex
       ) as HTMLInputElement).value = this.longFieldValue;
