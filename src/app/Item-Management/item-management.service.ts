@@ -22,7 +22,6 @@ export class ItemManagementService {
     if (this.totalInputs.length <= this.MAX_INPUTS - 1) {
       // to keep track of the indices of the input elements
       this.totalInputs.push(this.totalInputs.length);
-      console.log('nexting input added');
       this.inputAdded.next(this.totalInputs.length - 1);
     } // else pop up to tell user no
   }
