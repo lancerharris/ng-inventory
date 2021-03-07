@@ -47,7 +47,7 @@ export class AddItemComponent implements OnInit {
   }
 
   onAddInput() {
-    this.itemManager.AddInput();
+    this.itemInputService.AddInput();
     this.sidenav.close();
   }
 
@@ -56,13 +56,16 @@ export class AddItemComponent implements OnInit {
   }
 
   onDeleteClick() {
-    this.itemManager.removeInputs(0, this.itemManager.totalInputs.length);
+    this.itemInputService.removeInputs(
+      0,
+      this.itemInputService.totalInputs.length
+    );
     this.itemInputService.removeInputs(
       0,
       this.itemInputService.itemFields.length
     );
     // this.itemManager.AddInput();
-    this.itemManager.setLongFieldIndex(-1);
+    this.itemInputService.setLongFieldIndex(-1);
   }
 
   onSubmit() {
@@ -70,7 +73,7 @@ export class AddItemComponent implements OnInit {
     const fields: string[] = [];
     const values: string[] = [];
 
-    this.itemManager.totalInputs.forEach((index) => {
+    this.itemInputService.totalInputs.forEach((index) => {
       const fieldInput = document.getElementById(
         'field_' + index
       ) as HTMLInputElement;
@@ -113,7 +116,6 @@ export class AddItemComponent implements OnInit {
 
   onTemplateSelect(template) {
     this.onDeleteClick();
-
     for (const el of localTemplates[template]) {
       this.itemInputService.itemFields.push(el);
       this.onAddInput();

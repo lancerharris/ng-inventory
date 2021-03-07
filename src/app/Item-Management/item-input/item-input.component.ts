@@ -41,22 +41,26 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
   ngOnInit(): void {
     this.itemFields = this.itemInputService.itemFields;
     this.itemValues = this.itemInputService.itemValues;
-    this.totalInputs = this.itemManager.totalInputs;
-    this.longFieldIndex = this.itemManager.getLongFieldIndex();
-    this.longFieldSub = this.itemManager.longFieldSubject.subscribe((index) => {
-      this.longFieldIndex = index;
-    });
-    this.inputAddedSub = this.itemManager.inputAdded.subscribe((addedIndex) => {
-      this.newInputAdded = true;
-      console.log(this.itemFields);
-    });
+    this.totalInputs = this.itemInputService.totalInputs;
+    this.longFieldIndex = this.itemInputService.getLongFieldIndex();
+    this.longFieldSub = this.itemInputService.longFieldSubject.subscribe(
+      (index) => {
+        this.longFieldIndex = index;
+      }
+    );
+    this.inputAddedSub = this.itemInputService.inputAdded.subscribe(
+      (addedIndex) => {
+        this.newInputAdded = true;
+        console.log(this.itemFields);
+      }
+    );
   }
 
   onClearItem(index) {
     if (index === this.longFieldIndex) {
       this.onLongClick(index);
     }
-    this.itemManager.removeInputs(index, 1);
+    this.itemInputService.removeInputs(index, 1);
   }
 
   onLongClick(index) {
@@ -65,9 +69,9 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
     ) as HTMLInputElement).value;
     this.longField = !this.longField;
     if (this.longField) {
-      this.itemManager.setLongFieldIndex(index);
+      this.itemInputService.setLongFieldIndex(index);
     } else {
-      this.itemManager.setLongFieldIndex(-1);
+      this.itemInputService.setLongFieldIndex(-1);
       this.priorLongFieldIndex = index;
     }
   }
@@ -81,8 +85,8 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
     for (let i = startIndex; i < this.totalInputs.length; i++) {
       inputStatus = inputStatus === 'field_' ? 'value_' : 'field_';
       if (i === this.totalInputs.length - 1 && inputStatus === 'field_') {
-        if (i !== this.itemManager.MAX_INPUTS - 1) {
-          this.itemManager.AddInput();
+        if (i !== this.itemInputService.MAX_INPUTS - 1) {
+          this.itemInputService.AddInput();
           // this.newInputAdded = true;
         }
         return;
@@ -157,13 +161,15 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.priorLongFieldIndex = -1;
     }
 
-    if (this.itemManager.totalInputs.length < 1) {
-      this.itemManager.AddInput();
+    if (this.itemInputService.totalInputs.length < 1) {
+      this.itemInputService.AddInput();
     }
 
     if (this.newInputAdded) {
       document
-        .getElementById('field_' + (this.itemManager.totalInputs.length - 1))
+        .getElementById(
+          'field_' + (this.itemInputService.totalInputs.length - 1)
+        )
         .focus();
       this.newInputAdded = false;
     }
