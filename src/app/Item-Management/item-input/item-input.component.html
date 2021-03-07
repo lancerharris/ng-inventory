@@ -18,25 +18,29 @@
         class="input__content-field"
         id="{{ 'field_' + i }}"
         name="{{ 'field_' + i }}"
+        (keydown)="onInputKeydown($event, i, 'inField')"
       />
 
       <input
-        *ngIf="this.longFieldIndex !== i"
+        *ngIf="longFieldIndex !== i"
         maxlength="80"
-        class="input__content-value"
+        class="input__content-value mat-body"
         id="{{ 'value_' + i }}"
         name="{{ 'value_' + i }}"
+        (keydown)="onInputKeydown($event, i, 'inValue')"
       />
       <textarea
-        *ngIf="this.longFieldIndex === i"
+        *ngIf="longFieldIndex === i"
         style="height: auto"
         maxlength="250"
-        rows="5"
-        class="input__content-value"
+        rows="3"
+        class="input__content-value text-area mat-body"
         id="{{ 'value_' + i }}"
         name="{{ 'value_' + i }}"
-      >
-      </textarea>
+        (input)="autoGrow($event)"
+        [value]="longFieldValue"
+        (keydown)="onInputKeydown($event, i, 'inValue')"
+      ></textarea>
 
       <!-- <mat-form-field class=".col-1">
       <input matInput maxlength="30" id="{{'field_' + i}}" name="{{'field_' + i}}"/>
@@ -58,7 +62,7 @@
       </button>
     </div> -->
     </div>
-    <mat-card class="input__content-edit" *ngIf="editMode">
+    <div class="input__content-edit" *ngIf="editMode">
       <button
         mat-flat-button
         color="warn"
@@ -69,13 +73,17 @@
       </button>
       <button
         mat-flat-button
-        [color]="this.longFieldIndex === i ? 'accent' : 'primary'"
+        [color]="longFieldIndex === i ? 'accent' : 'primary'"
         value="Long"
         (click)="onLongClick(i)"
-        [disabled]="this.longFieldIndex !== -1 && this.longFieldIndex !== i"
+        [disabled]="longFieldIndex !== -1 && longFieldIndex !== i"
+        [ngStyle]="{
+          visibility:
+            longFieldIndex !== -1 && longFieldIndex !== i ? 'hidden' : ''
+        }"
       >
         L
       </button>
-    </mat-card>
+    </div>
   </div>
 </div>

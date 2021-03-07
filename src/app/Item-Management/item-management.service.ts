@@ -8,12 +8,20 @@ import { catchError } from 'rxjs/operators';
 })
 export class ItemManagementService {
   totalInputs: [number] = [0];
+  MAX_INPUTS: number = 20;
   private longFieldIndex: number;
   longFieldSubject = new Subject<number>();
   constructor(private http: HttpClient) {}
 
-  removeInput(inputIndex) {
-    this.totalInputs.splice(inputIndex, 1);
+  removeInputs(inputIndex, removeN = 1) {
+    this.totalInputs.splice(inputIndex, removeN);
+  }
+
+  AddInput() {
+    if (this.totalInputs.length <= this.MAX_INPUTS - 1) {
+      // to keep track of the indices of the input elements
+      this.totalInputs.push(this.totalInputs.length);
+    } // else pop up to tell user no
   }
 
   getLongFieldIndex() {
