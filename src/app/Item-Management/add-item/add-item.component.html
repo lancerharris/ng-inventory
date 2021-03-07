@@ -24,11 +24,15 @@
       mat-stroked-button
       class="edit-input__button"
       color="primary"
-      (click)="editMode = !editMode"
+      [ngStyle]="{
+        'background-color': editMode ? 'rgb(103, 58, 183, 0.1)' : ''
+      }"
+      (click)="onEditClick()"
     >
       <mat-icon class="top-tools__icon" color="primary">edit</mat-icon>
     </button>
-    <button mat-stroked-button color="warn">
+
+    <button mat-stroked-button color="warn" (click)="onDeleteClick()">
       <mat-icon class="top-tools__icon">delete</mat-icon>
     </button>
   </div>
@@ -51,6 +55,7 @@
       <mat-list-option
         *ngFor="let template of templates"
         [value]="template"
+        color="primary"
         (click)="sidenav.close()"
       >
         {{ template }}

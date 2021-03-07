@@ -39,14 +39,19 @@ export class AddItemComponent implements OnInit {
   }
 
   onAddInput() {
-    const currentLength = this.itemManager.totalInputs.length;
-    if (currentLength <= 19) {
-      // to keep track of the indices of the input elements
-      this.itemManager.totalInputs.push(currentLength);
-    } // else pop up to tell user no
-
+    this.itemManager.AddInput();
     this.sidenav.close();
   }
+
+  onEditClick() {
+    this.editMode = !this.editMode;
+  }
+
+  onDeleteClick() {
+    this.itemManager.removeInputs(0, this.itemManager.totalInputs.length);
+    this.itemManager.setLongFieldIndex(-1);
+  }
+
   onSubmit() {
     let form: NgForm;
     const fields: string[] = [];
