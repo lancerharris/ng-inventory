@@ -25,9 +25,10 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
   longField: boolean = false;
   priorLongFieldIndex: number;
   longFieldIndex: number;
-  longFieldSub: Subscription;
   longFieldValue: string;
   private newInputAdded: boolean;
+  longFieldSub: Subscription;
+  inputAddedSub: Subscription;
 
   constructor(private itemManager: ItemManagementService) {}
 
@@ -36,6 +37,9 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.longFieldIndex = this.itemManager.getLongFieldIndex();
     this.longFieldSub = this.itemManager.longFieldSubject.subscribe((index) => {
       this.longFieldIndex = index;
+    });
+    this.inputAddedSub = this.itemManager.inputAdded.subscribe((addedIndex) => {
+      this.newInputAdded = true;
     });
   }
 
@@ -70,7 +74,7 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
       if (i === this.totalInputs.length - 1 && inputStatus === 'field_') {
         if (i !== this.itemManager.MAX_INPUTS - 1) {
           this.itemManager.AddInput();
-          this.newInputAdded = true;
+          // this.newInputAdded = true;
         }
         return;
       }
@@ -141,7 +145,11 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
       (document.getElementById(
         'value_' + this.priorLongFieldIndex
       ) as HTMLInputElement).value = this.longFieldValue;
-      this.priorLongFieldIndex = null;
+      this.priorLongFieldIndex = -1;
+    }
+
+    if (this.itemManager.totalInputs.length < 1) {
+      this.itemManager.AddInput();
     }
 
     if (this.newInputAdded) {
@@ -154,5 +162,6 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   ngOnDestroy(): void {
     this.longFieldSub.unsubscribe();
+    this.inputAddedSub.unsubscribe();
   }
 }

@@ -49,7 +49,7 @@ export class AddItemComponent implements OnInit {
 
   onDeleteClick() {
     this.itemManager.removeInputs(0, this.itemManager.totalInputs.length);
-    this.itemManager.AddInput();
+    // this.itemManager.AddInput();
     this.itemManager.setLongFieldIndex(-1);
   }
 

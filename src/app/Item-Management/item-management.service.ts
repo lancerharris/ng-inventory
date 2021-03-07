@@ -11,6 +11,7 @@ export class ItemManagementService {
   MAX_INPUTS: number = 20;
   private longFieldIndex: number;
   longFieldSubject = new Subject<number>();
+  inputAdded = new Subject<number>();
   constructor(private http: HttpClient) {}
 
   removeInputs(inputIndex, removeN = 1) {
@@ -21,6 +22,8 @@ export class ItemManagementService {
     if (this.totalInputs.length <= this.MAX_INPUTS - 1) {
       // to keep track of the indices of the input elements
       this.totalInputs.push(this.totalInputs.length);
+      console.log('nexting input added');
+      this.inputAdded.next(this.totalInputs.length - 1);
     } // else pop up to tell user no
   }
 
