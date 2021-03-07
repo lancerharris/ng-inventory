@@ -7,6 +7,13 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { ItemManagementService } from '../item-management.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
+import { ItemInputService } from '../item-input.service';
+
+const localTemplates = {
+  Tops: ['category', 'price', 'color'],
+  Dresses: ['category', 'price', 'color', 'inseam', 'rise'],
+  Bottoms: ['category', 'price', 'color', 'Dress Length'],
+};
 
 @Component({
   selector: 'app-add-item',
@@ -24,6 +31,7 @@ export class AddItemComponent implements OnInit {
 
   constructor(
     private itemManager: ItemManagementService,
+    private itemInputService: ItemInputService,
     private router: Router,
     public dialog: MatDialog
   ) {}
@@ -49,6 +57,10 @@ export class AddItemComponent implements OnInit {
 
   onDeleteClick() {
     this.itemManager.removeInputs(0, this.itemManager.totalInputs.length);
+    this.itemInputService.removeInputs(
+      0,
+      this.itemInputService.itemFields.length
+    );
     // this.itemManager.AddInput();
     this.itemManager.setLongFieldIndex(-1);
   }
@@ -97,5 +109,14 @@ export class AddItemComponent implements OnInit {
       console.log(result);
     });
     this.sidenav.close();
+  }
+
+  onTemplateSelect(template) {
+    this.onDeleteClick();
+
+    for (const el of localTemplates[template]) {
+      this.itemInputService.itemFields.push(el);
+      this.onAddInput();
+    }
   }
 }

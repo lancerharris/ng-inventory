@@ -56,7 +56,7 @@
         *ngFor="let template of templates"
         [value]="template"
         color="primary"
-        (click)="sidenav.close()"
+        (click)="onTemplateSelect(template)"
       >
         {{ template }}
       </mat-list-option>

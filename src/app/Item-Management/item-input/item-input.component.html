@@ -18,6 +18,7 @@
         class="input__content-field"
         id="{{ 'field_' + i }}"
         name="{{ 'field_' + i }}"
+        [(ngModel)]="itemFields[i]"
         (keydown)="onInputKeydown($event, i, 'inField')"
       />
 

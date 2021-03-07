@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 
 import { Subscription } from 'rxjs';
+import { ItemInputService } from '../item-input.service';
 import { ItemManagementService } from '../item-management.service';
 
 @Component({
@@ -29,10 +30,17 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
   private newInputAdded: boolean;
   longFieldSub: Subscription;
   inputAddedSub: Subscription;
+  itemFields: string[];
+  itemValues: string[];
 
-  constructor(private itemManager: ItemManagementService) {}
+  constructor(
+    private itemManager: ItemManagementService,
+    private itemInputService: ItemInputService
+  ) {}
 
   ngOnInit(): void {
+    this.itemFields = this.itemInputService.itemFields;
+    this.itemValues = this.itemInputService.itemValues;
     this.totalInputs = this.itemManager.totalInputs;
     this.longFieldIndex = this.itemManager.getLongFieldIndex();
     this.longFieldSub = this.itemManager.longFieldSubject.subscribe((index) => {
@@ -40,6 +48,7 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
     this.inputAddedSub = this.itemManager.inputAdded.subscribe((addedIndex) => {
       this.newInputAdded = true;
+      console.log(this.itemFields);
     });
   }
 
