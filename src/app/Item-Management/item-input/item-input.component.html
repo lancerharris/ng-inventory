@@ -21,12 +21,22 @@
       />
 
       <input
-        maxlength="30"
+        *ngIf="this.longFieldIndex !== i"
+        maxlength="80"
         class="input__content-value"
         id="{{ 'value_' + i }}"
         name="{{ 'value_' + i }}"
-        matPrefix
       />
+      <textarea
+        *ngIf="this.longFieldIndex === i"
+        style="height: auto"
+        maxlength="250"
+        rows="5"
+        class="input__content-value"
+        id="{{ 'value_' + i }}"
+        name="{{ 'value_' + i }}"
+      >
+      </textarea>
 
       <!-- <mat-form-field class=".col-1">
       <input matInput maxlength="30" id="{{'field_' + i}}" name="{{'field_' + i}}"/>
@@ -57,7 +67,15 @@
       >
         <mat-icon>clear</mat-icon>
       </button>
-      <button mat-flat-button color="primary" value="Long">L</button>
+      <button
+        mat-flat-button
+        [color]="this.longFieldIndex === i ? 'accent' : 'primary'"
+        value="Long"
+        (click)="onLongClick(i)"
+        [disabled]="this.longFieldIndex !== -1 && this.longFieldIndex !== i"
+      >
+        L
+      </button>
     </mat-card>
   </div>
 </div>
