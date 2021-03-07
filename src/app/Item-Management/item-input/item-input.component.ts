@@ -143,9 +143,6 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
       ) as HTMLInputElement).value = this.longFieldValue;
       this.priorLongFieldIndex = null;
     }
-    if (this.itemManager.totalInputs.length < 1) {
-      this.itemManager.AddInput();
-    }
 
     if (this.newInputAdded) {
       document
