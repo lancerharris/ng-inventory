@@ -28,6 +28,7 @@
         class="input__content-value mat-body"
         id="{{ 'value_' + i }}"
         name="{{ 'value_' + i }}"
+        [(ngModel)]="itemValues[i]"
         (keydown)="onInputKeydown($event, i, 'inValue')"
       />
       <textarea

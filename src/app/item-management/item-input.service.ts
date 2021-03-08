@@ -11,19 +11,20 @@ export class ItemInputService {
   MAX_INPUTS: number = 20;
   MAX_VALUE_LENGTH: number = 80;
   private longFieldIndex: number;
-  longFieldSubject = new Subject<number>();
-  inputAdded = new Subject<number>();
+  public longFieldSubject = new Subject<number>();
+  public inputAdded = new Subject<number>();
+  public templateSelectSubject = new Subject<void>();
 
   constructor() {}
 
   removeInputs(inputIndex, removeN = 1) {
+    this.totalInputs.splice(inputIndex, removeN);
     this.itemFields.splice(inputIndex, removeN);
     this.itemValues.splice(inputIndex, removeN);
-    this.totalInputs.splice(inputIndex, removeN);
   }
 
   AddInput() {
-    if (this.totalInputs.length <= this.MAX_INPUTS - 1) {
+    if (this.totalInputs.length < this.MAX_INPUTS) {
       // to keep track of the indices of the input elements
       this.totalInputs.push(this.totalInputs.length);
       this.inputAdded.next(this.totalInputs.length - 1);

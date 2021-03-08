@@ -1,17 +1,14 @@
 import {
-  AfterContentInit,
   AfterViewChecked,
-  AfterViewInit,
+  ChangeDetectorRef,
   Component,
   Input,
   OnDestroy,
   OnInit,
-  ViewChild,
 } from '@angular/core';
 
 import { Subscription } from 'rxjs';
 import { ItemInputService } from '../item-input.service';
-import { ItemManagementService } from '../item-management.service';
 
 @Component({
   selector: 'app-item-input',
@@ -21,21 +18,21 @@ import { ItemManagementService } from '../item-management.service';
 export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
   @Input() editMode: boolean = false;
 
-  addingTemplate: boolean;
-  totalInputs: number[];
-  longField: boolean = false;
-  priorLongFieldIndex: number;
-  longFieldIndex: number;
-  longFieldValue: string;
-  private newInputAdded: boolean;
-  longFieldSub: Subscription;
-  inputAddedSub: Subscription;
-  itemFields: string[];
-  itemValues: string[];
+  public itemFields: string[];
+  public itemValues: string[];
+  public addingTemplate: boolean;
+  public totalInputs: number[];
+  public longField: boolean = false;
+  public priorLongFieldIndex: number;
+  public longFieldIndex: number;
+  public longFieldValue: string;
+  private templateSelectSub: Subscription;
+  private longFieldSub: Subscription;
+  private inputAddedSub: Subscription;
 
   constructor(
-    private itemManager: ItemManagementService,
-    private itemInputService: ItemInputService
+    private itemInputService: ItemInputService,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -50,8 +47,15 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
     );
     this.inputAddedSub = this.itemInputService.inputAdded.subscribe(
       (addedIndex) => {
-        this.newInputAdded = true;
-        console.log(this.itemFields);
+        this.cd.detectChanges(); // allow the app to know of the existence of new element
+        document.getElementById('field_' + addedIndex).focus();
+      }
+    );
+    this.templateSelectSub = this.itemInputService.templateSelectSubject.subscribe(
+      () => {
+        this.cd.detectChanges();
+        document.getElementById('field_0').focus();
+        this.onInputEnterKey(0, 'field_');
       }
     );
   }
@@ -64,9 +68,7 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   onLongClick(index) {
-    this.longFieldValue = (document.getElementById(
-      'value_' + index
-    ) as HTMLInputElement).value;
+    this.longFieldValue = this.itemInputService.itemValues[index];
     this.longField = !this.longField;
     if (this.longField) {
       this.itemInputService.setLongFieldIndex(index);
@@ -78,28 +80,42 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   autoGrow(event) {
     event.target.style.height = event.target.scrollHeight + 'px';
-    // element.style.height = element.scrollHeight + 'px';
   }
 
   onInputEnterKey(startIndex, inputStatus) {
-    for (let i = startIndex; i < this.totalInputs.length; i++) {
-      inputStatus = inputStatus === 'field_' ? 'value_' : 'field_';
-      if (i === this.totalInputs.length - 1 && inputStatus === 'field_') {
-        if (i !== this.itemInputService.MAX_INPUTS - 1) {
-          this.itemInputService.AddInput();
-          // this.newInputAdded = true;
+    let firstEmptyIndex;
+    let targetStatus;
+    if (
+      inputStatus === 'field_' &&
+      !this.itemInputService.itemValues[startIndex]
+    ) {
+      firstEmptyIndex = startIndex;
+      targetStatus = 'value_';
+    } else if (startIndex < this.totalInputs.length - 1) {
+      for (let i = startIndex + 1; i < this.totalInputs.length; i++) {
+        if (
+          !this.itemInputService.itemFields[i] ||
+          !this.itemInputService.itemValues[i]
+        ) {
+          firstEmptyIndex = i;
+          targetStatus = !this.itemInputService.itemFields[firstEmptyIndex]
+            ? 'field_'
+            : 'value_';
+          break;
         }
-        return;
       }
-      i = inputStatus === 'field_' ? i + 1 : i;
-      if (
-        (document.getElementById(inputStatus + i) as HTMLInputElement).value ===
-        ''
-      ) {
-        document.getElementById(inputStatus + i).focus();
-        return;
+      if (!firstEmptyIndex) {
+        this.itemInputService.AddInput();
       }
-      i -= 1; // to avoid skipping value field at the next i level on iteration
+    } else {
+      targetStatus = 'field_';
+      firstEmptyIndex = startIndex + 1;
+      this.itemInputService.AddInput();
+      return; // must return since getElementById won't work since the input isn't available yet.
+    }
+
+    if (firstEmptyIndex >= 0) {
+      document.getElementById(targetStatus + firstEmptyIndex).focus();
     }
   }
 
@@ -155,9 +171,9 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   ngAfterViewChecked(): void {
     if (this.priorLongFieldIndex > -1) {
-      (document.getElementById(
-        'value_' + this.priorLongFieldIndex
-      ) as HTMLInputElement).value = this.longFieldValue.substring(
+      this.itemInputService.itemValues[
+        this.priorLongFieldIndex
+      ] = this.longFieldValue.substring(
         0,
         this.itemInputService.MAX_VALUE_LENGTH
       );
@@ -167,19 +183,11 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (this.itemInputService.totalInputs.length < 1) {
       this.itemInputService.AddInput();
     }
-
-    if (this.newInputAdded) {
-      document
-        .getElementById(
-          'field_' + (this.itemInputService.totalInputs.length - 1)
-        )
-        .focus();
-      this.newInputAdded = false;
-    }
   }
 
   ngOnDestroy(): void {
     this.longFieldSub.unsubscribe();
     this.inputAddedSub.unsubscribe();
+    this.templateSelectSub.unsubscribe();
   }
 }
