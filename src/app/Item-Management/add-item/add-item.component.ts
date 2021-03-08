@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { MatSidenav } from '@angular/material/sidenav';
 
 import { ItemManagementService } from '../item-management.service';
@@ -10,9 +10,18 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { ItemInputService } from '../item-input.service';
 
 const localTemplates = {
-  Tops: ['category', 'price', 'color'],
-  Dresses: ['category', 'price', 'color', 'inseam', 'rise'],
-  Bottoms: ['category', 'price', 'color', 'Dress Length'],
+  Tops: {
+    fields: ['category', 'prices', 'color'],
+    values: ['temp', '', ''],
+  },
+  Dresses: {
+    fields: ['category', 'price', 'color', 'inseam', 'rise'],
+    values: ['', '', '', '', ''],
+  },
+  Bottoms: {
+    fields: ['category', 'price', 'color', 'Dress Length'],
+    values: ['', '', '', '', ''],
+  },
 };
 
 @Component({
@@ -27,6 +36,7 @@ export class AddItemComponent implements OnInit {
   public addingTemplate: boolean;
   public value: string = '';
   public editMode: boolean = false;
+  public totalInputs: number[];
   private templatName: string;
 
   constructor(
@@ -38,6 +48,7 @@ export class AddItemComponent implements OnInit {
 
   ngOnInit(): void {
     this.addingTemplate = this.router.url === '/items/add-template';
+    this.totalInputs = this.itemInputService.totalInputs;
   }
 
   onTopToolsClick(event) {
@@ -55,16 +66,8 @@ export class AddItemComponent implements OnInit {
     this.editMode = !this.editMode;
   }
 
-  onDeleteClick() {
-    this.itemInputService.removeInputs(
-      0,
-      this.itemInputService.totalInputs.length
-    );
-    this.itemInputService.removeInputs(
-      0,
-      this.itemInputService.itemFields.length
-    );
-    // this.itemManager.AddInput();
+  onDelete() {
+    this.itemInputService.removeInputs(0, this.totalInputs.length);
     this.itemInputService.setLongFieldIndex(-1);
   }
 
@@ -73,7 +76,7 @@ export class AddItemComponent implements OnInit {
     const fields: string[] = [];
     const values: string[] = [];
 
-    this.itemInputService.totalInputs.forEach((index) => {
+    this.totalInputs.forEach((index) => {
       const fieldInput = document.getElementById(
         'field_' + index
       ) as HTMLInputElement;
@@ -115,10 +118,15 @@ export class AddItemComponent implements OnInit {
   }
 
   onTemplateSelect(template) {
-    this.onDeleteClick();
-    for (const el of localTemplates[template]) {
-      this.itemInputService.itemFields.push(el);
+    this.onDelete();
+    const fields = localTemplates[template]['fields'];
+    const values = localTemplates[template]['values'];
+    for (let i = 0; i < fields.length; i++) {
       this.onAddInput();
+      this.itemInputService.itemFields.push(fields[i]);
+      this.itemInputService.itemValues.push(values[i]);
     }
+    this.itemInputService.templateSelectSubject.next();
+    // this.templateSelectSubject.next();
   }
 }
