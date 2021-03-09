@@ -88,8 +88,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
     const gemInput = { fields: fields, values: values };
     const longField = form.value.longField ? form.value.longField : null;
 
-    console.log(gemInput);
-
     let addItemObs: Observable<{
       data: { createGem: { fields: string[]; values: string[] } };
     }> = this.itemManager.addItem(gemInput, longField);
@@ -119,7 +117,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
   onTemplateSelect(template) {
     this.templateService.currentTemplate = template;
     this.itemInputService.removeInputs(0, this.totalInputs.length);
-    console.log(this.templateService.localTemplates[template]);
     const fields = this.templateService.localTemplates[template]['fields'];
     const values = this.templateService.localTemplates[template]['values'];
     const longFieldIndex = this.templateService.localTemplates[template][

@@ -20,7 +20,6 @@ export class ItemInputComponent implements OnInit, OnDestroy {
 
   public itemFields: string[];
   public itemValues: string[];
-  public addingTemplate: boolean;
   public totalInputs: number[];
   public longField: boolean = false;
   public longFieldIndex: number = -1;
@@ -37,11 +36,10 @@ export class ItemInputComponent implements OnInit, OnDestroy {
     this.itemFields = this.itemInputService.itemFields;
     this.itemValues = this.itemInputService.itemValues;
     this.totalInputs = this.itemInputService.totalInputs;
-    //
+    // this is needed for showing the long edit button in the view
     this.longFieldSub = this.itemInputService.longFieldSubject.subscribe(
       (index) => {
         this.longFieldIndex = index;
-        console.log(this.longFieldIndex);
       }
     );
     this.inputAddedSub = this.itemInputService.inputAdded.subscribe(
@@ -54,7 +52,9 @@ export class ItemInputComponent implements OnInit, OnDestroy {
       () => {
         this.cd.detectChanges();
         document.getElementById('field_0').focus();
-        this.onInputEnterKey(0, 'field_');
+        if (this.itemInputService.itemFields[0]) {
+          this.onInputEnterKey(0, 'field_');
+        }
       }
     );
   }
