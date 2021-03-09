@@ -179,10 +179,6 @@ export class ItemInputComponent implements OnInit, OnDestroy, AfterViewChecked {
       );
       this.priorLongFieldIndex = -1;
     }
-
-    if (this.itemInputService.totalInputs.length < 1) {
-      this.itemInputService.AddInput();
-    }
   }
 
   ngOnDestroy(): void {

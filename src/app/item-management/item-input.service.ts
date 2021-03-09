@@ -21,6 +21,9 @@ export class ItemInputService {
     this.totalInputs.splice(inputIndex, removeN);
     this.itemFields.splice(inputIndex, removeN);
     this.itemValues.splice(inputIndex, removeN);
+    if (this.totalInputs.length === 0) {
+      this.AddInput();
+    }
   }
 
   AddInput() {
