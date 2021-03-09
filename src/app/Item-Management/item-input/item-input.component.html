@@ -40,7 +40,7 @@
         id="{{ 'value_' + i }}"
         name="{{ 'value_' + i }}"
         (input)="autoGrow($event)"
-        [value]="longFieldValue"
+        [(ngModel)]="itemValues[i]"
         (keydown)="onInputKeydown($event, i, 'inValue')"
       ></textarea>
 
