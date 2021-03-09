@@ -23,7 +23,6 @@ export class ItemInputComponent implements OnInit, OnDestroy {
   public addingTemplate: boolean;
   public totalInputs: number[];
   public longField: boolean = false;
-  public priorLongFieldIndex: number;
   public longFieldIndex: number = -1;
   private templateSelectSub: Subscription;
   private longFieldSub: Subscription;
@@ -38,9 +37,11 @@ export class ItemInputComponent implements OnInit, OnDestroy {
     this.itemFields = this.itemInputService.itemFields;
     this.itemValues = this.itemInputService.itemValues;
     this.totalInputs = this.itemInputService.totalInputs;
+    //
     this.longFieldSub = this.itemInputService.longFieldSubject.subscribe(
       (index) => {
         this.longFieldIndex = index;
+        console.log(this.longFieldIndex);
       }
     );
     this.inputAddedSub = this.itemInputService.inputAdded.subscribe(
@@ -59,23 +60,24 @@ export class ItemInputComponent implements OnInit, OnDestroy {
   }
 
   onClearItem(index) {
-    if (index === this.longFieldIndex) {
-      this.longFieldIndex = -1;
+    if (index === this.itemInputService.getLongFieldIndex()) {
+      this.itemInputService.setLongFieldIndex(-1);
     }
     this.itemInputService.removeInputs(index, 1);
   }
 
   onLongClick(index) {
+    const longFieldIndex = this.itemInputService.getLongFieldIndex();
     const value = this.itemInputService.itemValues[index] || '';
-    if (this.longFieldIndex > -1) {
+    if (longFieldIndex > -1) {
       this.itemInputService.itemValues[index] = value.substring(
         0,
         this.itemInputService.MAX_VALUE_LENGTH
       );
-      this.longFieldIndex = -1;
+      this.itemInputService.setLongFieldIndex(-1);
     } else {
       this.itemInputService.itemValues[index] = value;
-      this.longFieldIndex = index;
+      this.itemInputService.setLongFieldIndex(index);
     }
   }
 

@@ -1,4 +1,11 @@
-import { Component, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  KeyValueDiffers,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { Observable, Subject, Subscription } from 'rxjs';
@@ -58,8 +65,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   onDelete() {
-    this.itemInputService.removeInputs(0, this.totalInputs.length);
     this.itemInputService.setLongFieldIndex(-1);
+    this.itemInputService.removeInputs(0, this.totalInputs.length);
   }
 
   onSubmit() {
@@ -102,21 +109,35 @@ export class AddItemComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      this.templateService.currentTemplate = result;
-      this.templateService.addToTemplates(result);
+      if (result) {
+        this.templateService.addToTemplates(result);
+      }
     });
     this.sidenav.close();
   }
 
   onTemplateSelect(template) {
     this.templateService.currentTemplate = template;
-    this.onDelete();
+    this.itemInputService.removeInputs(0, this.totalInputs.length);
+    console.log(this.templateService.localTemplates[template]);
     const fields = this.templateService.localTemplates[template]['fields'];
     const values = this.templateService.localTemplates[template]['values'];
-    for (let i = 0; i < fields.length; i++) {
-      this.onAddInput();
+    const longFieldIndex = this.templateService.localTemplates[template][
+      'longFieldIndex'
+    ];
+    const inputLength =
+      fields.length > values.length ? fields.length : values.length;
+    for (let i = 0; i < inputLength; i++) {
+      if (i < inputLength - 1) {
+        this.onAddInput(); // we start with already having 1 input
+      }
       this.itemInputService.itemFields.push(fields[i]);
       this.itemInputService.itemValues.push(values[i]);
+    }
+    if (longFieldIndex) {
+      this.itemInputService.setLongFieldIndex(longFieldIndex);
+    } else {
+      this.itemInputService.setLongFieldIndex(-1);
     }
     this.itemInputService.templateSelectSubject.next();
   }

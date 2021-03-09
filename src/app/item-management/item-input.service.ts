@@ -10,7 +10,7 @@ export class ItemInputService {
   totalInputs: number[] = [0];
   MAX_INPUTS: number = 20;
   MAX_VALUE_LENGTH: number = 80;
-  private longFieldIndex: number;
+  private longFieldIndex: number = -1;
   public longFieldSubject = new Subject<number>();
   public inputAdded = new Subject<number>();
   public templateSelectSubject = new Subject<void>();
@@ -32,6 +32,10 @@ export class ItemInputService {
       this.totalInputs.push(this.totalInputs.length);
       this.inputAdded.next(this.totalInputs.length - 1);
     } // else pop up to tell user no
+  }
+
+  getLongFieldIndex() {
+    return this.longFieldIndex;
   }
 
   setLongFieldIndex(index) {

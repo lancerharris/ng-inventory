@@ -27,9 +27,14 @@ export class TemplateService {
 
   addToTemplates(templateName: string) {
     this.localTemplates[templateName] = {
-      fields: this.itemInputService.itemFields,
-      values: this.itemInputService.itemValues,
+      fields: [...this.itemInputService.itemFields],
+      values: [...this.itemInputService.itemValues],
     };
+    const longFieldIndex = this.itemInputService.getLongFieldIndex();
+    if (longFieldIndex > -1) {
+      this.localTemplates[templateName]['longFieldIndex'] = longFieldIndex;
+    }
+    this.currentTemplate = templateName;
     this.templatesSubject.next();
   }
 }
