@@ -34,13 +34,6 @@ export class ItemInputService {
     } // else pop up to tell user no
   }
 
-  getLongFieldIndex() {
-    if (!this.longFieldIndex) {
-      return -1;
-    }
-    return this.longFieldIndex;
-  }
-
   setLongFieldIndex(index) {
     this.longFieldIndex = index;
     this.longFieldSubject.next(this.longFieldIndex);
