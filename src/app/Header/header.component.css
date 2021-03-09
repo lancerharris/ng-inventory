@@ -1,9 +1,11 @@
 nav {
   display: flex;
+  align-items: baseline;
 }
 
 .mat-divider-vertical {
-  height: 2.5rem;
+  height: 1.75rem;
+  align-self: center;
 }
 
 mat-toolbar-row {
@@ -13,8 +15,6 @@ mat-toolbar-row {
 
 .toolbar__items {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
 }
 
 .toolbar__brand {
@@ -40,6 +40,13 @@ mat-toolbar-row {
   }
   .toolbar__items {
     display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .toolbar__items a,
+  .toolbar__items mat-divider{
+    margin-right: 0.1rem;
   }
 
   .toolbar__brand-large {
