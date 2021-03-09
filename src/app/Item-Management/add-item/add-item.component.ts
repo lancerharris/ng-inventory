@@ -1,47 +1,34 @@
-import { Component, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { MatSidenav } from '@angular/material/sidenav';
 
 import { ItemManagementService } from '../item-management.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { ItemInputService } from '../item-input.service';
-
-const localTemplates = {
-  Tops: {
-    fields: ['category', 'prices', 'color'],
-    values: ['temp', '', ''],
-  },
-  Dresses: {
-    fields: ['category', 'price', 'color', 'inseam', 'rise'],
-    values: ['', '', '', '', ''],
-  },
-  Bottoms: {
-    fields: ['category', 'price', 'color', 'Dress Length'],
-    values: ['', '', '', '', ''],
-  },
-};
+import { TemplateService } from '../template.service';
 
 @Component({
   selector: 'app-add-item',
   templateUrl: './add-item.component.html',
   styleUrls: ['./add-item.component.css'],
 })
-export class AddItemComponent implements OnInit {
+export class AddItemComponent implements OnInit, OnDestroy {
   @ViewChild('sidenav') sidenav: MatSidenav;
 
-  public templates: string[] = ['Tops', 'Dresses', 'Bottoms'];
+  public templates: string[];
   public addingTemplate: boolean;
   public value: string = '';
   public editMode: boolean = false;
   public totalInputs: number[];
-  private templatName: string;
+  private templatesSub: Subscription;
 
   constructor(
     private itemManager: ItemManagementService,
     private itemInputService: ItemInputService,
+    private templateService: TemplateService,
     private router: Router,
     public dialog: MatDialog
   ) {}
@@ -49,6 +36,10 @@ export class AddItemComponent implements OnInit {
   ngOnInit(): void {
     this.addingTemplate = this.router.url === '/items/add-template';
     this.totalInputs = this.itemInputService.totalInputs;
+    this.templates = Object.keys(this.templateService.localTemplates);
+    this.templatesSub = this.templateService.templatesSubject.subscribe(() => {
+      this.templates = Object.keys(this.templateService.localTemplates);
+    });
   }
 
   onTopToolsClick(event) {
@@ -107,26 +98,30 @@ export class AddItemComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogComponent, {
       width: '250px',
       restoreFocus: false,
-      data: { templateName: this.templatName },
+      data: { templateName: '' },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      this.templatName = result;
-      console.log(result);
+      this.templateService.currentTemplate = result;
+      this.templateService.addToTemplates(result);
     });
     this.sidenav.close();
   }
 
   onTemplateSelect(template) {
+    this.templateService.currentTemplate = template;
     this.onDelete();
-    const fields = localTemplates[template]['fields'];
-    const values = localTemplates[template]['values'];
+    const fields = this.templateService.localTemplates[template]['fields'];
+    const values = this.templateService.localTemplates[template]['values'];
     for (let i = 0; i < fields.length; i++) {
       this.onAddInput();
       this.itemInputService.itemFields.push(fields[i]);
       this.itemInputService.itemValues.push(values[i]);
     }
     this.itemInputService.templateSelectSubject.next();
-    // this.templateSelectSubject.next();
+  }
+
+  ngOnDestroy(): void {
+    this.templatesSub.unsubscribe();
   }
 }
