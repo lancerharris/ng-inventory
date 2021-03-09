@@ -13,7 +13,6 @@ export class ItemInputService {
   private longFieldIndex: number = -1;
   public longFieldSubject = new Subject<number>();
   public inputAdded = new Subject<number>();
-  public templateSelectSubject = new Subject<void>();
 
   constructor() {}
 

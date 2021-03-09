@@ -9,6 +9,7 @@ import {
 
 import { Subscription } from 'rxjs';
 import { ItemInputService } from '../item-input.service';
+import { TemplateService } from '../template.service';
 
 @Component({
   selector: 'app-item-input',
@@ -29,6 +30,7 @@ export class ItemInputComponent implements OnInit, OnDestroy {
 
   constructor(
     private itemInputService: ItemInputService,
+    private templateService: TemplateService,
     private cd: ChangeDetectorRef
   ) {}
 
@@ -48,7 +50,7 @@ export class ItemInputComponent implements OnInit, OnDestroy {
         document.getElementById('field_' + addedIndex).focus();
       }
     );
-    this.templateSelectSub = this.itemInputService.templateSelectSubject.subscribe(
+    this.templateSelectSub = this.templateService.selectTemplateSubject.subscribe(
       () => {
         this.cd.detectChanges();
         document.getElementById('field_0').focus();

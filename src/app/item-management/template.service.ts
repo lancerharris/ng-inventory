@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ItemInputService } from './item-input.service';
 
 @Injectable({
@@ -22,7 +22,9 @@ export class TemplateService {
     },
   };
 
-  public templatesSubject = new Subject<void>();
+  public addTemplateSubject = new Subject<void>();
+  public selectTemplateSubject = new Subject<void>();
+
   constructor(private itemInputService: ItemInputService) {}
 
   addToTemplates(templateName: string) {
@@ -35,6 +37,6 @@ export class TemplateService {
       this.localTemplates[templateName]['longFieldIndex'] = longFieldIndex;
     }
     this.currentTemplate = templateName;
-    this.templatesSubject.next();
+    this.addTemplateSubject.next();
   }
 }

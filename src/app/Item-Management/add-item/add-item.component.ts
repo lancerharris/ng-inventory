@@ -44,9 +44,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.addingTemplate = this.router.url === '/items/add-template';
     this.totalInputs = this.itemInputService.totalInputs;
     this.templates = Object.keys(this.templateService.localTemplates);
-    this.templatesSub = this.templateService.templatesSubject.subscribe(() => {
-      this.templates = Object.keys(this.templateService.localTemplates);
-    });
+    this.templatesSub = this.templateService.addTemplateSubject.subscribe(
+      () => {
+        this.templates = Object.keys(this.templateService.localTemplates);
+      }
+    );
   }
 
   onTopToolsClick(event) {
@@ -114,7 +116,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.sidenav.close();
   }
 
-  onTemplateSelect(template) {
+  onSelectTemplate(template) {
     this.templateService.currentTemplate = template;
     this.itemInputService.removeInputs(0, this.totalInputs.length);
     const fields = this.templateService.localTemplates[template]['fields'];
@@ -136,7 +138,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     } else {
       this.itemInputService.setLongFieldIndex(-1);
     }
-    this.itemInputService.templateSelectSubject.next();
+    this.templateService.selectTemplateSubject.next();
   }
 
   ngOnDestroy(): void {
