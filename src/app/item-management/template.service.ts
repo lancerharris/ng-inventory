@@ -18,7 +18,7 @@ export class TemplateService {
     },
     Bottoms: {
       fields: ['category', 'price', 'color', 'Dress Length'],
-      values: ['', '', '', '', ''],
+      values: ['', '', '', ''],
     },
   };
 
