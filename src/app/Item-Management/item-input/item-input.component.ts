@@ -83,13 +83,12 @@ export class ItemInputComponent implements OnInit, OnDestroy {
     const longFieldIndex = this.itemInputService.getLongFieldIndex();
     const value = this.itemInputService.itemValues[index] || '';
     if (longFieldIndex > -1) {
-      this.itemInputService.itemValues[index] = value.substring(
-        0,
-        this.itemInputService.MAX_VALUE_LENGTH
-      );
+      this.itemInputService.itemValues[index] = value
+        .substring(0, this.itemInputService.MAX_VALUE_LENGTH)
+        .trim();
       this.itemInputService.setLongFieldIndex(-1);
     } else {
-      this.itemInputService.itemValues[index] = value;
+      this.itemInputService.itemValues[index] = value.trim();
       this.itemInputService.setLongFieldIndex(index);
     }
   }
@@ -178,10 +177,11 @@ export class ItemInputComponent implements OnInit, OnDestroy {
   }
 
   onInputKeydown(event, startIndex, inputStatus) {
+    // event.preventDefault();
     console.log(event);
     inputStatus = inputStatus === 'inField' ? 'field_' : 'value_';
 
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && !event.shiftKey) {
       this.onInputEnterKey(startIndex, inputStatus);
     } else if (
       event.ctrlKey &&
