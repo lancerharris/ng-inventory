@@ -2,7 +2,12 @@
 <div mat-dialog-content>
   <mat-form-field>
     <mat-label>Template name</mat-label>
-    <input matInput [(ngModel)]="data.templateName" />
+    <input
+      matInput
+      cdkFocusInitial
+      [(ngModel)]="data.templateName"
+      (keydown.enter)="saveButton.focus()"
+    />
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
@@ -11,7 +16,7 @@
     mat-stroked-button
     [mat-dialog-close]="data.templateName"
     color="primary"
-    cdkFocusInitial
+    #saveButton
   >
     Save
   </button>

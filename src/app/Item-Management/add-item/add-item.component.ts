@@ -126,7 +126,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
     const longFieldIndex = this.templateService.localTemplates[template][
       'longFieldIndex'
     ];
-    console.log(this.templateService.localTemplates[template]);
     const inputLength =
       fields.length > values.length ? fields.length : values.length;
     for (let i = 0; i < inputLength; i++) {
