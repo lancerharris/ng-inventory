@@ -37,6 +37,22 @@
       </nav>
       <div class="flex-spacer"></div>
       <mat-divider vertical="true"></mat-divider>
+
+      <a
+        mat-button
+        class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+        href="https://www.ebay.com/sh/ovw"
+      >
+        <span>Ebay</span>
+      </a>
+      <a
+        mat-button
+        class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+        href="https://poshmark.com/feed"
+      >
+        <span>Poshmark</span>
+      </a>
+      <mat-divider vertical="true"></mat-divider>
       <a
         routerLink="/auth"
         routerLinkActive="mat-accent"
@@ -70,21 +86,6 @@
       >
         <span>Logout</span>
       </a>
-      <mat-divider vertical="true"></mat-divider>
-      <a
-        mat-button
-        class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
-        href="https://www.ebay.com/sh/ovw"
-      >
-        <span>Ebay</span>
-      </a>
-      <a
-        mat-button
-        class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
-        href="https://poshmark.com/feed"
-      >
-        <span>Poshmark</span>
-      </a>
     </div>
     <button
       mat-icon-button
@@ -112,6 +113,21 @@
       class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
     >
       <span>Add Item</span>
+    </a>
+    <mat-divider></mat-divider>
+    <a
+      mat-menu-item
+      class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+      href="https://www.ebay.com/sh/ovw"
+    >
+      <span>Ebay</span>
+    </a>
+    <a
+      mat-menu-item
+      class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
+      href="https://poshmark.com/feed"
+    >
+      <span>Poshmark</span>
     </a>
     <mat-divider></mat-divider>
     <a
@@ -146,21 +162,6 @@
       (click)="onLogout()"
     >
       <span>Logout</span>
-    </a>
-    <mat-divider></mat-divider>
-    <a
-      mat-menu-item
-      class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
-      href="https://www.ebay.com/sh/ovw"
-    >
-      <span>Ebay</span>
-    </a>
-    <a
-      mat-menu-item
-      class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base"
-      href="https://poshmark.com/feed"
-    >
-      <span>Poshmark</span>
     </a>
   </mat-menu>
 </mat-toolbar>
