@@ -53,9 +53,21 @@ export class ItemInputComponent implements OnInit, OnDestroy {
     this.templateSelectSub = this.templateService.selectTemplateSubject.subscribe(
       () => {
         this.cd.detectChanges();
-        document.getElementById('field_0').focus();
-        if (this.itemInputService.itemFields[0]) {
-          this.onInputEnterKey(0, 'field_');
+
+        // if all fields and values full, select first value field
+        const emptyField = this.itemInputService.itemFields.findIndex(
+          (el) => el === ''
+        );
+        const emptyValue = this.itemInputService.itemValues.findIndex(
+          (el) => el === ''
+        );
+        if (emptyField !== -1 || emptyValue !== -1) {
+          document.getElementById('field_0').focus();
+          if (emptyField !== 0) {
+            this.onInputEnterKey(0, 'field_');
+          }
+        } else {
+          (document.getElementById('value_0') as HTMLInputElement).select();
         }
       }
     );
@@ -144,16 +156,20 @@ export class ItemInputComponent implements OnInit, OnDestroy {
       ) {
         startIndex = -1;
       }
-      document
-        .getElementById(nextInputStatus + (startIndex + rowOffset))
-        .focus();
+      const input = <HTMLInputElement>(
+        document.getElementById(nextInputStatus + (startIndex + rowOffset))
+      );
+      input.focus;
+      input.select();
     } else if (columnOffset < 0) {
       if (inputStatus === 'field_' && startIndex === 0) {
         startIndex = this.totalInputs.length;
       }
-      document
-        .getElementById(nextInputStatus + (startIndex + rowOffset - 1))
-        .focus();
+      const input = <HTMLInputElement>(
+        document.getElementById(nextInputStatus + (startIndex + rowOffset - 1))
+      );
+      input.focus();
+      input.setSelectionRange(0, input.value.length);
     }
   }
 
