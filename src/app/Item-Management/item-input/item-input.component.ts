@@ -53,7 +53,6 @@ export class ItemInputComponent implements OnInit, OnDestroy {
     this.templateSelectSub = this.templateService.selectTemplateSubject.subscribe(
       () => {
         this.cd.detectChanges();
-
         // if all fields and values full, select first value field
         const emptyField = this.itemInputService.itemFields.findIndex(
           (el) => el === ''
@@ -67,7 +66,7 @@ export class ItemInputComponent implements OnInit, OnDestroy {
             this.onInputEnterKey(0, 'field_');
           }
         } else {
-          (document.getElementById('value_0') as HTMLInputElement).select();
+          (document.getElementById('value_0') as HTMLInputElement).focus();
         }
       }
     );
@@ -138,10 +137,16 @@ export class ItemInputComponent implements OnInit, OnDestroy {
 
   onInputUpDown(eventKey: string, startIndex: number, inputStatus: string) {
     const direction: number = eventKey === 'ArrowUp' ? -1 : 1;
-    if (startIndex > 0 && direction < 0) {
+    if (startIndex === 0 && direction < 0) {
+      document
+        .getElementById(inputStatus + (this.totalInputs.length - 1))
+        .focus();
+    } else if (startIndex > 0 && direction < 0) {
       document.getElementById(inputStatus + (startIndex + direction)).focus();
     } else if (startIndex < this.totalInputs.length - 1 && direction > 0) {
       document.getElementById(inputStatus + (startIndex + direction)).focus();
+    } else if (startIndex === this.totalInputs.length - 1 && direction > 0) {
+      document.getElementById(inputStatus + 0).focus();
     }
   }
 
@@ -156,11 +161,11 @@ export class ItemInputComponent implements OnInit, OnDestroy {
       ) {
         startIndex = -1;
       }
+
       const input = <HTMLInputElement>(
         document.getElementById(nextInputStatus + (startIndex + rowOffset))
       );
-      input.focus;
-      input.select();
+      input.focus();
     } else if (columnOffset < 0) {
       if (inputStatus === 'field_' && startIndex === 0) {
         startIndex = this.totalInputs.length;
@@ -169,21 +174,24 @@ export class ItemInputComponent implements OnInit, OnDestroy {
         document.getElementById(nextInputStatus + (startIndex + rowOffset - 1))
       );
       input.focus();
-      input.setSelectionRange(0, input.value.length);
     }
   }
 
   onInputKeydown(event, startIndex, inputStatus) {
+    console.log(event);
     inputStatus = inputStatus === 'inField' ? 'field_' : 'value_';
+
     if (event.key === 'Enter') {
       this.onInputEnterKey(startIndex, inputStatus);
     } else if (
       event.ctrlKey &&
+      event.altKey &&
       (event.key === 'ArrowUp' || event.key === 'ArrowDown')
     ) {
       this.onInputUpDown(event.key, startIndex, inputStatus);
     } else if (
       event.ctrlKey &&
+      event.altKey &&
       (event.key === 'ArrowLeft' || event.key === 'ArrowRight')
     ) {
       this.onInputLeftRight(event.key, startIndex, inputStatus);

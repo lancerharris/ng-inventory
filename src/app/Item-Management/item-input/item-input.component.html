@@ -18,8 +18,9 @@
         class="input__content-field"
         id="{{ 'field_' + i }}"
         name="{{ 'field_' + i }}"
+        appInputSelect
         [(ngModel)]="itemFields[i]"
-        (keydown)="onInputKeydown($event, i, 'inField')"
+        (keyup)="onInputKeydown($event, i, 'inField')"
       />
 
       <input
@@ -28,8 +29,9 @@
         class="input__content-value mat-body"
         id="{{ 'value_' + i }}"
         name="{{ 'value_' + i }}"
+        appInputSelect
         [(ngModel)]="itemValues[i]"
-        (keydown)="onInputKeydown($event, i, 'inValue')"
+        (keyup)="onInputKeydown($event, i, 'inValue')"
       />
       <textarea
         *ngIf="longFieldIndex === i"
@@ -40,8 +42,9 @@
         id="{{ 'value_' + i }}"
         name="{{ 'value_' + i }}"
         (input)="autoGrow($event)"
+        appInputSelect
         [(ngModel)]="itemValues[i]"
-        (keydown)="onInputKeydown($event, i, 'inValue')"
+        (keyup)="onInputKeydown($event, i, 'inValue')"
       ></textarea>
 
       <!-- <mat-form-field class=".col-1">
