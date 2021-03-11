@@ -58,15 +58,17 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   onAddInput() {
-    this.itemInputService.AddInput();
     this.sidenav.close();
+    this.itemInputService.AddInput();
   }
 
   onEditClick() {
+    this.sidenav.close();
     this.editMode = !this.editMode;
   }
 
   onDelete() {
+    this.sidenav.close();
     this.itemInputService.setLongFieldIndex(-1);
     this.itemInputService.removeInputs(0, this.totalInputs.length);
   }
@@ -124,6 +126,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     const longFieldIndex = this.templateService.localTemplates[template][
       'longFieldIndex'
     ];
+    console.log(this.templateService.localTemplates[template]);
     const inputLength =
       fields.length > values.length ? fields.length : values.length;
     for (let i = 0; i < inputLength; i++) {
@@ -139,6 +142,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.itemInputService.setLongFieldIndex(-1);
     }
     this.templateService.selectTemplateSubject.next();
+    this.sidenav.close();
   }
 
   ngOnDestroy(): void {
