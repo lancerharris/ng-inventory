@@ -24,6 +24,7 @@ import { ReviewItemComponent } from './review-item/review-item.component';
 import { ItemManagementRoutingModule } from './item-management-routing.module';
 import { ItemInputComponent } from './item-input/item-input.component';
 import { DialogComponent } from './dialog/dialog.component';
+import { InputSelectDirective } from './input-select.directive';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { DialogComponent } from './dialog/dialog.component';
     ReviewItemComponent,
     ItemInputComponent,
     DialogComponent,
+    InputSelectDirective,
   ],
   imports: [
     CommonModule,
