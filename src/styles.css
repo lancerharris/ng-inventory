@@ -15,3 +15,9 @@ body {
 body {
   overflow-x: hidden; /* Hide horizontal scrollbar */
 }
+
+/* stop material dialog from giving extra scrollbar */
+.cdk-global-scrollblock {
+  position: static;
+  overflow-y: hidden;
+}
