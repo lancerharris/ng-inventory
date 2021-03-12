@@ -11,10 +11,10 @@ export class DialogYesNoComponent {
   constructor(
     public dialogRef: MatDialogRef<AddItemComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: { title: string; templateName: string }
+    public data: { title1: string; title2: string; title3: string }
   ) {}
 
-  onCancel(): void {
+  onNo(): void {
     this.dialogRef.close();
   }
 }

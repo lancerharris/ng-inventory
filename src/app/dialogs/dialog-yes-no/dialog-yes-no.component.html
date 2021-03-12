@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>
+  {{ data.title1 }}<span>{{ data.title2 }}</span
+  >{{ data.title3 }}
+</h1>
+<div mat-dialog-actions>
+  <button mat-stroked-button (click)="onNo()" color="primary">No</button>
+  <button
+    mat-flat-button
+    [mat-dialog-close]="'overwrite'"
+    color="accent"
+    #saveButton
+  >
+    Yes
+  </button>
+</div>
