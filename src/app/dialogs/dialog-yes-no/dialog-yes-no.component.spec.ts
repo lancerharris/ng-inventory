@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DialogComponent } from './dialog.component';
+import { DialogYesNoComponent } from './dialog-yes-no.component';
 
-describe('DialogComponent', () => {
-  let component: DialogComponent;
-  let fixture: ComponentFixture<DialogComponent>;
+describe('DialogYesNoComponent', () => {
+  let component: DialogYesNoComponent;
+  let fixture: ComponentFixture<DialogYesNoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DialogComponent ]
+      declarations: [ DialogYesNoComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DialogComponent);
+    fixture = TestBed.createComponent(DialogYesNoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
