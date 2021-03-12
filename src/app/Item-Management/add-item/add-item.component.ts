@@ -105,7 +105,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   onSaveTemplate(): void {
     const dialogRef = this.dialog.open(DialogComponent, {
-      width: '250px',
+      width: '17rem',
       restoreFocus: false,
       data: { templateName: '' },
     });

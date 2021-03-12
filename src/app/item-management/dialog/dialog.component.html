@@ -1,7 +1,6 @@
 <h1 mat-dialog-title>Name your Template</h1>
 <div mat-dialog-content>
   <mat-form-field>
-    <mat-label>Template name</mat-label>
     <input
       matInput
       cdkFocusInitial
@@ -13,11 +12,11 @@
 <div mat-dialog-actions>
   <button mat-stroked-button (click)="onCancel()" color="warn">Cancel</button>
   <button
-    mat-stroked-button
+    mat-flat-button
     [mat-dialog-close]="data.templateName"
-    color="primary"
+    color="accent"
     #saveButton
   >
-    Save
+    Save Template
   </button>
 </div>
