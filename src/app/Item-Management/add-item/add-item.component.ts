@@ -13,9 +13,10 @@ import { MatSidenav } from '@angular/material/sidenav';
 
 import { ItemManagementService } from '../item-management.service';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent } from '../dialog/dialog.component';
+import { DialogActionCancelComponent } from '../../dialogs/dialog-action-cancel/dialog-action-cancel.component';
 import { ItemInputService } from '../item-input.service';
 import { TemplateService } from '../template.service';
+import { DialogYesNoComponent } from 'src/app/dialogs/dialog-yes-no/dialog-yes-no.component';
 
 @Component({
   selector: 'app-add-item',
@@ -103,15 +104,35 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.sidenav.close();
   }
 
+  overwrite(templateName: string): void {
+    const dialogRef = this.dialog.open(DialogYesNoComponent, {
+      width: '22rem',
+      restoreFocus: false,
+      data: {
+        title: 'Would you like to overwrite the existing template?',
+        templateName: templateName,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {});
+  }
+
   onSaveTemplate(): void {
-    const dialogRef = this.dialog.open(DialogComponent, {
+    const dialogRef = this.dialog.open(DialogActionCancelComponent, {
       width: '17rem',
       restoreFocus: false,
-      data: { templateName: '' },
+      data: { title: 'Name your template', templateName: '' },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
+        // const templateExists = this.templateService.checkTemplateExists(result);
+        const templateExists = true;
+        if (templateExists) {
+          this.overwrite(result);
+          // todo: modal popup asking to overwrite
+        }
+        console.log(result);
         this.templateService.addToTemplates(result);
       }
     });
