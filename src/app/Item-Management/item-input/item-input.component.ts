@@ -54,13 +54,19 @@ export class ItemInputComponent implements OnInit, OnDestroy {
       () => {
         this.cd.detectChanges();
         // if all fields and values full, select first value field
+
+        const fieldsLength = this.itemInputService.itemFields.length;
+        const valuesLength = this.itemInputService.itemValues.length;
+
         const emptyField = this.itemInputService.itemFields.findIndex(
           (el) => el === ''
         );
         const emptyValue = this.itemInputService.itemValues.findIndex(
           (el) => el === ''
         );
-        if (emptyField !== -1 || emptyValue !== -1) {
+        if (fieldsLength === 0 && valuesLength === 0) {
+          document.getElementById('field_0').focus();
+        } else if (emptyField !== -1 || emptyValue !== -1) {
           document.getElementById('field_0').focus();
           if (emptyField !== 0) {
             this.onInputEnterKey(0, 'field_');
