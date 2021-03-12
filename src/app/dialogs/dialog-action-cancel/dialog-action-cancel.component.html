@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>{{ data.title }}</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input
+      matInput
+      cdkFocusInitial
+      [(ngModel)]="data.templateName"
+      (keydown.enter)="saveButton.focus()"
+    />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-stroked-button (click)="onCancel()" color="warn">Cancel</button>
+  <button
+    mat-flat-button
+    [mat-dialog-close]="data.templateName"
+    color="accent"
+    #saveButton
+  >
+    Save Template
+  </button>
+</div>
