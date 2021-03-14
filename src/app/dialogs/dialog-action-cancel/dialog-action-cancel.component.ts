@@ -11,7 +11,7 @@ export class DialogActionCancelComponent {
   constructor(
     public dialogRef: MatDialogRef<AddItemComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: { title: string; templateName: string }
+    public data: { title: string; templateName: string; cancelText: string }
   ) {}
 
   onCancel(): void {
