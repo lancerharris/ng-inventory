@@ -19,9 +19,12 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
+import { SnackbarSimpleMessageComponent } from './snackbar-simple-message/snackbar-simple-message.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [SnackbarSimpleMessageComponent],
   imports: [
     CommonModule,
     MatToolbarModule,
@@ -42,6 +45,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatButtonToggleModule,
     MatCardModule,
     MatFormFieldModule,
+    MatSnackBarModule,
   ],
   exports: [
     MatToolbarModule,
@@ -62,6 +66,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatButtonToggleModule,
     MatCardModule,
     MatFormFieldModule,
+    MatSnackBarModule,
   ],
 })
 export class MaterialsModule {}

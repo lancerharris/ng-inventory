@@ -21,3 +21,9 @@ body {
   position: static;
   overflow-y: hidden;
 }
+
+/* overwrite material styling */
+.mat-snack-bar-container {
+  text-align: center;
+  min-width: 0 !important;
+}
