@@ -35,7 +35,9 @@ export class AuthComponent implements OnInit, OnDestroy {
     const password = form.value.password;
 
     let loginObs: Observable<{
-      data: { login: { token: string; userId: string; minsToExpiration: string } };
+      data: {
+        login: { token: string; userId: string; minsToExpiration: string };
+      };
     }> = this.authService.login(email, password);
 
     if (this.authService.isSigningUp) {
@@ -52,7 +54,7 @@ export class AuthComponent implements OnInit, OnDestroy {
               resData.data.login.minsToExpiration
             );
             this.authService.setIsAuthenticatedTo(true);
-            this.authService.setAutoLogout(resData.data.login.minsToExpiration)
+            this.authService.setAutoLogout(resData.data.login.minsToExpiration);
             this.router.navigate(['/items']);
           });
         },
@@ -63,14 +65,13 @@ export class AuthComponent implements OnInit, OnDestroy {
       );
     } else {
       loginObs.subscribe((resData) => {
-        console.log(resData);
         this.authService.setLocalStorage(
           resData.data.login.token,
           resData.data.login.userId,
           resData.data.login.minsToExpiration
         );
         this.authService.setIsAuthenticatedTo(true);
-        this.authService.setAutoLogout(resData.data.login.minsToExpiration)
+        this.authService.setAutoLogout(resData.data.login.minsToExpiration);
         this.router.navigate(['/items']);
       });
     }
