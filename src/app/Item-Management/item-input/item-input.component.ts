@@ -184,7 +184,7 @@ export class ItemInputComponent implements OnInit, OnDestroy {
 
   onInputKeydown(event, startIndex, inputStatus) {
     // event.preventDefault();
-    console.log(event);
+
     inputStatus = inputStatus === 'inField' ? 'field_' : 'value_';
 
     if (event.key === 'Enter' && !event.shiftKey) {

@@ -17,6 +17,8 @@ import { DialogActionCancelComponent } from '../../dialogs/dialog-action-cancel/
 import { ItemInputService } from '../item-input.service';
 import { TemplateService } from '../template.service';
 import { DialogYesNoComponent } from 'src/app/dialogs/dialog-yes-no/dialog-yes-no.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarSimpleMessageComponent } from 'src/app/materials/snackbar-simple-message/snackbar-simple-message.component';
 
 @Component({
   selector: 'app-add-item',
@@ -32,19 +34,25 @@ export class AddItemComponent implements OnInit, OnDestroy {
   public editMode: boolean = false;
   public totalInputs: number[];
   private templatesSub: Subscription;
+  private DURATION_IN_SECONDS = 3;
 
   constructor(
     private itemManager: ItemManagementService,
     private itemInputService: ItemInputService,
     private templateService: TemplateService,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.addingTemplate = this.router.url === '/items/add-template';
     this.totalInputs = this.itemInputService.totalInputs;
-    this.templates = Object.keys(this.templateService.localTemplates);
+    if (!this.templateService.localTemplates) {
+      this.templateService.getTemplates();
+    } else {
+      this.templates = Object.keys(this.templateService.localTemplates);
+    }
     this.templatesSub = this.templateService.addTemplateSubject.subscribe(
       () => {
         this.templates = Object.keys(this.templateService.localTemplates);
@@ -60,6 +68,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   onAddInput() {
     this.sidenav.close();
+    this.editMode = false;
     this.itemInputService.AddInput();
   }
 
@@ -70,11 +79,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   onDelete() {
     this.sidenav.close();
+    this.editMode = false;
     this.itemInputService.setLongFieldIndex(-1);
     this.itemInputService.removeInputs(0, this.totalInputs.length);
   }
 
   onSubmit() {
+    this.editMode = false;
     let form: NgForm;
     const fields: string[] = [];
     const values: string[] = [];
@@ -104,36 +115,60 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.sidenav.close();
   }
 
-  overwrite(templateName: string): void {
+  overwriteTemplate(templateName: string): void {
     const dialogRef = this.dialog.open(DialogYesNoComponent, {
       width: '22rem',
+      autoFocus: false,
       restoreFocus: false,
       data: {
-        title: 'Would you like to overwrite the existing template?',
-        templateName: templateName,
+        title1: 'Are you sure you want to overwrite the ',
+        title2: templateName,
+        title3: ' template?',
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'overwrite') {
+        this.templateService.addToTemplates(templateName);
+      } else {
+        this._snackBar.openFromComponent(SnackbarSimpleMessageComponent, {
+          duration: this.DURATION_IN_SECONDS * 1000,
+          data: {
+            onNoText: 'Template Save Canceled',
+          },
+        });
+      }
+    });
   }
 
   onSaveTemplate(): void {
+    this.editMode = false;
     const dialogRef = this.dialog.open(DialogActionCancelComponent, {
       width: '17rem',
+
       restoreFocus: false,
-      data: { title: 'Name your template', templateName: '' },
+      data: {
+        title: 'Name your template',
+        templateName: '',
+        cancelText: 'Template Save Canceled',
+      },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        // const templateExists = this.templateService.checkTemplateExists(result);
-        const templateExists = true;
+        const templateExists = this.templateService.checkTemplateExists(result);
         if (templateExists) {
-          this.overwrite(result);
-          // todo: modal popup asking to overwrite
+          this.overwriteTemplate(result);
+        } else {
+          this.templateService.addToTemplates(result);
         }
-        console.log(result);
-        this.templateService.addToTemplates(result);
+      } else {
+        this._snackBar.openFromComponent(SnackbarSimpleMessageComponent, {
+          duration: this.DURATION_IN_SECONDS * 1000,
+          data: {
+            onNoText: 'Template Save Canceled',
+          },
+        });
       }
     });
     this.sidenav.close();
@@ -147,6 +182,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     const longFieldIndex = this.templateService.localTemplates[template][
       'longFieldIndex'
     ];
+
     const inputLength =
       fields.length > values.length ? fields.length : values.length;
     for (let i = 0; i < inputLength; i++) {
@@ -156,7 +192,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.itemInputService.itemFields.push(fields[i]);
       this.itemInputService.itemValues.push(values[i]);
     }
-    if (longFieldIndex) {
+    if (longFieldIndex > -1) {
       this.itemInputService.setLongFieldIndex(longFieldIndex);
     } else {
       this.itemInputService.setLongFieldIndex(-1);
