@@ -23,43 +23,71 @@ export class TemplateService {
     return this.localTemplates[templateName] ? true : false;
   }
 
-  addToTemplates(templateName: string) {
+  addToTemplates(templateName: string, overwrite: boolean = false) {
     const fields = ['name', ...this.itemInputService.itemFields];
     const values = [templateName, ...this.itemInputService.itemValues];
     const longFieldIndex = this.itemInputService.getLongFieldIndex().toString();
 
-    const graphqlQuery = {
-      query: `
-          mutation addToTemplates($userId: String!, $gemInput: GemInputData!, $longFieldIndex: String, $isTemplate: Boolean!) {
-            createGem(userId: $userId, gemInput: $gemInput, longFieldIndex: $longFieldIndex, isTemplate: $isTemplate) {
-              fields
-              values
+    let graphqlQuery;
+    if (overwrite) {
+      graphqlQuery = {
+        query: `
+            mutation addToTemplates($userId: String!, $id: ID!, $gemInput: GemInputData!, $longFieldIndex: String, $isTemplate: Boolean!) {
+              replaceGem(userId: $userId, id: $id gemInput: $gemInput, longFieldIndex: $longFieldIndex, isTemplate: $isTemplate) {
+                fields
+                values
+              }
             }
-          }
-        `,
-      variables: {
-        userId: localStorage.getItem('userId'),
-        gemInput: { fields, values },
-        longFieldIndex: longFieldIndex,
-        isTemplate: true,
-      },
-    };
+          `,
+        variables: {
+          userId: localStorage.getItem('userId'),
+          id: this.localTemplates[templateName].id,
+          gemInput: { fields, values },
+          longFieldIndex: longFieldIndex,
+          isTemplate: true,
+        },
+      };
+    } else {
+      graphqlQuery = {
+        query: `
+            mutation addToTemplates($userId: String!, $gemInput: GemInputData!, $longFieldIndex: String, $isTemplate: Boolean!) {
+              createGem(userId: $userId, gemInput: $gemInput, longFieldIndex: $longFieldIndex, isTemplate: $isTemplate) {
+                fields
+                values
+              }
+            }
+          `,
+        variables: {
+          userId: localStorage.getItem('userId'),
+          gemInput: { fields, values },
+          longFieldIndex: longFieldIndex,
+          isTemplate: true,
+        },
+      };
+    }
+
     this.http
-      .post<{ data: { createGem: { fields: string[]; values: string[] } } }>(
-        'http://localhost:3000/graphql',
-        JSON.stringify(graphqlQuery),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      )
+      .post<{
+        data: { [key: string]: { fields: string[]; values: string[] } };
+      }>('http://localhost:3000/graphql', JSON.stringify(graphqlQuery), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
       .pipe(catchError(this.handleError))
       .subscribe((resData) => {
+        const operation = overwrite ? 'replaceGem' : 'createGem';
+        const idIndex = resData.data[operation].fields.findIndex(
+          (el) => el === '_id'
+        );
+
+        const templateId = resData.data[operation].values[idIndex];
         this.localTemplates[templateName] = {
-          fields: fields.slice(1),
+          fields: fields.slice(1), // slice at 1 to drop the name field
           values: values.slice(1),
+          id: templateId,
         };
+
         if (+longFieldIndex > -1) {
           this.localTemplates[templateName]['longFieldIndex'] = +longFieldIndex;
         }
@@ -101,22 +129,29 @@ export class TemplateService {
         resData.data.getGems.gems.forEach((gem) => {
           const nameIndex = gem.fields.findIndex((el) => el === 'name');
           const name = gem.values[nameIndex];
+          gem.fields.splice(nameIndex, 1);
+          gem.values.splice(nameIndex, 1);
+
           const longFieldIndexIndex = gem.fields.findIndex(
             (el) => el === 'longFieldIndex'
           );
-
           let longFieldIndex;
           if (longFieldIndexIndex > -1) {
             longFieldIndex = gem.values[longFieldIndexIndex];
             gem.fields.splice(longFieldIndexIndex, 1);
             gem.values.splice(longFieldIndexIndex, 1);
           }
-          gem.fields.splice(nameIndex, 1);
-          gem.values.splice(nameIndex, 1);
+
+          const idIndex = gem.fields.findIndex((el) => el === '_id');
+          const templateId = gem.values[idIndex];
+          gem.fields.splice(idIndex, 1);
+          gem.values.splice(idIndex, 1);
+
           this.localTemplates[name] = {
             fields: gem.fields,
             values: gem.values,
             longFieldIndex: longFieldIndex ? +longFieldIndex : -1,
+            id: templateId,
           };
         });
 

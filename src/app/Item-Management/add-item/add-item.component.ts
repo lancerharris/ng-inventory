@@ -129,7 +129,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'overwrite') {
-        this.templateService.addToTemplates(templateName);
+        this.templateService.addToTemplates(templateName, true);
       } else {
         this._snackBar.openFromComponent(SnackbarSimpleMessageComponent, {
           duration: this.DURATION_IN_SECONDS * 1000,
@@ -160,7 +160,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
         if (templateExists) {
           this.overwriteTemplate(result);
         } else {
-          this.templateService.addToTemplates(result);
+          this.templateService.addToTemplates(result, false);
         }
       } else {
         this._snackBar.openFromComponent(SnackbarSimpleMessageComponent, {
