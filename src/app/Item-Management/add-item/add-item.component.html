@@ -4,7 +4,11 @@
   (click)="onTopToolsClick($event)"
 >
   <div class="left-tools">
-    <button mat-stroked-button color="primary" (click)="sidenav.toggle()">
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="sidenav.toggle(); editMode = false"
+    >
       Templates
     </button>
   </div>
