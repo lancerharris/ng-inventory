@@ -28,10 +28,29 @@ export class TemplateService {
   addToTemplates(templateName: string, overwrite: boolean = false) {
     const fields = ['name', ...this.itemInputService.itemFields];
     const values = [templateName, ...this.itemInputService.itemValues];
+    this.createItem(overwrite, true, fields, values, templateName);
+  }
+
+  createItem(
+    overwrite: boolean = false,
+    isTemplate: boolean,
+    inputFields?: string[],
+    inputValues?: string[],
+    templateName?: string
+  ) {
+    const fields = inputFields
+      ? inputFields
+      : [...this.itemInputService.itemFields];
+    const values = inputValues
+      ? inputValues
+      : [...this.itemInputService.itemValues];
     const longFieldIndex = this.itemInputService.getLongFieldIndex().toString();
 
     let graphqlQuery;
     if (overwrite) {
+      const id = isTemplate
+        ? this.localTemplates[templateName].id
+        : 'need to add item id here';
       graphqlQuery = {
         query: `
             mutation addToTemplates($userId: String!, $id: ID!, $gemInput: GemInputData!, $longFieldIndex: String, $isTemplate: Boolean!) {
@@ -43,10 +62,10 @@ export class TemplateService {
           `,
         variables: {
           userId: localStorage.getItem('userId'),
-          id: this.localTemplates[templateName].id,
+          id: id,
           gemInput: { fields, values },
           longFieldIndex: longFieldIndex,
-          isTemplate: true,
+          isTemplate: isTemplate,
         },
       };
     } else {
@@ -63,7 +82,7 @@ export class TemplateService {
           userId: localStorage.getItem('userId'),
           gemInput: { fields, values },
           longFieldIndex: longFieldIndex,
-          isTemplate: true,
+          isTemplate: isTemplate,
         },
       };
     }
@@ -83,18 +102,33 @@ export class TemplateService {
           (el) => el === '_id'
         );
 
-        const templateId = resData.data[operation].values[idIndex];
-        this.localTemplates[templateName] = {
-          fields: fields.slice(1), // slice at 1 to drop the name field
-          values: values.slice(1),
-          id: templateId,
-        };
+        if (isTemplate) {
+          const templateId = resData.data[operation].values[idIndex];
+          this.localTemplates[templateName] = {
+            fields: fields.slice(1), // slice at 1 to drop the name field
+            values: values.slice(1),
+            id: templateId,
+          };
 
-        if (+longFieldIndex > -1) {
-          this.localTemplates[templateName]['longFieldIndex'] = +longFieldIndex;
+          if (+longFieldIndex > -1) {
+            this.localTemplates[templateName][
+              'longFieldIndex'
+            ] = +longFieldIndex;
+          }
+          this.currentTemplate = templateName;
+          this.localTemplatesSubject.next();
+          this.messagingService.simpleMessage(
+            'The ',
+            templateName,
+            ' template has been added'
+          );
+        } else {
+          this.messagingService.simpleMessage('Item Saved');
         }
-        this.currentTemplate = templateName;
-        this.localTemplatesSubject.next();
+        this.itemInputService.removeInputs(
+          0,
+          this.itemInputService.totalInputs.length
+        );
       });
   }
 

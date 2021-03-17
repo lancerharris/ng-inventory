@@ -11,7 +11,6 @@ import { NgForm } from '@angular/forms';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { MatSidenav } from '@angular/material/sidenav';
 
-import { ItemManagementService } from '../item-management.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogActionCancelComponent } from '../../dialogs/dialog-action-cancel/dialog-action-cancel.component';
 import { ItemInputService } from '../item-input.service';
@@ -35,10 +34,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   public totalInputs: number[];
   private templatesSub: Subscription;
-  private DURATION_IN_SECONDS = 3;
 
   constructor(
-    private itemManager: ItemManagementService,
     private itemInputService: ItemInputService,
     private templateService: TemplateService,
     private router: Router,
@@ -106,34 +103,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.itemInputService.removeInputs(0, this.totalInputs.length);
   }
 
-  onSubmit() {
+  onSaveItem() {
     this.editMode = false;
-    let form: NgForm;
-    const fields: string[] = [];
-    const values: string[] = [];
 
-    this.totalInputs.forEach((index) => {
-      const fieldInput = document.getElementById(
-        'field_' + index
-      ) as HTMLInputElement;
-      const valueInput = document.getElementById(
-        'value_' + index
-      ) as HTMLInputElement;
-      fields[index] = fieldInput.value;
-      values[index] = valueInput.value;
-    });
-
-    const gemInput = { fields: fields, values: values };
-    const longField = form.value.longField ? form.value.longField : null;
-
-    let addItemObs: Observable<{
-      data: { createGem: { fields: string[]; values: string[] } };
-    }> = this.itemManager.addItem(gemInput, longField);
-
-    addItemObs.subscribe((resData) => {});
-
-    // form.reset();
-
+    this.templateService.createItem(false, false);
     this.cleanUp();
   }
 
