@@ -20,6 +20,7 @@ import { DialogYesNoComponent } from 'src/app/dialogs/dialog-yes-no/dialog-yes-n
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarSimpleMessageComponent } from 'src/app/materials/snackbar-simple-message/snackbar-simple-message.component';
 import { DialogTemplateEditComponent } from 'src/app/dialogs/dialog-template-edit/dialog-template-edit.component';
+import { MessagingService } from 'src/app/services/messaging.service';
 
 @Component({
   selector: 'app-add-item',
@@ -44,7 +45,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private templateService: TemplateService,
     private router: Router,
     public dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    private messagingService: MessagingService
   ) {}
 
   ngOnInit(): void {
@@ -96,12 +97,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'renaming' || result === 'deleting') {
       } else {
-        this._snackBar.openFromComponent(SnackbarSimpleMessageComponent, {
-          duration: this.DURATION_IN_SECONDS * 1000,
-          data: {
-            mainText: 'Template Edit Canceled',
-          },
-        });
+        this.messagingService.simpleMessage('Template Edit Canceled');
       }
     });
   }
@@ -159,12 +155,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       if (result === 'overwrite') {
         this.templateService.addToTemplates(templateName, true);
       } else {
-        this._snackBar.openFromComponent(SnackbarSimpleMessageComponent, {
-          duration: this.DURATION_IN_SECONDS * 1000,
-          data: {
-            mainText: 'Template Save Canceled',
-          },
-        });
+        this.messagingService.simpleMessage('Template Save Canceled');
       }
     });
   }
@@ -191,12 +182,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
           this.templateService.addToTemplates(result, false);
         }
       } else {
-        this._snackBar.openFromComponent(SnackbarSimpleMessageComponent, {
-          duration: this.DURATION_IN_SECONDS * 1000,
-          data: {
-            mainText: 'Template Save Canceled',
-          },
-        });
+        this.messagingService.simpleMessage('Template Save Canceled');
       }
     });
     this.cleanUp();
