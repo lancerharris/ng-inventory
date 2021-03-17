@@ -94,13 +94,12 @@ export class AddItemComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result in ['renamed', 'deleted']) {
-        console.log('renamed or deleted!');
+      if (result === 'renaming' || result === 'deleting') {
       } else {
         this._snackBar.openFromComponent(SnackbarSimpleMessageComponent, {
           duration: this.DURATION_IN_SECONDS * 1000,
           data: {
-            onNoText: 'Template Edit Canceled',
+            mainText: 'Template Edit Canceled',
           },
         });
       }
@@ -163,7 +162,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this._snackBar.openFromComponent(SnackbarSimpleMessageComponent, {
           duration: this.DURATION_IN_SECONDS * 1000,
           data: {
-            onNoText: 'Template Save Canceled',
+            mainText: 'Template Save Canceled',
           },
         });
       }
@@ -195,7 +194,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this._snackBar.openFromComponent(SnackbarSimpleMessageComponent, {
           duration: this.DURATION_IN_SECONDS * 1000,
           data: {
-            onNoText: 'Template Save Canceled',
+            mainText: 'Template Save Canceled',
           },
         });
       }

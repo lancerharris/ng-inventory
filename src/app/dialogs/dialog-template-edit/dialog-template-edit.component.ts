@@ -13,6 +13,7 @@ import { AddItemComponent } from '../../item-management/add-item/add-item.compon
 export class DialogTemplateEditComponent implements OnInit {
   public firstFormGroup: FormGroup;
   public secondFormGroup: FormGroup;
+  public thirdFormGroup: FormGroup;
   public templates;
   public selectedTemplate: string;
   public action: string;
@@ -35,6 +36,9 @@ export class DialogTemplateEditComponent implements OnInit {
     this.secondFormGroup = this._formBuilder.group({
       secondCtrl: ['', Validators.required],
     });
+    this.thirdFormGroup = this._formBuilder.group({
+      thirdCtrl: ['', Validators.required],
+    });
   }
 
   onCancelEdit(): void {
@@ -51,11 +55,17 @@ export class DialogTemplateEditComponent implements OnInit {
     this.action = alreadySelected ? null : action;
   }
 
-  onSaveTemplate() {
-    this.templateService.renameTemplate(this.selectedTemplate);
+  onRenameTemplate() {
+    // console.log(this.selectedTemplate, this.thirdFormGroup.value.thirdCtrl);
+    this.templateService.renameTemplate(
+      this.selectedTemplate,
+      this.thirdFormGroup.value.thirdCtrl
+    );
+    this.dialogRef.close('renaming');
   }
 
   onDeleteTemplate() {
     this.templateService.deleteTemplate(this.selectedTemplate);
+    this.dialogRef.close('deleting');
   }
 }

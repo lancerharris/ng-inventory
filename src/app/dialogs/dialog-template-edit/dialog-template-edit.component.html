@@ -63,16 +63,21 @@
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>Finish Up</ng-template>
-    <form *ngIf="action === 'rename'">
+    <form *ngIf="action === 'rename'" [formGroup]="thirdFormGroup">
       <h2>Select a new template name</h2>
       <div>
         <mat-form-field>
           <mat-label>New Template Name</mat-label>
-          <input matInput placeholder="Ex. Super Template" />
+          <input
+            matInput
+            placeholder="Ex. Super Template"
+            formControlName="thirdCtrl"
+            required
+          />
         </mat-form-field>
       </div>
       <button mat-button matStepperPrevious>Back</button>
-      <button mat-flat-button color="accent" (click)="onSaveTemplate()">
+      <button mat-flat-button color="accent" (click)="onRenameTemplate()">
         Save Template
       </button>
     </form>
@@ -80,7 +85,6 @@
       <h2>
         Are you sure you want to delete the
         <span id="selectedTemplate">{{ selectedTemplate }}</span>
-
         template?
       </h2>
       <button mat-button matStepperPrevious>Back</button>

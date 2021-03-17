@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { MessagingService } from '../services/messaging.service';
 import { ItemInputService } from './item-input.service';
 
 @Injectable({
@@ -16,7 +17,8 @@ export class TemplateService {
 
   constructor(
     private itemInputService: ItemInputService,
-    private http: HttpClient
+    private http: HttpClient,
+    private messagingService: MessagingService
   ) {}
 
   checkTemplateExists(templateName: string): boolean {
@@ -158,6 +160,51 @@ export class TemplateService {
         this.addTemplateSubject.next();
       });
   }
+
+  renameTemplate(priorTemplateName: string, newTemplateName: string) {
+    const templateId = this.localTemplates[priorTemplateName].id;
+
+    let graphqlQuery;
+    graphqlQuery = {
+      query: `
+            mutation renameTemplate($userId: String!, $templateId: ID!, $newTemplateName: String!) {
+              renameTemplate(userId: $userId, id: $templateId, newTemplateName: $newTemplateName)
+            }
+          `,
+      variables: {
+        userId: localStorage.getItem('userId'),
+        templateId: templateId,
+        newTemplateName: newTemplateName,
+      },
+    };
+
+    this.http
+      .post<{
+        data: { renameTemplate: boolean };
+      }>('http://localhost:3000/graphql', JSON.stringify(graphqlQuery), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .pipe(catchError(this.handleError))
+      .subscribe((resData) => {
+        if (resData.data.renameTemplate) {
+          this.localTemplates[newTemplateName] = this.localTemplates[
+            priorTemplateName
+          ];
+          delete this.localTemplates[priorTemplateName];
+          this.messagingService.simpleMessage(
+            'Template renamed to ',
+            newTemplateName
+          );
+          this.addTemplateSubject.next();
+        } else {
+          this.messagingService.simpleMessage('Template renaming failed');
+        }
+      });
+  }
+
+  deleteTemplate(templateName: string) {}
 
   private handleError(errorRes: HttpErrorResponse) {
     console.log(errorRes);
