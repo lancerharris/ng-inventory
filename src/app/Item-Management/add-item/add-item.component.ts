@@ -54,7 +54,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     } else {
       this.templates = Object.keys(this.templateService.localTemplates);
     }
-    this.templatesSub = this.templateService.addTemplateSubject.subscribe(
+    this.templatesSub = this.templateService.localTemplatesSubject.subscribe(
       () => {
         this.templates = Object.keys(this.templateService.localTemplates);
       }
