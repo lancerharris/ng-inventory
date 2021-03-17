@@ -17,8 +17,6 @@ import { DialogActionCancelComponent } from '../../dialogs/dialog-action-cancel/
 import { ItemInputService } from '../item-input.service';
 import { TemplateService } from '../template.service';
 import { DialogYesNoComponent } from 'src/app/dialogs/dialog-yes-no/dialog-yes-no.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { SnackbarSimpleMessageComponent } from 'src/app/materials/snackbar-simple-message/snackbar-simple-message.component';
 import { DialogTemplateEditComponent } from 'src/app/dialogs/dialog-template-edit/dialog-template-edit.component';
 import { MessagingService } from 'src/app/services/messaging.service';
 
