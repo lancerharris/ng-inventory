@@ -11,14 +11,6 @@
     >
       Templates
     </button>
-    <button
-      *ngIf="sidenav.opened"
-      mat-stroked-button
-      color="primary"
-      (click)="onEditTemplates()"
-    >
-      Edit Templates
-    </button>
   </div>
 
   <div class="middle-tools">
@@ -70,6 +62,9 @@
           {{ template }}
         </mat-list-option>
       </div>
+      <button mat-stroked-button color="primary" (click)="onEditTemplates()">
+        Edit Templates
+      </button>
     </mat-selection-list>
   </mat-sidenav>
   <mat-sidenav-content>

@@ -2,8 +2,8 @@ mat-sidenav-container {
   height: 100%;
 }
 
-mat-sidenav .mat-button {
-  display: block;
+mat-sidenav button {
+  margin: 0.5rem;
 }
 
 .item-form {
@@ -34,6 +34,7 @@ mat-sidenav .mat-button {
   flex-wrap: wrap;
 }
 
+.left-tools button,
 .middle-tools button,
 .right-tools button {
   margin: 0.25rem 0.25rem;
@@ -50,6 +51,16 @@ mat-sidenav .mat-button {
 
 .mat-list-base {
   padding: 0;
+}
+
+.templates__list {
+  display: flex;
+}
+
+.templates__list button,
+.templates__list .mat-button-wrapper {
+  display: inline-block;
+  border-radius: 0;
 }
 
 @media (min-width: 40rem) {
