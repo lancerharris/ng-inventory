@@ -2,7 +2,7 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { TemplateService } from '../../item-management/template.service';
+import { ItemCrudService } from '../../item-management/item-crud.service';
 import { AddItemComponent } from '../../item-management/add-item/add-item.component';
 
 @Component({
@@ -20,7 +20,7 @@ export class DialogTemplateEditComponent implements OnInit {
 
   constructor(
     private _formBuilder: FormBuilder,
-    private templateService: TemplateService,
+    private ItemCrudService: ItemCrudService,
     public dialogRef: MatDialogRef<AddItemComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
@@ -29,7 +29,7 @@ export class DialogTemplateEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.templates = this.templateService.localTemplates;
+    this.templates = this.ItemCrudService.localTemplates;
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ['', Validators.required],
     });
@@ -57,7 +57,7 @@ export class DialogTemplateEditComponent implements OnInit {
 
   onRenameTemplate() {
     // console.log(this.selectedTemplate, this.thirdFormGroup.value.thirdCtrl);
-    this.templateService.renameTemplate(
+    this.ItemCrudService.renameTemplate(
       this.selectedTemplate,
       this.thirdFormGroup.value.thirdCtrl
     );
@@ -65,7 +65,7 @@ export class DialogTemplateEditComponent implements OnInit {
   }
 
   onDeleteTemplate() {
-    this.templateService.deleteTemplate(this.selectedTemplate, true);
+    this.ItemCrudService.deleteTemplate(this.selectedTemplate, true);
     this.dialogRef.close('deleting');
   }
 }

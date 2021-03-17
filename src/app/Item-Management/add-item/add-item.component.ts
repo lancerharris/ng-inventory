@@ -14,7 +14,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogActionCancelComponent } from '../../dialogs/dialog-action-cancel/dialog-action-cancel.component';
 import { ItemInputService } from '../item-input.service';
-import { TemplateService } from '../template.service';
+import { ItemCrudService } from '../item-crud.service';
 import { DialogYesNoComponent } from 'src/app/dialogs/dialog-yes-no/dialog-yes-no.component';
 import { DialogTemplateEditComponent } from 'src/app/dialogs/dialog-template-edit/dialog-template-edit.component';
 import { MessagingService } from 'src/app/services/messaging.service';
@@ -37,7 +37,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   constructor(
     private itemInputService: ItemInputService,
-    private templateService: TemplateService,
+    private ItemCrudService: ItemCrudService,
     private router: Router,
     public dialog: MatDialog,
     private messagingService: MessagingService
@@ -46,14 +46,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.addingTemplate = this.router.url === '/items/add-template';
     this.totalInputs = this.itemInputService.totalInputs;
-    if (!this.templateService.localTemplates) {
-      this.templateService.getTemplates();
+    if (!this.ItemCrudService.localTemplates) {
+      this.ItemCrudService.getTemplates();
     } else {
-      this.templates = Object.keys(this.templateService.localTemplates);
+      this.templates = Object.keys(this.ItemCrudService.localTemplates);
     }
-    this.templatesSub = this.templateService.localTemplatesSubject.subscribe(
+    this.templatesSub = this.ItemCrudService.localTemplatesSubject.subscribe(
       () => {
-        this.templates = Object.keys(this.templateService.localTemplates);
+        this.templates = Object.keys(this.ItemCrudService.localTemplates);
       }
     );
   }
@@ -106,7 +106,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   onSaveItem() {
     this.editMode = false;
 
-    this.templateService.createItem(false, false);
+    this.ItemCrudService.createItem(false, false);
     this.cleanUp();
   }
 
@@ -124,7 +124,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'overwrite') {
-        this.templateService.addToTemplates(templateName, true);
+        this.ItemCrudService.addToTemplates(templateName, true);
       } else {
         this.messagingService.simpleMessage('Template Save Canceled');
       }
@@ -146,11 +146,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        const templateExists = this.templateService.checkTemplateExists(result);
+        const templateExists = this.ItemCrudService.checkTemplateExists(result);
         if (templateExists) {
           this.overwriteTemplate(result);
         } else {
-          this.templateService.addToTemplates(result, false);
+          this.ItemCrudService.addToTemplates(result, false);
         }
       } else {
         this.messagingService.simpleMessage('Template Save Canceled');
@@ -160,11 +160,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   onSelectTemplate(template) {
-    this.templateService.currentTemplate = template;
+    this.ItemCrudService.currentTemplate = template;
     this.itemInputService.removeInputs(0, this.totalInputs.length);
-    const fields = this.templateService.localTemplates[template]['fields'];
-    const values = this.templateService.localTemplates[template]['values'];
-    const longFieldIndex = this.templateService.localTemplates[template][
+    const fields = this.ItemCrudService.localTemplates[template]['fields'];
+    const values = this.ItemCrudService.localTemplates[template]['values'];
+    const longFieldIndex = this.ItemCrudService.localTemplates[template][
       'longFieldIndex'
     ];
 
@@ -182,7 +182,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     } else {
       this.itemInputService.setLongFieldIndex(-1);
     }
-    this.templateService.selectTemplateSubject.next();
+    this.ItemCrudService.selectTemplateSubject.next();
     this.cleanUp();
   }
 

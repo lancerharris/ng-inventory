@@ -8,7 +8,7 @@ import { ItemInputService } from './item-input.service';
 @Injectable({
   providedIn: 'root',
 })
-export class TemplateService {
+export class ItemCrudService {
   public currentTemplate: string;
   public localTemplates;
 

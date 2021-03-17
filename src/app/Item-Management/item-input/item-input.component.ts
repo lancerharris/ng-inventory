@@ -9,7 +9,7 @@ import {
 
 import { Subscription } from 'rxjs';
 import { ItemInputService } from '../item-input.service';
-import { TemplateService } from '../template.service';
+import { ItemCrudService } from '../item-crud.service';
 
 @Component({
   selector: 'app-item-input',
@@ -30,7 +30,7 @@ export class ItemInputComponent implements OnInit, OnDestroy {
 
   constructor(
     private itemInputService: ItemInputService,
-    private templateService: TemplateService,
+    private ItemCrudService: ItemCrudService,
     private cd: ChangeDetectorRef
   ) {}
 
@@ -50,7 +50,7 @@ export class ItemInputComponent implements OnInit, OnDestroy {
         document.getElementById('field_' + addedIndex).focus();
       }
     );
-    this.templateSelectSub = this.templateService.selectTemplateSubject.subscribe(
+    this.templateSelectSub = this.ItemCrudService.selectTemplateSubject.subscribe(
       () => {
         this.cd.detectChanges();
         // if all fields and values full, select first value field
