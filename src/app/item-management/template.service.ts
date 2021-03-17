@@ -12,7 +12,7 @@ export class TemplateService {
   public currentTemplate: string;
   public localTemplates;
 
-  public addTemplateSubject = new Subject<void>();
+  public localTemplatesSubject = new Subject<void>();
   public selectTemplateSubject = new Subject<void>();
 
   constructor(
@@ -94,7 +94,7 @@ export class TemplateService {
           this.localTemplates[templateName]['longFieldIndex'] = +longFieldIndex;
         }
         this.currentTemplate = templateName;
-        this.addTemplateSubject.next();
+        this.localTemplatesSubject.next();
       });
   }
 
@@ -157,7 +157,7 @@ export class TemplateService {
           };
         });
 
-        this.addTemplateSubject.next();
+        this.localTemplatesSubject.next();
       });
   }
 
@@ -197,14 +197,53 @@ export class TemplateService {
             'Template renamed to ',
             newTemplateName
           );
-          this.addTemplateSubject.next();
+          this.localTemplatesSubject.next();
         } else {
           this.messagingService.simpleMessage('Template renaming failed');
         }
       });
   }
 
-  deleteTemplate(templateName: string) {}
+  deleteTemplate(templateName: string, isTemplate: boolean) {
+    const id = this.localTemplates[templateName].id;
+    let graphqlQuery;
+    graphqlQuery = {
+      query: `
+            mutation deleteGem($userId: String!, $id: ID!, $isTemplate: Boolean!) {
+              deleteGem(userId: $userId, id: $id, isTemplate: $isTemplate)
+            }
+          `,
+      variables: {
+        userId: localStorage.getItem('userId'),
+        id: id,
+        isTemplate: isTemplate,
+      },
+    };
+    this.http
+      .post<{
+        data: { deleteGem: boolean };
+      }>('http://localhost:3000/graphql', JSON.stringify(graphqlQuery), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .pipe(catchError(this.handleError))
+      .subscribe((resData) => {
+        if (resData.data.deleteGem) {
+          if (isTemplate) {
+            delete this.localTemplates[templateName];
+            this.messagingService.simpleMessage(
+              'The ',
+              templateName,
+              ' template has been deleted'
+            );
+            this.localTemplatesSubject.next();
+          }
+        } else {
+          this.messagingService.simpleMessage('Template delete failed');
+        }
+      });
+  }
 
   private handleError(errorRes: HttpErrorResponse) {
     console.log(errorRes);

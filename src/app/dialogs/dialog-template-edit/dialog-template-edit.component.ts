@@ -65,7 +65,7 @@ export class DialogTemplateEditComponent implements OnInit {
   }
 
   onDeleteTemplate() {
-    this.templateService.deleteTemplate(this.selectedTemplate);
+    this.templateService.deleteTemplate(this.selectedTemplate, true);
     this.dialogRef.close('deleting');
   }
 }
