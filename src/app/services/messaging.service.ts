@@ -6,21 +6,21 @@ import { SnackbarSimpleMessageComponent } from '../materials/snackbar-simple-mes
   providedIn: 'root',
 })
 export class MessagingService {
-  private DURATION_IN_SECONDS = 3;
+  private DURATION_IN_SECONDS = 300;
 
   constructor(private _snackBar: MatSnackBar) {}
 
   simpleMessage(
-    simpleMessage: string,
-    emphasisMessage?: string,
-    secondaryMessage?: string
+    mainText: string,
+    emphasisText?: string,
+    secondaryText?: string
   ) {
     this._snackBar.openFromComponent(SnackbarSimpleMessageComponent, {
       duration: this.DURATION_IN_SECONDS * 1000,
       data: {
-        mainText: simpleMessage,
-        emphasisText: emphasisMessage,
-        secondaryMessage: secondaryMessage,
+        mainText: mainText,
+        emphasisText: emphasisText,
+        secondaryText: secondaryText,
       },
     });
   }
