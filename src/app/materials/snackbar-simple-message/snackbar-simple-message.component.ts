@@ -10,7 +10,9 @@ export class SnackbarSimpleMessageComponent {
   constructor(
     @Inject(MAT_SNACK_BAR_DATA)
     public data: {
-      onNoText: string;
+      mainText: string;
+      emphasisText: string;
+      secondaryText: string;
     }
   ) {}
 }
