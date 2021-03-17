@@ -1,0 +1,95 @@
+<button mat-stroked-button color="primary" (click)="onCancelEdit()">
+  Cancel editing
+</button>
+
+<mat-vertical-stepper [linear]="true" #stepper>
+  <mat-step [completed]="selectedTemplate">
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Pick the template to edit</ng-template>
+      <mat-chip-list aria-label="Template selection">
+        <mat-chip
+          *ngFor="let template of data.templateNames"
+          (click)="onTemplateSelect(template)"
+          (keydown.space)="onTemplateSelect(template)"
+          (keydown.enter)="onTemplateSelect(template)"
+          [selected]="selectedTemplate === template"
+          [id]="selectedTemplate === template ? 'selectedChip' : template"
+          [color]="template === selectedTemplate ? 'primary' : 'default'"
+          >{{ template }}
+        </mat-chip>
+      </mat-chip-list>
+      <div>
+        <button
+          mat-button
+          color="primary"
+          [disabled]="!selectedTemplate"
+          matStepperNext
+        >
+          Next
+        </button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [completed]="action">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Select the action to take</ng-template>
+      <mat-chip-list>
+        <mat-chip
+          (click)="onActionSelect('rename')"
+          (keydown.space)="onActionSelect('rename')"
+          (keydown.enter)="onActionSelect('rename')"
+          [selected]="action === 'rename'"
+          [id]="action === 'rename' ? 'selectedChip' : 'renameChip'"
+          color="primary"
+          >Rename</mat-chip
+        >
+        <mat-chip
+          (click)="onActionSelect('delete')"
+          (keydown.space)="onActionSelect('delete')"
+          (keydown.enter)="onActionSelect('delete')"
+          [selected]="action === 'delete'"
+          [id]="action === 'delete' ? 'selectedChip' : 'deleteChip'"
+          color="warn"
+          >Delete</mat-chip
+        >
+      </mat-chip-list>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button color="primary" [disabled]="!action" matStepperNext>
+          Next
+        </button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Finish Up</ng-template>
+    <form *ngIf="action === 'rename'">
+      <h2>Select a new template name</h2>
+      <div>
+        <mat-form-field>
+          <mat-label>New Template Name</mat-label>
+          <input matInput placeholder="Ex. Super Template" />
+        </mat-form-field>
+      </div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-flat-button color="accent" (click)="onSaveTemplate()">
+        Save Template
+      </button>
+    </form>
+    <form *ngIf="action === 'delete'">
+      <h2>
+        Are you sure you want to delete the
+        <span id="selectedTemplate">{{ selectedTemplate }}</span>
+
+        template?
+      </h2>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button color="primary" (click)="onCancelEdit()">
+        No, Cancel Edit
+      </button>
+      <button mat-flat-button color="warn" (click)="onDeleteTemplate()">
+        Yes, Delete the Template
+      </button>
+    </form>
+  </mat-step>
+</mat-vertical-stepper>

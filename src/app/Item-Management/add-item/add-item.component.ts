@@ -19,6 +19,7 @@ import { TemplateService } from '../template.service';
 import { DialogYesNoComponent } from 'src/app/dialogs/dialog-yes-no/dialog-yes-no.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarSimpleMessageComponent } from 'src/app/materials/snackbar-simple-message/snackbar-simple-message.component';
+import { DialogTemplateEditComponent } from 'src/app/dialogs/dialog-template-edit/dialog-template-edit.component';
 
 @Component({
   selector: 'app-add-item',
@@ -32,6 +33,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   public addingTemplate: boolean;
   public value: string = '';
   public editMode: boolean = false;
+
   public totalInputs: number[];
   private templatesSub: Subscription;
   private DURATION_IN_SECONDS = 3;
@@ -60,15 +62,19 @@ export class AddItemComponent implements OnInit, OnDestroy {
     );
   }
 
+  cleanUp() {
+    this.sidenav.close();
+    this.editMode = false;
+  }
+
   onTopToolsClick(event) {
     if (event.target instanceof HTMLDivElement) {
-      this.sidenav.close();
+      this.cleanUp();
     }
   }
 
   onAddInput() {
-    this.sidenav.close();
-    this.editMode = false;
+    this.cleanUp();
     this.itemInputService.AddInput();
   }
 
@@ -77,9 +83,32 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.editMode = !this.editMode;
   }
 
+  onEditTemplates() {
+    this.cleanUp();
+    const dialogRef = this.dialog.open(DialogTemplateEditComponent, {
+      width: '48rem',
+      restoreFocus: false,
+      data: {
+        templateNames: this.templates,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result in ['renamed', 'deleted']) {
+        console.log('renamed or deleted!');
+      } else {
+        this._snackBar.openFromComponent(SnackbarSimpleMessageComponent, {
+          duration: this.DURATION_IN_SECONDS * 1000,
+          data: {
+            onNoText: 'Template Edit Canceled',
+          },
+        });
+      }
+    });
+  }
+
   onDelete() {
-    this.sidenav.close();
-    this.editMode = false;
+    this.cleanUp();
     this.itemInputService.setLongFieldIndex(-1);
     this.itemInputService.removeInputs(0, this.totalInputs.length);
   }
@@ -112,7 +141,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     // form.reset();
 
-    this.sidenav.close();
+    this.cleanUp();
   }
 
   overwriteTemplate(templateName: string): void {
@@ -171,7 +200,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
         });
       }
     });
-    this.sidenav.close();
+    this.cleanUp();
   }
 
   onSelectTemplate(template) {
@@ -198,7 +227,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.itemInputService.setLongFieldIndex(-1);
     }
     this.templateService.selectTemplateSubject.next();
-    this.sidenav.close();
+    this.cleanUp();
   }
 
   ngOnDestroy(): void {

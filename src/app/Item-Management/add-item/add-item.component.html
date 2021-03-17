@@ -11,6 +11,14 @@
     >
       Templates
     </button>
+    <button
+      *ngIf="sidenav.opened"
+      mat-stroked-button
+      color="primary"
+      (click)="onEditTemplates()"
+    >
+      Edit Templates
+    </button>
   </div>
 
   <div class="middle-tools">
@@ -50,20 +58,18 @@
 </div>
 
 <mat-divider></mat-divider>
-<mat-sidenav-container
-  (backdropClick)="sidenav.close()"
-  (keydown.escape)="sidenav.close()"
->
+<mat-sidenav-container (backdropClick)="cleanUp()" (keydown.escape)="cleanUp()">
   <mat-sidenav #sidenav autoFocus="false" opened="false">
     <mat-selection-list [multiple]="false">
-      <mat-list-option
-        *ngFor="let template of templates"
-        [value]="template"
-        color="primary"
-        (click)="onSelectTemplate(template)"
-      >
-        {{ template }}
-      </mat-list-option>
+      <div *ngFor="let template of templates" class="templates__list">
+        <mat-list-option
+          [value]="template"
+          color="primary"
+          (click)="onSelectTemplate(template)"
+        >
+          {{ template }}
+        </mat-list-option>
+      </div>
     </mat-selection-list>
   </mat-sidenav>
   <mat-sidenav-content>

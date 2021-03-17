@@ -20,6 +20,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatStepperModule } from '@angular/material/stepper';
 
 import { SnackbarSimpleMessageComponent } from './snackbar-simple-message/snackbar-simple-message.component';
 
@@ -46,6 +48,8 @@ import { SnackbarSimpleMessageComponent } from './snackbar-simple-message/snackb
     MatCardModule,
     MatFormFieldModule,
     MatSnackBarModule,
+    MatExpansionModule,
+    MatStepperModule,
   ],
   exports: [
     MatToolbarModule,
@@ -67,6 +71,8 @@ import { SnackbarSimpleMessageComponent } from './snackbar-simple-message/snackb
     MatCardModule,
     MatFormFieldModule,
     MatSnackBarModule,
+    MatExpansionModule,
+    MatStepperModule,
   ],
 })
 export class MaterialsModule {}
