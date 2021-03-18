@@ -1,0 +1,30 @@
+button {
+  margin-bottom: 0.5rem;
+}
+
+form {
+  margin-top: 1rem;
+}
+
+form button {
+  margin-top: 1rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0;
+}
+
+.chipListSeparator {
+  height: 0.5rem;
+}
+
+#selectedChip:focus::after {
+  background-color: white;
+  opacity: 0.1;
+}
+
+#selectedTemplate {
+  background-color: #673ab7;
+  color: #fff;
+  padding: 0.3rem 0.5rem;
+  border-radius: 16px;
+  align-items: baseline;
+}

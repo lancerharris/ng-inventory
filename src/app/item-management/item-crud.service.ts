@@ -35,10 +35,13 @@ export class ItemCrudService {
     this.selectTemplateSubject.next();
   }
 
-  addToTemplates(templateName: string, overwrite: boolean = false) {
+  async addToTemplates(
+    templateName: string,
+    overwrite: boolean = false
+  ): Promise<boolean> {
     const fields = ['name', ...this.itemInputService.itemFields];
     const values = [templateName, ...this.itemInputService.itemValues];
-    this.createItem(overwrite, true, fields, values, templateName);
+    return this.createItem(overwrite, true, fields, values, templateName);
   }
 
   createItem(
@@ -130,7 +133,7 @@ export class ItemCrudService {
           this.messagingService.simpleMessage(
             'The ',
             templateName,
-            ' template has been added'
+            ' template has been saved'
           );
         } else {
           this.messagingService.simpleMessage('Item Saved');

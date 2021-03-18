@@ -1,0 +1,89 @@
+<button mat-stroked-button color="primary" (click)="onCancelEdit()">
+  Cancel Template Add
+</button>
+
+<mat-vertical-stepper [linear]="true" #stepper>
+  <mat-step [completed]="action">
+    <form>
+      <ng-template matStepLabel>Pick the kind of template to make</ng-template>
+      <mat-chip-list>
+        <mat-chip
+          (click)="onActionSelect('newTemplate')"
+          (keydown.space)="onActionSelect('newTemplate')"
+          (keydown.enter)="onActionSelect('newTemplate')"
+          [selected]="action === 'newTemplate'"
+          [id]="action === 'newTemplate' ? 'selectedChip' : 'newTemplateChip'"
+          color="primary"
+          >New Template</mat-chip
+        >
+        <mat-chip
+          (click)="onActionSelect('overwriteTemplate')"
+          (keydown.space)="onActionSelect('overwriteTemplate')"
+          (keydown.enter)="onActionSelect('overwriteTemplate')"
+          [selected]="action === 'overwriteTemplate'"
+          [id]="
+            action === 'overwriteTemplate'
+              ? 'selectedChip'
+              : 'overwriteTemplateChip'
+          "
+          color="warn"
+          >Overwrite Existing</mat-chip
+        >
+      </mat-chip-list>
+      <div>
+        <button mat-button color="primary" [disabled]="!action" matStepperNext>
+          Next
+        </button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Save the template</ng-template>
+    <form [formGroup]="firstFormGroup">
+      <h2 *ngIf="action === 'overwriteTemplate'">
+        Select the template to overwrite
+      </h2>
+      <mat-chip-list
+        aria-label="Template selection"
+        *ngIf="action === 'overwriteTemplate'"
+      >
+        <mat-chip
+          *ngFor="let template of data.templateNames"
+          (click)="onTemplateSelect(template)"
+          (keydown.space)="onTemplateSelect(template)"
+          (keydown.enter)="onTemplateSelect(template)"
+          [selected]="selectedTemplate === template"
+          [id]="selectedTemplate === template ? 'selectedChip' : template"
+          [color]="template === selectedTemplate ? 'primary' : 'default'"
+          >{{ template }}
+        </mat-chip>
+      </mat-chip-list>
+      <div
+        class="chipListSeparator"
+        *ngIf="action === 'overwriteTemplate'"
+      ></div>
+      <h2 *ngIf="action === 'newTemplate'">Add a template name</h2>
+      <div *ngIf="action === 'newTemplate'">
+        <mat-form-field>
+          <mat-label>New Template Name</mat-label>
+          <input
+            matInput
+            placeholder="Ex. Super Template"
+            formControlName="firstCtrl"
+            required
+          />
+        </mat-form-field>
+      </div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button
+        mat-flat-button
+        [color]="saveColor"
+        [disabled]="!selectedTemplate"
+        (click)="onSaveTemplate()"
+      >
+        {{ saveMessage }}
+      </button>
+    </form>
+  </mat-step>
+</mat-vertical-stepper>

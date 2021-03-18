@@ -10,6 +10,7 @@ import { ItemCrudService } from '../item-crud.service';
 import { DialogYesNoComponent } from 'src/app/dialogs/dialog-yes-no/dialog-yes-no.component';
 import { DialogTemplateEditComponent } from 'src/app/dialogs/dialog-template-edit/dialog-template-edit.component';
 import { MessagingService } from 'src/app/services/messaging.service';
+import { DialogTemplateSaveComponent } from 'src/app/dialogs/dialog-template-save/dialog-template-save.component';
 
 @Component({
   selector: 'app-add-item',
@@ -137,26 +138,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   onSaveTemplate(): void {
     this.editMode = false;
-    const dialogRef = this.dialog.open(DialogActionCancelComponent, {
-      width: '17rem',
+    const dialogRef = this.dialog.open(DialogTemplateSaveComponent, {
+      width: '48rem',
 
       restoreFocus: false,
       data: {
-        title: 'Name your template',
-        templateName: '',
-        cancelText: 'Template Save Canceled',
+        templateNames: this.templates,
       },
     });
-
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        const templateExists = this.ItemCrudService.checkTemplateExists(result);
-        if (templateExists) {
-          this.overwriteTemplate(result);
-        } else {
-          this.ItemCrudService.addToTemplates(result, false);
-        }
-      } else {
+      if (!result) {
         this.messagingService.simpleMessage('Template Save Canceled');
       }
     });
