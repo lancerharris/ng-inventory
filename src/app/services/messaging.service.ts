@@ -6,7 +6,7 @@ import { SnackbarSimpleMessageComponent } from '../materials/snackbar-simple-mes
   providedIn: 'root',
 })
 export class MessagingService {
-  private DURATION_IN_SECONDS = 300;
+  private DURATION_IN_SECONDS = 3;
 
   constructor(private _snackBar: MatSnackBar) {}
 

@@ -11,6 +11,15 @@
     >
       Templates
     </button>
+
+    <button
+      mat-flat-button
+      id="selectedTemplate"
+      (click)="onDeselectTemplate()"
+      *ngIf="selectedTemplate"
+    >
+      {{ selectedTemplate }} Template
+    </button>
   </div>
 
   <div class="middle-tools">
@@ -36,7 +45,7 @@
       <mat-icon class="top-tools__icon" color="primary">edit</mat-icon>
     </button>
 
-    <button mat-stroked-button color="warn" (click)="onDelete()">
+    <button mat-stroked-button color="warn" (click)="onClear()">
       <mat-icon class="top-tools__icon">delete</mat-icon>
     </button>
   </div>
@@ -62,6 +71,15 @@
           {{ template }}
         </mat-list-option>
       </div>
+      <mat-divider></mat-divider>
+      <button
+        mat-stroked-button
+        color="primary"
+        (click)="onDeselectTemplate()"
+        *ngIf="selectedTemplate"
+      >
+        Deselect Template
+      </button>
       <button mat-stroked-button color="primary" (click)="onEditTemplates()">
         Edit Templates
       </button>

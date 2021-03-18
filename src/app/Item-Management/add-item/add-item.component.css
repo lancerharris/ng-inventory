@@ -3,7 +3,9 @@ mat-sidenav-container {
 }
 
 mat-sidenav button {
+  display: block;
   margin: 0.5rem;
+  width: 90%;
 }
 
 .item-form {
@@ -27,10 +29,15 @@ mat-sidenav button {
   margin: 0.25rem;
 }
 
+.left-tools {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .middle-tools,
 .right-tools {
-  flex-grow: 1;
   display: flex;
+  flex-grow: 1;
   flex-wrap: wrap;
 }
 
@@ -61,6 +68,20 @@ mat-sidenav button {
 .templates__list .mat-button-wrapper {
   display: inline-block;
   border-radius: 0;
+}
+
+#selectedTemplate {
+  background-color: #673ab7;
+  color: #fff;
+  padding: 0 0.5rem;
+  border-radius: 16px;
+  align-items: baseline;
+  align-self: center;
+  margin: 0 0.25rem;
+}
+
+#selectedTemplate:hover {
+  opacity: 0.85;
 }
 
 @media (min-width: 40rem) {

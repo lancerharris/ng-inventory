@@ -1,14 +1,6 @@
-import {
-  Component,
-  KeyValueDiffers,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import { Router } from '@angular/router';
-import { NgForm } from '@angular/forms';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Component, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+
+import { Subscription } from 'rxjs';
 import { MatSidenav } from '@angular/material/sidenav';
 
 import { MatDialog } from '@angular/material/dialog';
@@ -28,23 +20,22 @@ export class AddItemComponent implements OnInit, OnDestroy {
   @ViewChild('sidenav') sidenav: MatSidenav;
 
   public templates: string[];
-  public addingTemplate: boolean;
   public value: string = '';
   public editMode: boolean = false;
+  public selectedTemplate: string;
 
   public totalInputs: number[];
   private templatesSub: Subscription;
+  private selectTemplateSub: Subscription;
 
   constructor(
     private itemInputService: ItemInputService,
     private ItemCrudService: ItemCrudService,
-    private router: Router,
     public dialog: MatDialog,
     private messagingService: MessagingService
   ) {}
 
   ngOnInit(): void {
-    this.addingTemplate = this.router.url === '/items/add-template';
     this.totalInputs = this.itemInputService.totalInputs;
     if (!this.ItemCrudService.localTemplates) {
       this.ItemCrudService.getTemplates();
@@ -54,6 +45,12 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.templatesSub = this.ItemCrudService.localTemplatesSubject.subscribe(
       () => {
         this.templates = Object.keys(this.ItemCrudService.localTemplates);
+      }
+    );
+
+    this.selectTemplateSub = this.ItemCrudService.selectTemplateSubject.subscribe(
+      () => {
+        this.selectedTemplate = this.ItemCrudService.currentTemplate;
       }
     );
   }
@@ -97,16 +94,23 @@ export class AddItemComponent implements OnInit, OnDestroy {
     });
   }
 
-  onDelete() {
+  onClear() {
     this.cleanUp();
     this.itemInputService.setLongFieldIndex(-1);
-    this.itemInputService.removeInputs(0, this.totalInputs.length);
+    if (this.selectedTemplate) {
+      this.onSelectTemplate(this.selectedTemplate);
+    } else {
+      this.itemInputService.removeInputs(0, this.totalInputs.length);
+    }
   }
 
-  onSaveItem() {
+  async onSaveItem() {
     this.editMode = false;
 
-    this.ItemCrudService.createItem(false, false);
+    const saved: boolean = await this.ItemCrudService.createItem(false, false);
+    if (saved) {
+      this.onSelectTemplate(this.selectedTemplate);
+    }
     this.cleanUp();
   }
 
@@ -159,8 +163,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.cleanUp();
   }
 
-  onSelectTemplate(template) {
-    this.ItemCrudService.currentTemplate = template;
+  onSelectTemplate(template: string) {
     this.itemInputService.removeInputs(0, this.totalInputs.length);
     const fields = this.ItemCrudService.localTemplates[template]['fields'];
     const values = this.ItemCrudService.localTemplates[template]['values'];
@@ -182,11 +185,17 @@ export class AddItemComponent implements OnInit, OnDestroy {
     } else {
       this.itemInputService.setLongFieldIndex(-1);
     }
-    this.ItemCrudService.selectTemplateSubject.next();
+    this.ItemCrudService.setCurrentTemplate(template);
+    this.cleanUp();
+  }
+
+  onDeselectTemplate() {
+    this.ItemCrudService.setCurrentTemplate(null);
     this.cleanUp();
   }
 
   ngOnDestroy(): void {
     this.templatesSub.unsubscribe();
+    this.selectTemplateSub.unsubscribe();
   }
 }

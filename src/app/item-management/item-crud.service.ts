@@ -25,6 +25,16 @@ export class ItemCrudService {
     return this.localTemplates[templateName] ? true : false;
   }
 
+  setCurrentTemplate(templateName: string) {
+    if (templateName) {
+      this.currentTemplate = templateName;
+    } else {
+      this.currentTemplate = null;
+    }
+
+    this.selectTemplateSubject.next();
+  }
+
   addToTemplates(templateName: string, overwrite: boolean = false) {
     const fields = ['name', ...this.itemInputService.itemFields];
     const values = [templateName, ...this.itemInputService.itemValues];
@@ -37,7 +47,7 @@ export class ItemCrudService {
     inputFields?: string[],
     inputValues?: string[],
     templateName?: string
-  ) {
+  ): boolean {
     const fields = inputFields
       ? inputFields
       : [...this.itemInputService.itemFields];
@@ -125,11 +135,8 @@ export class ItemCrudService {
         } else {
           this.messagingService.simpleMessage('Item Saved');
         }
-        this.itemInputService.removeInputs(
-          0,
-          this.itemInputService.totalInputs.length
-        );
       });
+    return true; // shouldn't reach here if http error
   }
 
   getTemplates() {
