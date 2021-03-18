@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -12,8 +12,7 @@ import { AddItemComponent } from '../../item-management/add-item/add-item.compon
 })
 export class DialogTemplateEditComponent implements OnInit {
   public firstFormGroup: FormGroup;
-  public secondFormGroup: FormGroup;
-  public thirdFormGroup: FormGroup;
+
   public templates;
   public selectedTemplate: string;
   public action: string;
@@ -33,12 +32,6 @@ export class DialogTemplateEditComponent implements OnInit {
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ['', Validators.required],
     });
-    this.secondFormGroup = this._formBuilder.group({
-      secondCtrl: ['', Validators.required],
-    });
-    this.thirdFormGroup = this._formBuilder.group({
-      thirdCtrl: ['', Validators.required],
-    });
   }
 
   onCancelEdit(): void {
@@ -51,6 +44,7 @@ export class DialogTemplateEditComponent implements OnInit {
   }
 
   onActionSelect(action: string) {
+    console.log(action);
     const alreadySelected = this.action === action;
     this.action = alreadySelected ? null : action;
   }
@@ -59,7 +53,7 @@ export class DialogTemplateEditComponent implements OnInit {
     // console.log(this.selectedTemplate, this.thirdFormGroup.value.thirdCtrl);
     this.ItemCrudService.renameTemplate(
       this.selectedTemplate,
-      this.thirdFormGroup.value.thirdCtrl
+      this.firstFormGroup.value.firstCtrl
     );
     this.dialogRef.close('renaming');
   }

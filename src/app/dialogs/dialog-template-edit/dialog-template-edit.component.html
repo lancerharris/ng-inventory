@@ -3,35 +3,8 @@
 </button>
 
 <mat-vertical-stepper [linear]="true" #stepper>
-  <mat-step [completed]="selectedTemplate">
-    <form [formGroup]="firstFormGroup">
-      <ng-template matStepLabel>Pick the template to edit</ng-template>
-      <mat-chip-list aria-label="Template selection">
-        <mat-chip
-          *ngFor="let template of data.templateNames"
-          (click)="onTemplateSelect(template)"
-          (keydown.space)="onTemplateSelect(template)"
-          (keydown.enter)="onTemplateSelect(template)"
-          [selected]="selectedTemplate === template"
-          [id]="selectedTemplate === template ? 'selectedChip' : template"
-          [color]="template === selectedTemplate ? 'primary' : 'default'"
-          >{{ template }}
-        </mat-chip>
-      </mat-chip-list>
-      <div>
-        <button
-          mat-button
-          color="primary"
-          [disabled]="!selectedTemplate"
-          matStepperNext
-        >
-          Next
-        </button>
-      </div>
-    </form>
-  </mat-step>
   <mat-step [completed]="action">
-    <form [formGroup]="secondFormGroup">
+    <form>
       <ng-template matStepLabel>Select the action to take</ng-template>
       <mat-chip-list>
         <mat-chip
@@ -54,16 +27,45 @@
         >
       </mat-chip-list>
       <div>
-        <button mat-button matStepperPrevious>Back</button>
         <button mat-button color="primary" [disabled]="!action" matStepperNext>
           Next
         </button>
       </div>
     </form>
   </mat-step>
+
+  <mat-step [completed]="selectedTemplate">
+    <form>
+      <ng-template matStepLabel>Pick the template to edit</ng-template>
+      <mat-chip-list aria-label="Template selection">
+        <mat-chip
+          *ngFor="let template of data.templateNames"
+          (click)="onTemplateSelect(template)"
+          (keydown.space)="onTemplateSelect(template)"
+          (keydown.enter)="onTemplateSelect(template)"
+          [selected]="selectedTemplate === template"
+          [id]="selectedTemplate === template ? 'selectedChip' : template"
+          [color]="template === selectedTemplate ? 'primary' : 'default'"
+          >{{ template }}
+        </mat-chip>
+      </mat-chip-list>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button
+          mat-button
+          color="primary"
+          [disabled]="!selectedTemplate"
+          matStepperNext
+        >
+          Next
+        </button>
+      </div>
+    </form>
+  </mat-step>
+
   <mat-step>
     <ng-template matStepLabel>Finish Up</ng-template>
-    <form *ngIf="action === 'rename'" [formGroup]="thirdFormGroup">
+    <form *ngIf="action === 'rename'" [formGroup]="firstFormGroup">
       <h2>Select a new template name</h2>
       <div>
         <mat-form-field>
@@ -71,7 +73,7 @@
           <input
             matInput
             placeholder="Ex. Super Template"
-            formControlName="thirdCtrl"
+            formControlName="firstCtrl"
             required
           />
         </mat-form-field>
