@@ -79,7 +79,7 @@
       <button
         mat-flat-button
         [color]="saveColor"
-        [disabled]="!selectedTemplate"
+        [disabled]="action !== 'newTemplate' && !selectedTemplate"
         (click)="onSaveTemplate()"
       >
         {{ saveMessage }}
