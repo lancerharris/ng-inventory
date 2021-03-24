@@ -13,14 +13,12 @@ export class ItemCrudService {
   public currentTemplate: string;
   public localTemplates;
   public localItems;
-  public localItemChanges = {};
   public localTableItems = []; // an array of objects with dynamic number of fields and values
   public localTableFields: string[];
 
   public localTemplatesSubject = new Subject<void>();
   public selectTemplateSubject = new Subject<void>();
   public localItemsSubject = new Subject<void>();
-  public localItemChangesSubject = new Subject<void>();
 
   constructor(
     private itemInputService: ItemInputService,

@@ -12,6 +12,7 @@ import { MatCell, MatTableDataSource } from '@angular/material/table';
 import { ItemCrudService } from '../item-crud.service';
 import { fromEvent, Subscription } from 'rxjs';
 import { ITS_JUST_ANGULAR } from '@angular/core/src/r3_symbols';
+import { TableManagementService } from '../table-management.service';
 
 @Component({
   selector: 'app-all-items',
@@ -35,7 +36,7 @@ export class AllItemsComponent implements OnInit, OnDestroy {
 
   constructor(
     private itemCrudService: ItemCrudService,
-    private cd: ChangeDetectorRef
+    private tableManagmentService: TableManagementService
   ) {}
 
   ngOnInit() {
@@ -59,10 +60,10 @@ export class AllItemsComponent implements OnInit, OnDestroy {
       );
       this.headerRow = ['select', ...this.displayedColumns];
     });
-    this.itemChangesSub = this.itemCrudService.localItemChangesSubject.subscribe(
+    this.itemChangesSub = this.tableManagmentService.localItemChangesSubject.subscribe(
       () => {
         const itemChangeCount = Object.keys(
-          this.itemCrudService.localItemChanges
+          this.tableManagmentService.localItemChanges
         ).length;
         this.changesMade = itemChangeCount > 0 ? true : false;
       }
@@ -95,7 +96,7 @@ export class AllItemsComponent implements OnInit, OnDestroy {
 
   onDropChanges() {
     const localTableItems = this.itemCrudService.localTableItems;
-    Object.keys(this.itemCrudService.localItemChanges).forEach((item) => {
+    Object.keys(this.tableManagmentService.localItemChanges).forEach((item) => {
       const changedItemIndex = localTableItems.findIndex((el) => {
         return el['_id'] === item;
       });
@@ -103,7 +104,7 @@ export class AllItemsComponent implements OnInit, OnDestroy {
       // for now this should be the same as changedItemIndex
       const rowIndex = localTableItems[changedItemIndex]['rowIndex'];
 
-      Object.keys(this.itemCrudService.localItemChanges[item]).forEach(
+      Object.keys(this.tableManagmentService.localItemChanges[item]).forEach(
         (field) => {
           const cellElement = document.getElementById(
             field + '_' + rowIndex
@@ -113,9 +114,10 @@ export class AllItemsComponent implements OnInit, OnDestroy {
         }
       );
     });
-    this.itemCrudService.localItemChanges = {};
-    console.log(this.itemCrudService.localItemChanges);
+    this.tableManagmentService.localItemChanges = {};
   }
+
+  onSaveChanges() {}
 
   onRowEdit(row) {
     console.log(row);
