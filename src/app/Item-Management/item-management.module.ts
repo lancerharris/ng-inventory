@@ -12,6 +12,7 @@ import { ReviewItemComponent } from './review-item/review-item.component';
 import { ItemInputComponent } from './item-input/item-input.component';
 import { InputSelectDirective } from './input-select.directive';
 import { DialogsModule } from '../dialogs/dialogs.module';
+import { TableCellDirective } from './all-items/table-cell.directive';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { DialogsModule } from '../dialogs/dialogs.module';
     ReviewItemComponent,
     ItemInputComponent,
     InputSelectDirective,
+    TableCellDirective,
   ],
   imports: [
     CommonModule,
