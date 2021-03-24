@@ -1,4 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+
 import { Injectable } from '@angular/core';
 import { Subject, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -11,9 +12,15 @@ import { ItemInputService } from './item-input.service';
 export class ItemCrudService {
   public currentTemplate: string;
   public localTemplates;
+  public localItems;
+  public localItemChanges = {};
+  public localTableItems = []; // an array of objects with dynamic number of fields and values
+  public localTableFields: string[];
 
   public localTemplatesSubject = new Subject<void>();
   public selectTemplateSubject = new Subject<void>();
+  public localItemsSubject = new Subject<void>();
+  public localItemChangesSubject = new Subject<void>();
 
   constructor(
     private itemInputService: ItemInputService,
@@ -142,11 +149,15 @@ export class ItemCrudService {
     return true; // shouldn't reach here if http error
   }
 
-  getTemplates() {
-    this.localTemplates = {};
+  getItems(getTemplates: boolean) {
+    if (getTemplates) {
+      this.localTemplates = {};
+    } else {
+      this.localItems = {};
+    }
     const graphqlQuery = {
       query: `
-        query getTemplates($getTemplates: Boolean!) {
+        query getItems($getTemplates: Boolean!) {
           getGems(getTemplates: $getTemplates) {
             gems {
               fields
@@ -156,9 +167,10 @@ export class ItemCrudService {
         }
       `,
       variables: {
-        getTemplates: true,
+        getTemplates: getTemplates,
       },
     };
+
     this.http
       .post<{
         data: {
@@ -172,36 +184,69 @@ export class ItemCrudService {
       .pipe(catchError(this.handleError))
       .subscribe((resData) => {
         // this.localTemplates = {};
-        resData.data.getGems.gems.forEach((gem) => {
-          const nameIndex = gem.fields.findIndex((el) => el === 'name');
-          const name = gem.values[nameIndex];
-          gem.fields.splice(nameIndex, 1);
-          gem.values.splice(nameIndex, 1);
-
-          const longFieldIndexIndex = gem.fields.findIndex(
+        const tableFields: string[] = [];
+        resData.data.getGems.gems.forEach((item, itemIndex) => {
+          const longFieldIndexIndex = item.fields.findIndex(
             (el) => el === 'longFieldIndex'
           );
           let longFieldIndex;
           if (longFieldIndexIndex > -1) {
-            longFieldIndex = gem.values[longFieldIndexIndex];
-            gem.fields.splice(longFieldIndexIndex, 1);
-            gem.values.splice(longFieldIndexIndex, 1);
+            longFieldIndex = item.values[longFieldIndexIndex];
+            item.fields.splice(longFieldIndexIndex, 1);
+            item.values.splice(longFieldIndexIndex, 1);
           }
 
-          const idIndex = gem.fields.findIndex((el) => el === '_id');
-          const templateId = gem.values[idIndex];
-          gem.fields.splice(idIndex, 1);
-          gem.values.splice(idIndex, 1);
+          const idIndex = item.fields.findIndex((el) => el === '_id');
+          const itemId = item.values[idIndex];
 
-          this.localTemplates[name] = {
-            fields: gem.fields,
-            values: gem.values,
-            longFieldIndex: longFieldIndex ? +longFieldIndex : -1,
-            id: templateId,
-          };
+          if (getTemplates) {
+            const nameIndex = item.fields.findIndex((el) => el === 'name'); // todo change name to templateName everywhere. name is a likely user field
+            const name = item.values[nameIndex];
+            item.fields.splice(nameIndex, 1);
+            item.values.splice(nameIndex, 1);
+            item.fields.splice(idIndex, 1);
+            item.values.splice(idIndex, 1);
+
+            this.localTemplates[name] = {
+              fields: item.fields,
+              values: item.values,
+              longFieldIndex: longFieldIndex ? +longFieldIndex : -1,
+              id: itemId,
+            };
+          } else {
+            const tableItem = {};
+            item.fields.forEach((field, index) => {
+              // no empty fields in the table since there can be multiple empty fields the data would be comingled
+              if (field && field !== '') {
+                const value = item.values[index];
+                tableItem[field] = value ? value : '';
+                if (field !== '_id') {
+                  tableFields.push(field);
+                }
+              }
+            });
+            tableItem['rowIndex'] = itemIndex;
+            this.localTableItems.push(tableItem);
+
+            // splice id after getting it into the tableItem so that I can link table to item
+            item.fields.splice(idIndex, 1);
+            item.values.splice(idIndex, 1);
+            this.localItems[itemId] = {
+              fields: item.fields,
+              values: item.values,
+              longFieldIndex: longFieldIndex ? +longFieldIndex : -1,
+            };
+          }
         });
-
-        this.localTemplatesSubject.next();
+        if (getTemplates) {
+          this.localTemplatesSubject.next();
+        } else {
+          // to avoid confusing table, return only unique fields
+          this.localTableFields = tableFields.filter((field, index, self) => {
+            return self.indexOf(field) === index;
+          });
+          this.localItemsSubject.next();
+        }
       });
   }
 

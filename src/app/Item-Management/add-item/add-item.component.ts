@@ -31,27 +31,27 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   constructor(
     private itemInputService: ItemInputService,
-    private ItemCrudService: ItemCrudService,
+    private itemCrudService: ItemCrudService,
     public dialog: MatDialog,
     private messagingService: MessagingService
   ) {}
 
   ngOnInit(): void {
     this.totalInputs = this.itemInputService.totalInputs;
-    if (!this.ItemCrudService.localTemplates) {
-      this.ItemCrudService.getTemplates();
+    if (!this.itemCrudService.localTemplates) {
+      this.itemCrudService.getItems(true);
     } else {
-      this.templates = Object.keys(this.ItemCrudService.localTemplates);
+      this.templates = Object.keys(this.itemCrudService.localTemplates);
     }
-    this.templatesSub = this.ItemCrudService.localTemplatesSubject.subscribe(
+    this.templatesSub = this.itemCrudService.localTemplatesSubject.subscribe(
       () => {
-        this.templates = Object.keys(this.ItemCrudService.localTemplates);
+        this.templates = Object.keys(this.itemCrudService.localTemplates);
       }
     );
 
-    this.selectTemplateSub = this.ItemCrudService.selectTemplateSubject.subscribe(
+    this.selectTemplateSub = this.itemCrudService.selectTemplateSubject.subscribe(
       () => {
-        this.selectedTemplate = this.ItemCrudService.currentTemplate;
+        this.selectedTemplate = this.itemCrudService.currentTemplate;
       }
     );
   }
@@ -108,7 +108,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   async onSaveItem() {
     this.editMode = false;
 
-    const saved: boolean = await this.ItemCrudService.createItem(false, false);
+    const saved: boolean = await this.itemCrudService.createItem(false, false);
     if (saved) {
       this.onSelectTemplate(this.selectedTemplate);
     }
@@ -129,7 +129,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'overwrite') {
-        this.ItemCrudService.addToTemplates(templateName, true);
+        this.itemCrudService.addToTemplates(templateName, true);
       } else {
         this.messagingService.simpleMessage('Template Save Canceled');
       }
@@ -156,9 +156,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   onSelectTemplate(template: string) {
     this.itemInputService.removeInputs(0, this.totalInputs.length);
-    const fields = this.ItemCrudService.localTemplates[template]['fields'];
-    const values = this.ItemCrudService.localTemplates[template]['values'];
-    const longFieldIndex = this.ItemCrudService.localTemplates[template][
+    const fields = this.itemCrudService.localTemplates[template]['fields'];
+    const values = this.itemCrudService.localTemplates[template]['values'];
+    const longFieldIndex = this.itemCrudService.localTemplates[template][
       'longFieldIndex'
     ];
 
@@ -176,12 +176,12 @@ export class AddItemComponent implements OnInit, OnDestroy {
     } else {
       this.itemInputService.setLongFieldIndex(-1);
     }
-    this.ItemCrudService.setCurrentTemplate(template);
+    this.itemCrudService.setCurrentTemplate(template);
     this.cleanUp();
   }
 
   onDeselectTemplate() {
-    this.ItemCrudService.setCurrentTemplate(null);
+    this.itemCrudService.setCurrentTemplate(null);
     this.cleanUp();
   }
 
