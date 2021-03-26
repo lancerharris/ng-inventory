@@ -50,32 +50,35 @@ export class ItemInputComponent implements OnInit, OnDestroy {
         document.getElementById('field_' + addedIndex).focus();
       }
     );
-    this.templateSelectSub = this.ItemCrudService.selectTemplateSubject.subscribe(
+    this.templateSelectSub = this.itemInputService.itemSelectedSubject.subscribe(
       () => {
-        this.cd.detectChanges();
-        // if all fields and values full, select first value field
-
-        const fieldsLength = this.itemInputService.itemFields.length;
-        const valuesLength = this.itemInputService.itemValues.length;
-
-        const emptyField = this.itemInputService.itemFields.findIndex(
-          (el) => el === ''
-        );
-        const emptyValue = this.itemInputService.itemValues.findIndex(
-          (el) => el === ''
-        );
-        if (fieldsLength === 0 && valuesLength === 0) {
-          document.getElementById('field_0').focus();
-        } else if (emptyField !== -1 || emptyValue !== -1) {
-          document.getElementById('field_0').focus();
-          if (emptyField !== 0) {
-            this.onInputEnterKey(0, 'field_');
-          }
-        } else {
-          (document.getElementById('value_0') as HTMLInputElement).focus();
-        }
+        this.selectFirstEmptyInput();
       }
     );
+  }
+
+  selectFirstEmptyInput() {
+    this.cd.detectChanges();
+    // if all fields and values full, select first value field
+    const fieldsLength = this.itemInputService.itemFields.length;
+    const valuesLength = this.itemInputService.itemValues.length;
+
+    const emptyField = this.itemInputService.itemFields.findIndex(
+      (el) => el === ''
+    );
+    const emptyValue = this.itemInputService.itemValues.findIndex(
+      (el) => el === ''
+    );
+    if (fieldsLength === 0 && valuesLength === 0) {
+      document.getElementById('field_0').focus();
+    } else if (emptyField !== -1 || emptyValue !== -1) {
+      document.getElementById('field_0').focus();
+      if (emptyField !== 0) {
+        this.onInputEnterKey(0, 'field_');
+      }
+    } else {
+      (document.getElementById('value_0') as HTMLInputElement).focus();
+    }
   }
 
   onClearItem(index) {
