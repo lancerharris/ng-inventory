@@ -40,7 +40,7 @@ export class AllItemsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    if (!this.itemCrudService.localItems) {
+    if (Object.keys(this.itemCrudService.localItems).length <= 0) {
       this.itemCrudService.getItems(false);
     } else {
       this.dataSource = new MatTableDataSource<any>(
