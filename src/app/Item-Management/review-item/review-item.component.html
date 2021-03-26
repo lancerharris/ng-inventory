@@ -1,1 +1,60 @@
-<p>review-item works!</p>
+<mat-toolbar color="primary">
+  <span>Reviewing {{ currItemIndex + 1 }} of {{ reviewCount }} items</span>
+</mat-toolbar>
+
+<mat-divider></mat-divider>
+<div class="top-tools">
+  <div class="left-tools">
+    <button
+      mat-stroked-button
+      color="primary"
+      [disabled]="currItemIndex <= 0"
+      (click)="onPrevItem()"
+    >
+      Previous
+    </button>
+    <button
+      mat-stroked-button
+      color="primary"
+      [disabled]="currItemIndex >= reviewCount - 1"
+      (click)="onNextItem()"
+    >
+      Next
+    </button>
+  </div>
+
+  <div class="middle-tools">
+    <button
+      mat-stroked-button
+      class="add-input__button"
+      color="primary"
+      (click)="onAddInput()"
+    >
+      <mat-icon class="top-tools__icon" color="primary">add_circle</mat-icon>
+    </button>
+
+    <button
+      mat-stroked-button
+      class="edit-input__button"
+      color="primary"
+      [ngStyle]="{
+        'background-color': editMode ? 'rgb(103, 58, 183, 0.1)' : ''
+      }"
+      (click)="onEditClick()"
+    >
+      <mat-icon class="top-tools__icon" color="primary">edit</mat-icon>
+    </button>
+  </div>
+
+  <div class="right-tools">
+    <button mat-flat-button color="accent" (click)="onSaveItem()">Save</button>
+    <button mat-stroked-button color="primary" (click)="onDropChanges()">
+      Drop Changes
+    </button>
+    <button mat-stroked-button color="warn" (click)="onDeleteItem()">
+      Delete
+    </button>
+  </div>
+</div>
+<mat-divider></mat-divider>
+<app-item-input [editMode]="editMode"></app-item-input>
