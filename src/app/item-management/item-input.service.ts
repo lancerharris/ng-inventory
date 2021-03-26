@@ -5,14 +5,15 @@ import { Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class ItemInputService {
-  itemFields: string[] = [];
-  itemValues: string[] = [];
+  itemFields: string[] = [''];
+  itemValues: string[] = [''];
   totalInputs: number[] = [0];
   MAX_INPUTS: number = 20;
   MAX_VALUE_LENGTH: number = 80;
   private longFieldIndex: number = -1;
   public longFieldSubject = new Subject<number>();
   public inputAdded = new Subject<number>();
+  public itemSelectedSubject = new Subject<number>();
 
   constructor() {}
 
@@ -25,11 +26,14 @@ export class ItemInputService {
     }
   }
 
-  AddInput() {
+  AddInput(field?, value?) {
     if (this.totalInputs.length < this.MAX_INPUTS) {
+      const inputLength = this.totalInputs.length;
       // to keep track of the indices of the input elements
-      this.totalInputs.push(this.totalInputs.length);
-      this.inputAdded.next(this.totalInputs.length - 1);
+      this.totalInputs.push(inputLength);
+      this.itemFields[inputLength] = field ? field : '';
+      this.itemValues[inputLength] = value ? value : '';
+      this.inputAdded.next(inputLength);
     } // else pop up to tell user no
   }
 
