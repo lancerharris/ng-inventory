@@ -12,9 +12,9 @@ import { ItemInputService } from './item-input.service';
 export class ItemCrudService {
   public currentTemplate: string;
   public localTemplates;
-  public localItems;
+  public localItems = {};
   public localTableItems = []; // an array of objects with dynamic number of fields and values
-  public localTableFields: string[];
+  public localTableFields: string[] = [];
 
   public localTemplatesSubject = new Subject<void>();
   public selectTemplateSubject = new Subject<void>();
@@ -37,15 +37,17 @@ export class ItemCrudService {
       this.currentTemplate = null;
     }
 
-    this.selectTemplateSubject.next();
+    this.itemInputService.itemSelectedSubject.next();
   }
 
   async addToTemplates(
     templateName: string,
     overwrite: boolean = false
   ): Promise<boolean> {
-    const fields = ['name', ...this.itemInputService.itemFields];
+    const fields = ['templateName', ...this.itemInputService.itemFields];
     const values = [templateName, ...this.itemInputService.itemValues];
+    console.log('adding to templates');
+
     return this.createItem(overwrite, true, fields, values, templateName);
   }
 
@@ -63,7 +65,6 @@ export class ItemCrudService {
       ? inputValues
       : [...this.itemInputService.itemValues];
     const longFieldIndex = this.itemInputService.getLongFieldIndex().toString();
-
     let graphqlQuery;
     if (overwrite) {
       const id = isTemplate
@@ -152,6 +153,8 @@ export class ItemCrudService {
       this.localTemplates = {};
     } else {
       this.localItems = {};
+      // reset the array to allow fresh table fields and get rid of unused ones
+      this.localTableFields = [];
     }
     const graphqlQuery = {
       query: `
@@ -181,71 +184,122 @@ export class ItemCrudService {
       })
       .pipe(catchError(this.handleError))
       .subscribe((resData) => {
-        // this.localTemplates = {};
-        const tableFields: string[] = [];
-        resData.data.getGems.gems.forEach((item, itemIndex) => {
-          const longFieldIndexIndex = item.fields.findIndex(
-            (el) => el === 'longFieldIndex'
-          );
-          let longFieldIndex;
-          if (longFieldIndexIndex > -1) {
-            longFieldIndex = item.values[longFieldIndexIndex];
-            item.fields.splice(longFieldIndexIndex, 1);
-            item.values.splice(longFieldIndexIndex, 1);
-          }
+        console.log(resData);
 
-          const idIndex = item.fields.findIndex((el) => el === '_id');
-          const itemId = item.values[idIndex];
-
+        resData.data.getGems.gems.forEach((item) => {
           if (getTemplates) {
-            const nameIndex = item.fields.findIndex((el) => el === 'name'); // todo change name to templateName everywhere. name is a likely user field
-            const name = item.values[nameIndex];
-            item.fields.splice(nameIndex, 1);
-            item.values.splice(nameIndex, 1);
-            item.fields.splice(idIndex, 1);
-            item.values.splice(idIndex, 1);
-
-            this.localTemplates[name] = {
-              fields: item.fields,
-              values: item.values,
-              longFieldIndex: longFieldIndex ? +longFieldIndex : -1,
-              id: itemId,
-            };
+            this.addLocalTemplate(item);
           } else {
-            const tableItem = {};
-            item.fields.forEach((field, index) => {
-              // no empty fields in the table since there can be multiple empty fields the data would be comingled
-              if (field && field !== '') {
-                const value = item.values[index];
-                tableItem[field] = value ? value : '';
-                if (field !== '_id') {
-                  tableFields.push(field);
-                }
-              }
-            });
-            tableItem['rowIndex'] = itemIndex;
-            this.localTableItems.push(tableItem);
-
-            // splice id after getting it into the tableItem so that I can link table to item
-            item.fields.splice(idIndex, 1);
-            item.values.splice(idIndex, 1);
-            this.localItems[itemId] = {
-              fields: item.fields,
-              values: item.values,
-              longFieldIndex: longFieldIndex ? +longFieldIndex : -1,
-            };
+            // pass callingInLoop true to avoid calling updateTableFields too many times.
+            this.addLocalItem(item, true);
           }
         });
         if (getTemplates) {
           this.localTemplatesSubject.next();
         } else {
-          // to avoid confusing table, return only unique fields
-          this.localTableFields = tableFields.filter((field, index, self) => {
-            return self.indexOf(field) === index;
-          });
-          this.localItemsSubject.next();
+          this.updateTableFields();
         }
       });
+  }
+
+  updateTableFields() {
+    // to avoid confusing table, return only unique fields
+    this.localTableFields = this.localTableFields.filter(
+      (field, index, self) => {
+        return self.indexOf(field) === index;
+      }
+    );
+    this.localItemsSubject.next();
+  }
+
+  pullFromItem(
+    item,
+    istemplate: boolean = false
+  ): { itemId: string; longFieldIndex?: number; templateName?: string } {
+    const longFieldIndexIndex = item.fields.findIndex(
+      (el) => el === 'longFieldIndex'
+    );
+    let longFieldIndex;
+    if (longFieldIndexIndex > -1) {
+      longFieldIndex = item.values[longFieldIndexIndex];
+      item.fields.splice(longFieldIndexIndex, 1);
+      item.values.splice(longFieldIndexIndex, 1);
+    }
+
+    const idIndex = item.fields.findIndex((el) => el === '_id');
+    const itemId = item.values[idIndex];
+    // splice id after getting it into the tableItem so that I can link table to item by id
+    item.fields.splice(idIndex, 1);
+    item.values.splice(idIndex, 1);
+
+    const pulledFields = { itemId: itemId };
+
+    if (longFieldIndex) {
+      pulledFields['longFieldIndex'] = +longFieldIndex;
+    }
+    if (istemplate) {
+      const nameIndex = item.fields.findIndex((el) => el === 'templateName');
+      const templateName = item.values[nameIndex];
+      item.fields.splice(nameIndex, 1);
+      item.values.splice(nameIndex, 1);
+      pulledFields['templateName'] = templateName;
+    }
+
+    return pulledFields;
+  }
+
+  addLocalTemplate(template) {
+    const pulledFields = this.pullFromItem(template, true);
+
+    this.localTemplates[pulledFields.templateName] = {
+      fields: template.fields,
+      values: template.values,
+      longFieldIndex: pulledFields.longFieldIndex
+        ? pulledFields.longFieldIndex
+        : -1,
+      id: pulledFields.itemId,
+    };
+  }
+
+  addLocalItem(item, callingInLoop: boolean = false) {
+    const tableItem = {};
+    const itemIndex = this.localTableItems.length;
+
+    item.fields.forEach((field, index) => {
+      // no empty fields in the table since there can be multiple empty fields the data would be comingled
+      if (field && field !== '') {
+        const value = item.values[index];
+        tableItem[field] = value ? value : '';
+        if (field !== '_id' && field !== 'longFieldIndex') {
+          this.localTableFields.push(field);
+        }
+      }
+    });
+    tableItem['rowIndex'] = itemIndex;
+
+    // splice id after getting it into the tableItem so that I can link table to item by id
+    const pulledValues = this.pullFromItem(item);
+
+    // overwrite tableItem if already there
+    const tableItemIndex = this.localTableItems.findIndex(
+      (item) => item._id === pulledValues.itemId
+    );
+    if (tableItemIndex > -1) {
+      this.localTableItems[tableItemIndex] = tableItem;
+    } else {
+      this.localTableItems.push(tableItem);
+    }
+
+    this.localItems[pulledValues.itemId] = {
+      fields: item.fields,
+      values: item.values,
+      longFieldIndex: pulledValues.longFieldIndex
+        ? pulledValues.longFieldIndex
+        : -1,
+    };
+    if (!callingInLoop) {
+      this.updateTableFields();
+    }
   }
 
   renameTemplate(priorTemplateName: string, newTemplateName: string) {
