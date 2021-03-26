@@ -67,9 +67,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
     }
   }
 
-  onAddInput() {
+  onAddInput(field?, value?) {
     this.cleanUp();
-    this.itemInputService.AddInput();
+    field = field ? field : '';
+    value = value ? value : '';
+    this.itemInputService.AddInput(field, value);
   }
 
   onEditClick() {
@@ -168,9 +170,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
       if (i < inputLength - 1) {
         this.onAddInput(); // we start with already having 1 input
       }
-      this.itemInputService.itemFields.push(fields[i]);
-      this.itemInputService.itemValues.push(values[i]);
+
+      this.itemInputService.itemFields[i] = fields[i];
+      this.itemInputService.itemValues[i] = values[i];
     }
+
     if (longFieldIndex > -1) {
       this.itemInputService.setLongFieldIndex(longFieldIndex);
     } else {
