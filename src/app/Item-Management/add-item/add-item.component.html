@@ -51,9 +51,8 @@
   </div>
 
   <div class="right-tools">
-    <button mat-flat-button color="accent" (click)="onSaveItem()">Save</button>
-    <button mat-stroked-button color="primary" (click)="onSaveTemplate()">
-      Add to Templates
+    <button mat-flat-button color="accent" (click)="onSaveItem()">
+      Save Item
     </button>
   </div>
 </div>
@@ -79,6 +78,9 @@
         *ngIf="selectedTemplate"
       >
         Deselect Template
+      </button>
+      <button mat-stroked-button color="primary" (click)="onSaveTemplate()">
+        Add to Templates
       </button>
       <button mat-stroked-button color="primary" (click)="onEditTemplates()">
         Edit Templates
