@@ -90,6 +90,7 @@ export class ReviewItemComponent implements OnInit {
 
   onDropChanges() {
     this.loadCurrItem(this.currItem);
+    this.cleanUp();
   }
   onDeleteItem() {
     // const updated: boolean = await this.itemCrudService.deleteItem();

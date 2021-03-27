@@ -19,6 +19,8 @@
         id="{{ 'field_' + i }}"
         name="{{ 'field_' + i }}"
         appInputSelect
+        appInputEdit
+        [reviewMode]="reviewMode"
         [(ngModel)]="itemFields[i]"
         (keydown)="onInputKeydown($event, i, 'inField')"
       />
@@ -30,6 +32,8 @@
         id="{{ 'value_' + i }}"
         name="{{ 'value_' + i }}"
         appInputSelect
+        appInputEdit
+        [reviewMode]="reviewMode"
         [(ngModel)]="itemValues[i]"
         (keydown)="onInputKeydown($event, i, 'inValue')"
       />
@@ -43,6 +47,8 @@
         name="{{ 'value_' + i }}"
         (input)="autoGrow($event)"
         appInputSelect
+        appInputEdit
+        [reviewMode]="reviewMode"
         [(ngModel)]="itemValues[i]"
         (keydown)="onInputKeydown($event, i, 'inValue')"
       ></textarea>

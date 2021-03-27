@@ -18,6 +18,7 @@ import { ItemCrudService } from '../item-crud.service';
 })
 export class ItemInputComponent implements OnInit, OnDestroy {
   @Input() editMode: boolean = false;
+  @Input() reviewMode: boolean = false;
 
   public itemFields: string[];
   public itemValues: string[];

@@ -84,6 +84,13 @@
   display: none;
 }
 
+.cell__edited {
+  /* color: hsl(271, 98%, 55%); */
+  color: #673ab7;
+
+  font-weight: 700;
+}
+
 @media (min-width: 27rem) {
   .input__header-small {
     display: inline-block;
