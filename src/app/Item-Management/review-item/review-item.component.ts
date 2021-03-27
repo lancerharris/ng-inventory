@@ -40,9 +40,7 @@ export class ReviewItemComponent implements OnInit {
     this.reviewCount = this.reviewItemsService.itemIds.length;
     this.currItemChangeSub = this.itemInputService.itemSelectedSubject.subscribe(
       () => {
-        console.log('recieved emission');
         this.currItem = this.reviewItemsService.currItem;
-        console.log(this.currItem);
         this.currItemIndex = this.reviewItemsService.itemIds.findIndex(
           (el) => el === this.currItem._id
         );
@@ -90,7 +88,9 @@ export class ReviewItemComponent implements OnInit {
     this.cleanUp();
   }
 
-  onDropChanges() {}
+  onDropChanges() {
+    this.loadCurrItem(this.currItem);
+  }
   onDeleteItem() {
     // const updated: boolean = await this.itemCrudService.deleteItem();
     this.cleanUp();
@@ -107,29 +107,15 @@ export class ReviewItemComponent implements OnInit {
     const values = currItem['values'];
     const longFieldIndex = currItem['longFieldIndex'];
 
-    const inputLength =
-      fields.length > values.length ? fields.length : values.length;
-    for (let i = 0; i < inputLength; i++) {
-      if (i < inputLength - 1) {
-        this.onAddInput(); // we start with already having 1 input
-      }
-      this.itemInputService.itemFields.push(fields[i]);
-      this.itemInputService.itemValues.push(values[i]);
-    }
-    if (longFieldIndex > -1) {
-      this.itemInputService.setLongFieldIndex(longFieldIndex);
-    } else {
-      this.itemInputService.setLongFieldIndex(-1);
-    }
+    this.itemInputService.loadItem(fields, values, longFieldIndex);
+    this.cleanUp();
   }
 
   async onSelectItem(itemId: string) {
-    console.log('running onselete');
     if (
       this.itemCrudService.localItems &&
       this.itemCrudService.localItems[itemId]
     ) {
-      console.log('and in local items');
       // this will call loadCurrItem and set this.currItem
       this.reviewItemsService.setCurrItem({
         _id: itemId,

@@ -37,6 +37,23 @@ export class ItemInputService {
     } // else pop up to tell user no
   }
 
+  loadItem(fields, values, longFieldIndex) {
+    const inputLength =
+      fields.length > values.length ? fields.length : values.length;
+    for (let i = 0; i < inputLength; i++) {
+      if (i < inputLength - 1) {
+        this.AddInput(); // we start with already having 1 input
+      }
+      this.itemFields[i] = fields[i];
+      this.itemValues[i] = values[i];
+    }
+    if (longFieldIndex > -1) {
+      this.setLongFieldIndex(longFieldIndex);
+    } else {
+      this.setLongFieldIndex(-1);
+    }
+  }
+
   getLongFieldIndex() {
     return this.longFieldIndex;
   }
