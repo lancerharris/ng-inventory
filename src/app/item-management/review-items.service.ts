@@ -32,9 +32,7 @@ export class ReviewItemsService {
   }
 
   setCurrItem(currItem) {
-    console.log('setting current item');
     this.currItem = currItem;
-    console.log('emitting itemselectsubject');
     this.itemInputService.itemSelectedSubject.next();
   }
 
@@ -66,36 +64,27 @@ export class ReviewItemsService {
       })
       .pipe(catchError(this.handleError))
       .subscribe((resData) => {
+        console.log(resData);
         const item = resData.data.getOneGem;
         const fields = item.fields;
         const values = item.values;
 
         const idIndex = fields.findIndex((el) => el === '_id');
         const itemId = values[idIndex];
-
         if (!this.itemCrudService.localItems[itemId]) {
           this.itemCrudService.addLocalItem(item);
         }
-
-        const longFieldIndexIndex = fields.findIndex(
-          (el) => el === 'longFieldIndex'
-        );
-        let longFieldIndex;
-        if (longFieldIndexIndex > -1) {
-          longFieldIndex = values[longFieldIndexIndex];
-          fields.splice(longFieldIndexIndex, 1);
-          values.splice(longFieldIndexIndex, 1);
-        }
-
-        fields.splice(idIndex, 1);
-        values.splice(idIndex, 1);
+        const localItem = this.itemCrudService.localItems[itemId];
 
         this.setCurrItem({
           _id: itemId,
           fields: fields,
           values: values,
-          longFieldIndex: longFieldIndex ? +longFieldIndex : -1,
+          longFieldIndex: localItem.longFieldIndex
+            ? localItem.longFieldIndex
+            : -1,
         });
+        console.log(this.currItem);
       });
   }
 
