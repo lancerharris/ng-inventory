@@ -13,6 +13,7 @@ import { ItemInputComponent } from './item-input/item-input.component';
 import { InputSelectDirective } from './input-select.directive';
 import { DialogsModule } from '../dialogs/dialogs.module';
 import { TableCellDirective } from './all-items/table-cell.directive';
+import { InputEditDirective } from './item-input/input-edit.directive';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { TableCellDirective } from './all-items/table-cell.directive';
     ItemInputComponent,
     InputSelectDirective,
     TableCellDirective,
+    InputEditDirective,
   ],
   imports: [
     CommonModule,
