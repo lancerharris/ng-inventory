@@ -1,5 +1,7 @@
 <mat-toolbar color="primary">
-  <span>Reviewing {{ currItemIndex + 1 }} of {{ reviewCount }} items</span>
+  <span *ngIf="currItemIndex > -1"
+    >Reviewing {{ currItemIndex + 1 }} of {{ reviewCount }} items</span
+  >
 </mat-toolbar>
 
 <mat-divider></mat-divider>
@@ -47,7 +49,9 @@
   </div>
 
   <div class="right-tools">
-    <button mat-flat-button color="accent" (click)="onSaveItem()">Save</button>
+    <button mat-flat-button color="accent" (click)="onSaveItem()">
+      Save Item
+    </button>
     <button mat-stroked-button color="primary" (click)="onDropChanges()">
       Drop Changes
     </button>
