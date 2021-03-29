@@ -25,7 +25,7 @@ export class ItemInputComponent implements OnInit, OnDestroy {
   public totalInputs: number[];
   public longField: boolean = false;
   public longFieldIndex: number = -1;
-  private templateSelectSub: Subscription;
+  private itemSelectSub: Subscription;
   private longFieldSub: Subscription;
   private inputAddedSub: Subscription;
 
@@ -52,7 +52,7 @@ export class ItemInputComponent implements OnInit, OnDestroy {
         document.getElementById('field_' + addedIndex).focus();
       }
     );
-    this.templateSelectSub = this.itemInputService.itemSelectedSubject.subscribe(
+    this.itemSelectSub = this.itemInputService.itemSelectedSubject.subscribe(
       () => {
         this.selectFirstEmptyInput();
       }
@@ -125,8 +125,8 @@ export class ItemInputComponent implements OnInit, OnDestroy {
       inputStatus === 'field_' &&
       !this.itemInputService.itemValues[startIndex]
     ) {
-      firstEmptyIndex = startIndex;
       targetStatus = 'value_';
+      firstEmptyIndex = startIndex;
     } else if (startIndex < this.totalInputs.length - 1) {
       for (let i = startIndex + 1; i < this.totalInputs.length; i++) {
         if (
@@ -141,13 +141,21 @@ export class ItemInputComponent implements OnInit, OnDestroy {
         }
       }
       if (!firstEmptyIndex) {
-        this.itemInputService.AddInput();
+        this.itemInputService.AddInput({
+          field: '',
+          value: '',
+          suspendSubject: false,
+        });
       }
     } else {
       targetStatus = 'field_';
       firstEmptyIndex = startIndex + 1;
-      this.itemInputService.AddInput();
-      return; // must return since getElementById won't work since the input isn't available yet.
+      this.itemInputService.AddInput({
+        field: '',
+        value: '',
+        suspendSubject: false,
+      });
+      return; // must return, getElementById won't work since the input isn't available yet.
     }
 
     if (firstEmptyIndex >= 0) {
@@ -222,6 +230,6 @@ export class ItemInputComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.longFieldSub.unsubscribe();
     this.inputAddedSub.unsubscribe();
-    this.templateSelectSub.unsubscribe();
+    this.itemSelectSub.unsubscribe();
   }
 }

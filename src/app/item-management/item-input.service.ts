@@ -22,18 +22,20 @@ export class ItemInputService {
     this.itemFields.splice(inputIndex, removeN);
     this.itemValues.splice(inputIndex, removeN);
     if (this.totalInputs.length === 0) {
-      this.AddInput();
+      this.AddInput({ field: '', value: '', suspendSubject: false });
     }
   }
 
-  AddInput(field?, value?) {
+  AddInput(initObject: { field: string; value: any; suspendSubject: boolean }) {
     if (this.totalInputs.length < this.MAX_INPUTS) {
       const inputLength = this.totalInputs.length;
       // to keep track of the indices of the input elements
       this.totalInputs.push(inputLength);
-      this.itemFields[inputLength] = field ? field : '';
-      this.itemValues[inputLength] = value ? value : '';
-      this.inputAdded.next(inputLength);
+      this.itemFields[inputLength] = initObject.field ? initObject.field : '';
+      this.itemValues[inputLength] = initObject.value ? initObject.value : '';
+      if (initObject.suspendSubject) {
+        this.inputAdded.next(inputLength);
+      }
     } // else pop up to tell user no
   }
 
@@ -42,7 +44,8 @@ export class ItemInputService {
       fields.length > values.length ? fields.length : values.length;
     for (let i = 0; i < inputLength; i++) {
       if (i < inputLength - 1) {
-        this.AddInput(); // we start with already having 1 input
+        // when loading item don't need to emit event for cursor change
+        this.AddInput({ field: '', value: '', suspendSubject: true }); // we start with already having 1 input
       }
       this.itemFields[i] = fields[i];
       this.itemValues[i] = values[i];

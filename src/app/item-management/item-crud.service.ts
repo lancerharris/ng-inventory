@@ -36,7 +36,6 @@ export class ItemCrudService {
     } else {
       this.currentTemplate = null;
     }
-
     this.itemInputService.itemSelectedSubject.next();
   }
 

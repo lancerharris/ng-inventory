@@ -75,7 +75,11 @@ export class ReviewItemComponent implements OnInit {
   }
 
   onAddInput() {
-    this.itemInputService.AddInput();
+    this.itemInputService.AddInput({
+      field: '',
+      value: '',
+      suspendSubject: false,
+    });
     this.cleanUp();
   }
 
@@ -89,7 +93,8 @@ export class ReviewItemComponent implements OnInit {
   }
 
   onDropChanges() {
-    this.loadCurrItem(this.currItem);
+    this.reviewItemsService.setCurrItem(this.currItem);
+    // this.loadCurrItem(this.currItem);
     this.cleanUp();
   }
   onDeleteItem() {

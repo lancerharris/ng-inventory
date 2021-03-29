@@ -71,7 +71,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.cleanUp();
     field = field ? field : '';
     value = value ? value : '';
-    this.itemInputService.AddInput(field, value);
+    this.itemInputService.AddInput({
+      field: field,
+      value: value,
+      suspendSubject: false,
+    });
   }
 
   onEditClick() {
