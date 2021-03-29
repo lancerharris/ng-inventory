@@ -68,7 +68,6 @@ export class ReviewItemsService {
       })
       .pipe(catchError(this.handleError))
       .subscribe((resData) => {
-        console.log(resData);
         const item = resData.data.getOneGem;
         const fields = item.fields;
         const values = item.values;
@@ -88,7 +87,6 @@ export class ReviewItemsService {
             ? localItem.longFieldIndex
             : -1,
         });
-        console.log(this.currItem);
       });
   }
 

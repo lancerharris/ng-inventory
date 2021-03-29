@@ -44,13 +44,11 @@ export class DialogTemplateEditComponent implements OnInit {
   }
 
   onActionSelect(action: string) {
-    console.log(action);
     const alreadySelected = this.action === action;
     this.action = alreadySelected ? null : action;
   }
 
   onRenameTemplate() {
-    // console.log(this.selectedTemplate, this.thirdFormGroup.value.thirdCtrl);
     this.ItemCrudService.renameTemplate(
       this.selectedTemplate,
       this.firstFormGroup.value.firstCtrl

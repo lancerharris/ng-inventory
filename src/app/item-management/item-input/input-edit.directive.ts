@@ -39,7 +39,6 @@ export class InputEditDirective {
       fieldOrValue: this.fieldOrValue,
       rowIndex: this.rowIndex,
     };
-    console.log('hello der');
     if (this.reviewMode) {
       if (!this.listnerInitialized) {
         this.typeaheadSubject = new BehaviorSubject(eventObject);
@@ -56,8 +55,6 @@ export class InputEditDirective {
       const currItem = this.reviewItemsService.currItem;
       const currItemKey =
         eventObject.fieldOrValue === 'field' ? 'fields' : 'values';
-      console.log(currItem[currItemKey][eventObject.rowIndex]);
-      console.log(eventObject.text);
       if (eventObject.text !== currItem[currItemKey][eventObject.rowIndex]) {
         this.cellEditedChange.emit(true);
       } else {

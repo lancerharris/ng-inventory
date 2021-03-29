@@ -45,7 +45,6 @@ export class ItemCrudService {
   ): Promise<boolean> {
     const fields = ['templateName', ...this.itemInputService.itemFields];
     const values = [templateName, ...this.itemInputService.itemValues];
-    console.log('adding to templates');
 
     return this.createItem(overwrite, true, fields, values, templateName);
   }
@@ -183,8 +182,6 @@ export class ItemCrudService {
       })
       .pipe(catchError(this.handleError))
       .subscribe((resData) => {
-        console.log(resData);
-
         resData.data.getGems.gems.forEach((item) => {
           if (getTemplates) {
             this.addLocalTemplate(item);
