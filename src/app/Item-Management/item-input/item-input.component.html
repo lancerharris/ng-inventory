@@ -15,12 +15,16 @@
     <div class="input__content">
       <input
         maxlength="30"
-        class="input__content-field"
+        class="input__content-field mat-body"
         id="{{ 'field_' + i }}"
         name="{{ 'field_' + i }}"
         appInputSelect
         appInputEdit
         [reviewMode]="reviewMode"
+        [fieldOrValue]="'field'"
+        [rowIndex]="i"
+        (cellEditedChange)="changeCellEditedStatus($event, 'field', i)"
+        [ngClass]="{ cell__edited: editedInputs.fieldsEdited[i] }"
         [(ngModel)]="itemFields[i]"
         (keydown)="onInputKeydown($event, i, 'inField')"
       />
@@ -34,6 +38,10 @@
         appInputSelect
         appInputEdit
         [reviewMode]="reviewMode"
+        [fieldOrValue]="'value'"
+        [rowIndex]="i"
+        (cellEditedChange)="changeCellEditedStatus($event, 'value', i)"
+        [ngClass]="{ cell__edited: editedInputs.valuesEdited[i] }"
         [(ngModel)]="itemValues[i]"
         (keydown)="onInputKeydown($event, i, 'inValue')"
       />
@@ -49,6 +57,10 @@
         appInputSelect
         appInputEdit
         [reviewMode]="reviewMode"
+        [fieldOrValue]="'value'"
+        [rowIndex]="i"
+        (cellEditedChange)="changeCellEditedStatus($event, 'value', i)"
+        [ngClass]="{ cell__edited: editedInputs.valuesEdited[i] }"
         [(ngModel)]="itemValues[i]"
         (keydown)="onInputKeydown($event, i, 'inValue')"
       ></textarea>

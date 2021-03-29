@@ -1,5 +1,4 @@
 import {
-  AfterViewChecked,
   ChangeDetectorRef,
   Component,
   Input,
@@ -9,7 +8,7 @@ import {
 
 import { Subscription } from 'rxjs';
 import { ItemInputService } from '../item-input.service';
-import { ItemCrudService } from '../item-crud.service';
+import { ReviewItemsService } from '../review-items.service';
 
 @Component({
   selector: 'app-item-input',
@@ -22,6 +21,7 @@ export class ItemInputComponent implements OnInit, OnDestroy {
 
   public itemFields: string[];
   public itemValues: string[];
+  public editedInputs: { fieldsEdited: boolean[]; valuesEdited: boolean[] };
   public totalInputs: number[];
   public longField: boolean = false;
   public longFieldIndex: number = -1;
@@ -31,7 +31,7 @@ export class ItemInputComponent implements OnInit, OnDestroy {
 
   constructor(
     private itemInputService: ItemInputService,
-    private ItemCrudService: ItemCrudService,
+    private reviewItemService: ReviewItemsService,
     private cd: ChangeDetectorRef
   ) {}
 
@@ -39,6 +39,7 @@ export class ItemInputComponent implements OnInit, OnDestroy {
     this.itemFields = this.itemInputService.itemFields;
     this.itemValues = this.itemInputService.itemValues;
     this.totalInputs = this.itemInputService.totalInputs;
+    this.editedInputs = this.reviewItemService.editedInputs;
     // this is needed for showing the long edit button in the view
     this.longFieldSub = this.itemInputService.longFieldSubject.subscribe(
       (index) => {
@@ -56,6 +57,16 @@ export class ItemInputComponent implements OnInit, OnDestroy {
         this.selectFirstEmptyInput();
       }
     );
+  }
+
+  changeCellEditedStatus(event: boolean, fieldOrValue: string, index: number) {
+    fieldOrValue =
+      fieldOrValue === 'field'
+        ? 'fieldsEdited'
+        : fieldOrValue === 'value'
+        ? 'valuesEdited'
+        : 'err';
+    this.editedInputs[fieldOrValue][index] = event;
   }
 
   selectFirstEmptyInput() {

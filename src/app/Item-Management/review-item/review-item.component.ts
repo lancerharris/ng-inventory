@@ -103,10 +103,18 @@ export class ReviewItemComponent implements OnInit {
     longFieldIndex: number;
   }) {
     this.itemInputService.removeInputs(0, this.totalInputs.length);
-
     const fields = currItem['fields'];
     const values = currItem['values'];
     const longFieldIndex = currItem['longFieldIndex'];
+
+    const itemLength = Math.max(fields.length, values.length);
+
+    this.reviewItemsService.editedInputs.fieldsEdited = Array(itemLength).fill(
+      false
+    );
+    this.reviewItemsService.editedInputs.valuesEdited = Array(itemLength).fill(
+      false
+    );
 
     this.itemInputService.loadItem(fields, values, longFieldIndex);
     this.cleanUp();
