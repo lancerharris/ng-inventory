@@ -33,7 +33,7 @@ export class ItemInputService {
       this.totalInputs.push(inputLength);
       this.itemFields[inputLength] = initObject.field ? initObject.field : '';
       this.itemValues[inputLength] = initObject.value ? initObject.value : '';
-      if (initObject.suspendSubject) {
+      if (!initObject.suspendSubject) {
         this.inputAdded.next(inputLength);
       }
     } // else pop up to tell user no
