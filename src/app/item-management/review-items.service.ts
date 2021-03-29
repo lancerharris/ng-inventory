@@ -16,6 +16,10 @@ export class ReviewItemsService {
     longFieldIndex: number;
   };
   public itemIds: string[];
+  public editedInputs: { fieldsEdited: boolean[]; valuesEdited: boolean[] } = {
+    fieldsEdited: [],
+    valuesEdited: [],
+  };
 
   public currItemChangeSubject = new Subject<void>();
 
