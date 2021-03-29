@@ -1,4 +1,11 @@
-import { Directive, ElementRef, HostListener, Input } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+} from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ReviewItemsService } from '../review-items.service';
@@ -8,11 +15,15 @@ import { ReviewItemsService } from '../review-items.service';
 })
 export class InputEditDirective {
   @Input() reviewMode: boolean;
+  @Input() fieldOrValue: string;
+  @Input() rowIndex: number;
+
+  @Output() cellEditedChange = new EventEmitter<boolean>();
 
   private typeaheadSubject: BehaviorSubject<{
     text: string;
     fieldOrValue: string;
-    rowIndex: string;
+    rowIndex: number;
   }>;
 
   private listnerInitialized: boolean = false;
@@ -22,14 +33,13 @@ export class InputEditDirective {
     private reviewItemsService: ReviewItemsService
   ) {}
 
-  @HostListener('input') onInput() {
-    const idSplit = (this.el.nativeElement as HTMLInputElement).id.split('_');
+  @HostListener('input', ['$event.target']) onInput(eventTarget) {
     const eventObject = {
-      text: (this.el.nativeElement as HTMLInputElement).value,
-      fieldOrValue: idSplit[0],
-      rowIndex: idSplit[1],
+      text: eventTarget.value,
+      fieldOrValue: this.fieldOrValue,
+      rowIndex: this.rowIndex,
     };
-
+    console.log('hello der');
     if (this.reviewMode) {
       if (!this.listnerInitialized) {
         this.typeaheadSubject = new BehaviorSubject(eventObject);
@@ -42,14 +52,16 @@ export class InputEditDirective {
       this.listnerInitialized = true;
     }
 
-    this.typeaheadSubject.subscribe((ev) => {
+    this.typeaheadSubject.subscribe(() => {
       const currItem = this.reviewItemsService.currItem;
       const currItemKey =
         eventObject.fieldOrValue === 'field' ? 'fields' : 'values';
+      console.log(currItem[currItemKey][eventObject.rowIndex]);
+      console.log(eventObject.text);
       if (eventObject.text !== currItem[currItemKey][eventObject.rowIndex]) {
-        this.el.nativeElement.classList.add('cell__edited');
+        this.cellEditedChange.emit(true);
       } else {
-        this.el.nativeElement.classList.remove('cell__edited');
+        this.cellEditedChange.emit(false);
       }
     });
   }
