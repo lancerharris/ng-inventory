@@ -1,9 +1,11 @@
 import {
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
+  Output,
 } from '@angular/core';
 
 import { Subscription } from 'rxjs';
@@ -18,6 +20,8 @@ import { ReviewItemsService } from '../review-items.service';
 export class ItemInputComponent implements OnInit, OnDestroy {
   @Input() editMode: boolean = false;
   @Input() reviewMode: boolean = false;
+
+  @Output() cellEdited = new EventEmitter<boolean>();
 
   public itemFields: string[];
   public itemValues: string[];
@@ -59,14 +63,22 @@ export class ItemInputComponent implements OnInit, OnDestroy {
     );
   }
 
-  changeCellEditedStatus(event: boolean, fieldOrValue: string, index: number) {
+  changeCellEditedStatus(
+    cellEdited: boolean,
+    fieldOrValue: string,
+    index: number
+  ) {
+    if (cellEdited) {
+      // to enable drop changes button
+      this.cellEdited.emit(cellEdited);
+    }
     fieldOrValue =
       fieldOrValue === 'field'
         ? 'fieldsEdited'
         : fieldOrValue === 'value'
         ? 'valuesEdited'
         : 'err';
-    this.editedInputs[fieldOrValue][index] = event;
+    this.editedInputs[fieldOrValue][index] = cellEdited;
   }
 
   selectFirstEmptyInput() {

@@ -23,6 +23,7 @@ export class ReviewItemComponent implements OnInit {
   };
   public currItemIndex: number;
   public reviewCount: number;
+  public cellEdited: boolean = false;
 
   private currentIdSub: Subscription;
   private currItemChangeSub: Subscription;
@@ -62,12 +63,14 @@ export class ReviewItemComponent implements OnInit {
   }
 
   onPrevItem() {
+    this.cellEdited = false;
     this.router.navigate(
       ['../' + this.reviewItemsService.itemIds[this.currItemIndex - 1]],
       { relativeTo: this.route }
     );
   }
   onNextItem() {
+    this.cellEdited = false;
     this.router.navigate(
       ['../' + this.reviewItemsService.itemIds[this.currItemIndex + 1]],
       { relativeTo: this.route }
@@ -94,7 +97,7 @@ export class ReviewItemComponent implements OnInit {
 
   onDropChanges() {
     this.reviewItemsService.setCurrItem(this.currItem);
-    // this.loadCurrItem(this.currItem);
+    this.cellEdited = false;
     this.cleanUp();
   }
   onDeleteItem() {

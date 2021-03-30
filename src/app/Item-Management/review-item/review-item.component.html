@@ -52,7 +52,12 @@
     <button mat-flat-button color="accent" (click)="onSaveItem()">
       Save Item
     </button>
-    <button mat-stroked-button color="primary" (click)="onDropChanges()">
+    <button
+      mat-stroked-button
+      color="primary"
+      [disabled]="!cellEdited"
+      (click)="onDropChanges()"
+    >
       Drop Changes
     </button>
     <button mat-stroked-button color="warn" (click)="onDeleteItem()">
@@ -61,4 +66,8 @@
   </div>
 </div>
 <mat-divider></mat-divider>
-<app-item-input [editMode]="editMode" [reviewMode]="true"></app-item-input>
+<app-item-input
+  [editMode]="editMode"
+  [reviewMode]="true"
+  (cellEdited)="cellEdited = $event"
+></app-item-input>
