@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { MessagingService } from '../services/messaging.service';
 import { ItemCrudService } from './item-crud.service';
 import { ItemInputService } from './item-input.service';
 
@@ -22,11 +23,13 @@ export class ReviewItemsService {
   };
 
   public currItemChangeSubject = new Subject<void>();
+  public itemReplacedSubject = new Subject<void>();
 
   constructor(
     private http: HttpClient,
     private itemInputService: ItemInputService,
-    private itemCrudService: ItemCrudService
+    private itemCrudService: ItemCrudService,
+    private messagingService: MessagingService
   ) {
     this.itemIds = [
       '6054ed7ffbb9d91c34680b51',
@@ -38,6 +41,14 @@ export class ReviewItemsService {
   setCurrItem(currItem) {
     this.currItem = currItem;
     this.itemInputService.itemSelectedSubject.next();
+  }
+
+  resetEditedCells() {
+    const fields = this.currItem['fields'];
+    const values = this.currItem['values'];
+    const itemLength = Math.max(fields.length, values.length);
+    this.editedInputs.fieldsEdited = Array(itemLength).fill(false);
+    this.editedInputs.valuesEdited = Array(itemLength).fill(false);
   }
 
   getOneItem(itemId: string) {
@@ -87,6 +98,50 @@ export class ReviewItemsService {
             ? localItem.longFieldIndex
             : -1,
         });
+      });
+  }
+
+  replaceCurrItem() {
+    const longFieldIndex = this.itemInputService.getLongFieldIndex();
+    const graphqlQuery = {
+      query: `
+        mutation replaceItem($userId: String!, $id: ID!, $itemInput: GemInputData!, $longFieldIndex: String, $isTemplate: Boolean!) {
+          replaceGem(userId: $userId, id: $id, gemInput: $itemInput, longFieldIndex: $longFieldIndex, isTemplate: $isTemplate) {
+            fields
+            values
+          }
+        }
+      `,
+      variables: {
+        userId: localStorage.getItem('userId'),
+        id: this.currItem._id,
+        itemInput: {
+          fields: this.itemInputService.itemFields,
+          values: this.itemInputService.itemValues,
+        },
+        longFieldIndex: longFieldIndex.toString(),
+        isTemplate: false,
+      },
+    };
+
+    this.http
+      .post<{
+        data: {
+          replaceGem: { fields: string[]; values: string[] };
+        };
+      }>('http://localhost:3000/graphql', JSON.stringify(graphqlQuery), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .pipe(catchError(this.handleError))
+      .subscribe(() => {
+        this.currItem.fields = [...this.itemInputService.itemFields];
+        this.currItem.values = [...this.itemInputService.itemValues];
+        this.currItem.longFieldIndex = this.itemInputService.getLongFieldIndex();
+        this.messagingService.simpleMessage('Item Updated');
+        this.resetEditedCells();
+        this.itemReplacedSubject.next();
       });
   }
 

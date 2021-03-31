@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
 import { ItemCrudService } from '../item-crud.service';
 import { ItemInputService } from '../item-input.service';
 import { ReviewItemsService } from '../review-items.service';
@@ -15,7 +14,7 @@ export class ReviewItemComponent implements OnInit {
   public editMode: boolean = false;
   public totalInputs: number[];
   public itemId: string;
-  private currItem: {
+  public currItem: {
     _id: string;
     fields: string[];
     values: string[];
@@ -27,6 +26,7 @@ export class ReviewItemComponent implements OnInit {
 
   private currentIdSub: Subscription;
   private currItemChangeSub: Subscription;
+  private itemReplacedSub: Subscription;
 
   constructor(
     private itemInputService: ItemInputService,
@@ -45,7 +45,7 @@ export class ReviewItemComponent implements OnInit {
         this.currItemIndex = this.reviewItemsService.itemIds.findIndex(
           (el) => el === this.currItem._id
         );
-        this.loadCurrItem(this.currItem);
+        this.loadCurrItem();
       }
     );
     this.currentIdSub = this.route.params.subscribe((params) => {
@@ -56,6 +56,11 @@ export class ReviewItemComponent implements OnInit {
       }
       this.onSelectItem(this.itemId);
     });
+    this.itemReplacedSub = this.reviewItemsService.itemReplacedSubject.subscribe(
+      () => {
+        this.cellEdited = false;
+      }
+    );
   }
 
   cleanUp() {
@@ -90,8 +95,8 @@ export class ReviewItemComponent implements OnInit {
     this.editMode = !this.editMode;
   }
 
-  onSaveItem() {
-    // const saved: boolean = await this.itemCrudService.replaceItem(false, false);
+  onUpdateItem() {
+    this.reviewItemsService.replaceCurrItem();
     this.cleanUp();
   }
 
@@ -105,24 +110,13 @@ export class ReviewItemComponent implements OnInit {
     this.cleanUp();
   }
 
-  loadCurrItem(currItem: {
-    fields: string[];
-    values: string[];
-    longFieldIndex: number;
-  }) {
+  loadCurrItem() {
     this.itemInputService.removeInputs(0, this.totalInputs.length);
-    const fields = currItem['fields'];
-    const values = currItem['values'];
-    const longFieldIndex = currItem['longFieldIndex'];
+    this.reviewItemsService.resetEditedCells();
 
-    const itemLength = Math.max(fields.length, values.length);
-
-    this.reviewItemsService.editedInputs.fieldsEdited = Array(itemLength).fill(
-      false
-    );
-    this.reviewItemsService.editedInputs.valuesEdited = Array(itemLength).fill(
-      false
-    );
+    const fields = this.currItem['fields'];
+    const values = this.currItem['values'];
+    const longFieldIndex = this.currItem['longFieldIndex'];
 
     this.itemInputService.loadItem(fields, values, longFieldIndex);
     this.cleanUp();
@@ -149,5 +143,6 @@ export class ReviewItemComponent implements OnInit {
     this.itemInputService.removeInputs(0, this.totalInputs.length);
     this.currentIdSub.unsubscribe();
     this.currItemChangeSub.unsubscribe();
+    this.itemReplacedSub.unsubscribe();
   }
 }
