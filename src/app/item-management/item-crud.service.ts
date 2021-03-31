@@ -19,6 +19,7 @@ export class ItemCrudService {
   public localTemplatesSubject = new Subject<void>();
   public selectTemplateSubject = new Subject<void>();
   public localItemsSubject = new Subject<void>();
+  public itemCreatedSubject = new Subject<void>();
 
   constructor(
     private itemInputService: ItemInputService,
@@ -36,17 +37,15 @@ export class ItemCrudService {
     } else {
       this.currentTemplate = null;
     }
+    this.selectTemplateSubject.next();
     this.itemInputService.itemSelectedSubject.next();
   }
 
-  async addToTemplates(
-    templateName: string,
-    overwrite: boolean = false
-  ): Promise<boolean> {
+  addToTemplates(templateName: string, overwrite: boolean = false) {
     const fields = ['templateName', ...this.itemInputService.itemFields];
     const values = [templateName, ...this.itemInputService.itemValues];
 
-    return this.createItem(overwrite, true, fields, values, templateName);
+    this.createItem(overwrite, true, fields, values, templateName);
   }
 
   createItem(
@@ -55,7 +54,7 @@ export class ItemCrudService {
     inputFields?: string[],
     inputValues?: string[],
     templateName?: string
-  ): boolean {
+  ) {
     const fields = inputFields
       ? inputFields
       : [...this.itemInputService.itemFields];
@@ -132,7 +131,7 @@ export class ItemCrudService {
               'longFieldIndex'
             ] = +longFieldIndex;
           }
-          this.currentTemplate = templateName;
+          this.setCurrentTemplate(templateName);
           this.localTemplatesSubject.next();
           this.messagingService.simpleMessage(
             'The ',
@@ -142,8 +141,10 @@ export class ItemCrudService {
         } else {
           this.messagingService.simpleMessage('Item Saved');
         }
+
+        this.itemCreatedSubject.next();
       });
-    return true; // shouldn't reach here if http error
+    // return true; // shouldn't reach here if http error. I don't think that's true.
   }
 
   getItems(getTemplates: boolean) {
