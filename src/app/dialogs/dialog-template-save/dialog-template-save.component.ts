@@ -56,20 +56,13 @@ export class DialogTemplateSaveComponent implements OnInit {
     this.saveColor = action === 'overwriteTemplate' ? 'warn' : 'accent';
   }
 
-  async onSaveTemplate() {
+  onSaveTemplate() {
     const doOverwrite = this.action === 'overwriteTemplate';
     const saveName = doOverwrite
       ? this.selectedTemplate
       : this.firstFormGroup.value.firstCtrl;
 
-    const itemSaved = await this.ItemCrudService.addToTemplates(
-      saveName,
-      doOverwrite
-    );
-    if (!itemSaved) {
-      this.messagingService.simpleMessage('Template Save Failed');
-      this.dialogRef.close('fail');
-    }
-    this.dialogRef.close(itemSaved);
+    this.ItemCrudService.addToTemplates(saveName, doOverwrite);
+    this.dialogRef.close();
   }
 }
