@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 import { MatSidenav } from '@angular/material/sidenav';
 
 import { MatDialog } from '@angular/material/dialog';
-import { DialogActionCancelComponent } from '../../dialogs/dialog-action-cancel/dialog-action-cancel.component';
 import { ItemInputService } from '../item-input.service';
 import { ItemCrudService } from '../item-crud.service';
 import { DialogYesNoComponent } from 'src/app/dialogs/dialog-yes-no/dialog-yes-no.component';
@@ -28,6 +27,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   public totalInputs: number[];
   private templatesSub: Subscription;
   private selectTemplateSub: Subscription;
+  private itemCreatedSub: Subscription;
 
   constructor(
     private itemInputService: ItemInputService,
@@ -52,6 +52,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.selectTemplateSub = this.itemCrudService.selectTemplateSubject.subscribe(
       () => {
         this.selectedTemplate = this.itemCrudService.currentTemplate;
+      }
+    );
+    this.itemCreatedSub = this.itemCrudService.itemCreatedSubject.subscribe(
+      () => {
+        this.onSelectTemplate(this.selectedTemplate);
       }
     );
   }
@@ -111,13 +116,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     }
   }
 
-  async onSaveItem() {
-    this.editMode = false;
-
-    const saved: boolean = await this.itemCrudService.createItem(false, false);
-    if (saved) {
-      this.onSelectTemplate(this.selectedTemplate);
-    }
+  onSaveItem() {
+    this.itemCrudService.createItem(false, false);
     this.cleanUp();
   }
 
@@ -152,15 +152,12 @@ export class AddItemComponent implements OnInit, OnDestroy {
         templateNames: this.templates,
       },
     });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (!result) {
-        this.messagingService.simpleMessage('Template Save Canceled');
-      }
-    });
+    dialogRef.afterClosed().subscribe((result) => {});
     this.cleanUp();
   }
 
   onSelectTemplate(template: string) {
+    console.log(template);
     this.itemInputService.removeInputs(0, this.totalInputs.length);
     const fields = this.itemCrudService.localTemplates[template]['fields'];
     const values = this.itemCrudService.localTemplates[template]['values'];
@@ -181,5 +178,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.templatesSub.unsubscribe();
     this.selectTemplateSub.unsubscribe();
+    this.itemCreatedSub.unsubscribe();
   }
 }
