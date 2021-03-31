@@ -49,8 +49,13 @@
   </div>
 
   <div class="right-tools">
-    <button mat-flat-button color="accent" (click)="onSaveItem()">
-      Save Item
+    <button
+      mat-flat-button
+      color="accent"
+      [disabled]="!cellEdited"
+      (click)="onUpdateItem()"
+    >
+      Update Item
     </button>
     <button
       mat-stroked-button

@@ -39,6 +39,7 @@ export class InputEditDirective {
       fieldOrValue: this.fieldOrValue,
       rowIndex: this.rowIndex,
     };
+
     if (this.reviewMode) {
       if (!this.listnerInitialized) {
         this.typeaheadSubject = new BehaviorSubject(eventObject);
@@ -49,17 +50,17 @@ export class InputEditDirective {
       }
       this.typeaheadSubject.next(eventObject);
       this.listnerInitialized = true;
-    }
 
-    this.typeaheadSubject.subscribe(() => {
-      const currItem = this.reviewItemsService.currItem;
-      const currItemKey =
-        eventObject.fieldOrValue === 'field' ? 'fields' : 'values';
-      if (eventObject.text !== currItem[currItemKey][eventObject.rowIndex]) {
-        this.cellEditedChange.emit(true);
-      } else {
-        this.cellEditedChange.emit(false);
-      }
-    });
+      this.typeaheadSubject.subscribe(() => {
+        const currItem = this.reviewItemsService.currItem;
+        const currItemKey =
+          eventObject.fieldOrValue === 'field' ? 'fields' : 'values';
+        if (eventObject.text !== currItem[currItemKey][eventObject.rowIndex]) {
+          this.cellEditedChange.emit(true);
+        } else {
+          this.cellEditedChange.emit(false);
+        }
+      });
+    }
   }
 }
