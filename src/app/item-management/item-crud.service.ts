@@ -342,8 +342,15 @@ export class ItemCrudService {
       });
   }
 
-  deleteTemplate(templateName: string, isTemplate: boolean) {
-    const id = this.localTemplates[templateName].id;
+  deleteItem(deleteConfig: {
+    isTemplate: boolean;
+    templateName?: string;
+    itemId?: string;
+  }) {
+    const id = !deleteConfig.isTemplate
+      ? deleteConfig.itemId
+      : this.localTemplates[deleteConfig.templateName].id;
+
     let graphqlQuery;
     graphqlQuery = {
       query: `
@@ -354,7 +361,7 @@ export class ItemCrudService {
       variables: {
         userId: localStorage.getItem('userId'),
         id: id,
-        isTemplate: isTemplate,
+        isTemplate: deleteConfig.isTemplate,
       },
     };
     this.http
@@ -368,17 +375,24 @@ export class ItemCrudService {
       .pipe(catchError(this.handleError))
       .subscribe((resData) => {
         if (resData.data.deleteGem) {
-          if (isTemplate) {
-            delete this.localTemplates[templateName];
+          if (deleteConfig.isTemplate) {
+            delete this.localTemplates[deleteConfig.templateName];
             this.messagingService.simpleMessage(
               'The ',
-              templateName,
+              deleteConfig.templateName,
               ' template has been deleted'
             );
             this.localTemplatesSubject.next();
+          } else {
+            delete this.localItems[deleteConfig.itemId];
+            const tableItemIndex = this.localTableItems.findIndex(
+              (item) => item._id === deleteConfig.itemId
+            );
+            this.localTableItems.splice(tableItemIndex, 1);
+            this.messagingService.simpleMessage('Item Deleted');
           }
         } else {
-          this.messagingService.simpleMessage('Template delete failed');
+          this.messagingService.simpleMessage('Deletion failed');
         }
       });
   }
