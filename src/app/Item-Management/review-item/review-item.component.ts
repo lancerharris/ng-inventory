@@ -23,9 +23,10 @@ export class ReviewItemComponent implements OnInit {
   public currItemIndex: number;
   public reviewCount: number;
   public cellEdited: boolean = false;
+  public reviewOver: boolean = false;
 
   private currentIdSub: Subscription;
-  private currItemChangeSub: Subscription;
+  private itemSelectedSub: Subscription;
   private itemReplacedSub: Subscription;
 
   constructor(
@@ -38,9 +39,11 @@ export class ReviewItemComponent implements OnInit {
 
   ngOnInit(): void {
     this.totalInputs = this.itemInputService.totalInputs;
-    this.reviewCount = this.reviewItemsService.itemIds.length;
-    this.currItemChangeSub = this.itemInputService.itemSelectedSubject.subscribe(
+    this.itemSelectedSub = this.itemInputService.itemSelectedSubject.subscribe(
       () => {
+        // change the review count in case of deletion
+        this.reviewCount = this.reviewItemsService.itemIds.length;
+        console.log(this.reviewCount);
         this.currItem = this.reviewItemsService.currItem;
         this.currItemIndex = this.reviewItemsService.itemIds.findIndex(
           (el) => el === this.currItem._id
@@ -76,6 +79,7 @@ export class ReviewItemComponent implements OnInit {
   }
   onNextItem() {
     this.cellEdited = false;
+
     this.router.navigate(
       ['../' + this.reviewItemsService.itemIds[this.currItemIndex + 1]],
       { relativeTo: this.route }
@@ -106,7 +110,21 @@ export class ReviewItemComponent implements OnInit {
     this.cleanUp();
   }
   onDeleteItem() {
-    // const updated: boolean = await this.itemCrudService.deleteItem();
+    this.itemCrudService.deleteItem({ isTemplate: false, itemId: this.itemId });
+    if (this.reviewCount === 1) {
+      this.reviewOver = true;
+    } else if (
+      this.currItemIndex ===
+      this.reviewItemsService.itemIds.length - 1
+    ) {
+      this.onPrevItem();
+    } else if (
+      this.currItemIndex <
+      this.reviewItemsService.itemIds.length - 1
+    ) {
+      this.onNextItem();
+    }
+    this.reviewItemsService.dropReviewId(this.currItemIndex);
     this.cleanUp();
   }
 
@@ -142,7 +160,7 @@ export class ReviewItemComponent implements OnInit {
   ngOnDestroy(): void {
     this.itemInputService.removeInputs(0, this.totalInputs.length);
     this.currentIdSub.unsubscribe();
-    this.currItemChangeSub.unsubscribe();
+    this.itemSelectedSub.unsubscribe();
     this.itemReplacedSub.unsubscribe();
   }
 }
