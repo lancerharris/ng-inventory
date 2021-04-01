@@ -22,7 +22,6 @@ export class ReviewItemsService {
     valuesEdited: [],
   };
 
-  public currItemChangeSubject = new Subject<void>();
   public itemReplacedSubject = new Subject<void>();
 
   constructor(
@@ -31,16 +30,16 @@ export class ReviewItemsService {
     private itemCrudService: ItemCrudService,
     private messagingService: MessagingService
   ) {
-    this.itemIds = [
-      '6054ed7ffbb9d91c34680b51',
-      '6054ed64fbb9d91c34680b50',
-      '6054cbebfbb9d91c34680b4f',
-    ];
+    this.itemIds = ['606526ed0067c213dccd88f8', '606526ed0067c213dccd88f9'];
   }
 
   setCurrItem(currItem) {
     this.currItem = currItem;
     this.itemInputService.itemSelectedSubject.next();
+  }
+
+  dropReviewId(itemIndex) {
+    this.itemIds.splice(itemIndex, 1);
   }
 
   resetEditedCells() {
@@ -79,6 +78,7 @@ export class ReviewItemsService {
       })
       .pipe(catchError(this.handleError))
       .subscribe((resData) => {
+        // TODO: the no gem found case has to be handled. since its not an http error.
         const item = resData.data.getOneGem;
         const fields = item.fields;
         const values = item.values;
