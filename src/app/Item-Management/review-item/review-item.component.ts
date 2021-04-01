@@ -43,7 +43,6 @@ export class ReviewItemComponent implements OnInit {
       () => {
         // change the review count in case of deletion
         this.reviewCount = this.reviewItemsService.itemIds.length;
-        console.log(this.reviewCount);
         this.currItem = this.reviewItemsService.currItem;
         this.currItemIndex = this.reviewItemsService.itemIds.findIndex(
           (el) => el === this.currItem._id
@@ -97,6 +96,11 @@ export class ReviewItemComponent implements OnInit {
 
   onEditClick() {
     this.editMode = !this.editMode;
+  }
+
+  onSaveAsNew() {
+    this.itemCrudService.createItem(false, false);
+    this.onDropChanges();
   }
 
   onUpdateItem() {
