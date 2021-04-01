@@ -1,4 +1,4 @@
-<mat-toolbar color="primary">
+<mat-toolbar color="primary" *ngIf="!reviewOver">
   <span *ngIf="currItemIndex > -1"
     >Reviewing {{ currItemIndex + 1 }} of {{ reviewCount }} items</span
   >
@@ -55,7 +55,7 @@
       [disabled]="!cellEdited"
       (click)="onUpdateItem()"
     >
-      Update Item
+      Update
     </button>
     <button
       mat-stroked-button
@@ -72,7 +72,9 @@
 </div>
 <mat-divider></mat-divider>
 <app-item-input
+  *ngIf="!reviewOver"
   [editMode]="editMode"
   [reviewMode]="true"
   (cellEdited)="cellEdited = $event"
 ></app-item-input>
+<h2 *ngIf="reviewOver">No more items to review</h2>
