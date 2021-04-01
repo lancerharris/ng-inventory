@@ -43,9 +43,16 @@
     >
       Drop Changes
     </button>
-    <button mat-stroked-button color="primary">Review Items</button>
+    <button
+      mat-stroked-button
+      color="primary"
+      [disabled]="selection.selected.length === 0"
+      (click)="onReviewItems()"
+    >
+      Review Items
+    </button>
 
-    <button mat-stroked-button color="warn">Delete</button>
+    <button mat-stroked-button color="warn">Delete Items</button>
   </div>
 </div>
 

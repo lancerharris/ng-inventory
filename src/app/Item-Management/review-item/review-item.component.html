@@ -1,5 +1,5 @@
-<mat-toolbar color="primary" *ngIf="!reviewOver">
-  <span *ngIf="currItemIndex > -1"
+<mat-toolbar color="primary">
+  <span *ngIf="currItemIndex > -1 && !reviewOver"
     >Reviewing {{ currItemIndex + 1 }} of {{ reviewCount }} items</span
   >
 </mat-toolbar>

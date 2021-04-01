@@ -13,6 +13,8 @@ import { ItemCrudService } from '../item-crud.service';
 import { fromEvent, Subscription } from 'rxjs';
 import { ITS_JUST_ANGULAR } from '@angular/core/src/r3_symbols';
 import { TableManagementService } from '../table-management.service';
+import { ReviewItemsService } from '../review-items.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-all-items',
@@ -36,7 +38,10 @@ export class AllItemsComponent implements OnInit, OnDestroy {
 
   constructor(
     private itemCrudService: ItemCrudService,
-    private tableManagmentService: TableManagementService
+    private tableManagmentService: TableManagementService,
+    private reviewItemsService: ReviewItemsService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -92,6 +97,19 @@ export class AllItemsComponent implements OnInit, OnDestroy {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
       row.position + 1
     }`;
+  }
+
+  onReviewItems() {
+    this.reviewItemsService.itemIds = [];
+    this.selection.selected.forEach((item) => {
+      this.reviewItemsService.itemIds.push(item._id);
+    });
+    this.router.navigate(
+      ['review-item/' + this.reviewItemsService.itemIds[0]],
+      {
+        relativeTo: this.route,
+      }
+    );
   }
 
   onDropChanges() {

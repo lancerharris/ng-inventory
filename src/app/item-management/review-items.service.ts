@@ -16,7 +16,7 @@ export class ReviewItemsService {
     values: string[];
     longFieldIndex: number;
   };
-  public itemIds: string[];
+  public itemIds: string[] = [];
   public editedInputs: { fieldsEdited: boolean[]; valuesEdited: boolean[] } = {
     fieldsEdited: [],
     valuesEdited: [],
@@ -29,9 +29,7 @@ export class ReviewItemsService {
     private itemInputService: ItemInputService,
     private itemCrudService: ItemCrudService,
     private messagingService: MessagingService
-  ) {
-    this.itemIds = ['606526ed0067c213dccd88f8', '606526ed0067c213dccd88f9'];
-  }
+  ) {}
 
   setCurrItem(currItem) {
     this.currItem = currItem;
@@ -79,6 +77,7 @@ export class ReviewItemsService {
       .pipe(catchError(this.handleError))
       .subscribe((resData) => {
         // TODO: the no gem found case has to be handled. since its not an http error.
+
         const item = resData.data.getOneGem;
         const fields = item.fields;
         const values = item.values;
