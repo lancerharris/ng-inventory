@@ -18,7 +18,7 @@ export class ItemCrudService {
 
   public localTemplatesSubject = new Subject<void>();
   public selectTemplateSubject = new Subject<void>();
-  public localItemsSubject = new Subject<void>();
+  public localItemsChangedSubject = new Subject<void>();
   public itemCreatedSubject = new Subject<void>();
 
   constructor(
@@ -139,6 +139,8 @@ export class ItemCrudService {
             ' template has been saved'
           );
         } else {
+          // pass callingInLoop false to make sure table fields don't get duplicates.
+          this.addLocalItem(resData.data[operation], false);
           this.messagingService.simpleMessage('Item Saved');
         }
 
@@ -195,6 +197,7 @@ export class ItemCrudService {
           this.localTemplatesSubject.next();
         } else {
           this.updateTableFields();
+          this.localItemsChangedSubject.next();
         }
       });
   }
@@ -206,7 +209,6 @@ export class ItemCrudService {
         return self.indexOf(field) === index;
       }
     );
-    this.localItemsSubject.next();
   }
 
   pullFromItem(
@@ -296,6 +298,7 @@ export class ItemCrudService {
     };
     if (!callingInLoop) {
       this.updateTableFields();
+      this.localItemsChangedSubject.next();
     }
   }
 
