@@ -56,7 +56,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
     );
     this.itemCreatedSub = this.itemCrudService.itemCreatedSubject.subscribe(
       () => {
-        this.onSelectTemplate(this.selectedTemplate);
+        if (this.selectedTemplate) {
+          this.onSelectTemplate(this.selectedTemplate);
+        }
       }
     );
   }
@@ -117,7 +119,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   onSaveItem() {
-    this.itemCrudService.createItem(false, false);
+    if (this.itemInputService.checkForContent()) {
+      this.itemCrudService.createItem(false, false);
+    } else {
+      this.messagingService.errorMessage('Item must have content');
+    }
     this.cleanUp();
   }
 
@@ -157,7 +163,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   onSelectTemplate(template: string) {
-    console.log(template);
     this.itemInputService.removeInputs(0, this.totalInputs.length);
     const fields = this.itemCrudService.localTemplates[template]['fields'];
     const values = this.itemCrudService.localTemplates[template]['values'];

@@ -26,6 +26,16 @@ export class ItemInputService {
     }
   }
 
+  checkForContent() {
+    let hasField = false;
+    let hasValue = false;
+    this.totalInputs.forEach((inputValue) => {
+      hasField = this.itemFields[inputValue] !== '' ? true : hasField;
+      hasValue = this.itemValues[inputValue] !== '' ? true : hasValue;
+    });
+    return hasField || hasValue;
+  }
+
   AddInput(initObject: { field: string; value: any; suspendSubject: boolean }) {
     if (this.totalInputs.length < this.MAX_INPUTS) {
       const inputLength = this.totalInputs.length;
