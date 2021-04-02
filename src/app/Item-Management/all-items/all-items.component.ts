@@ -1,17 +1,8 @@
-import {
-  AfterContentInit,
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatCell, MatTableDataSource } from '@angular/material/table';
 import { ItemCrudService } from '../item-crud.service';
-import { fromEvent, Subscription } from 'rxjs';
-import { ITS_JUST_ANGULAR } from '@angular/core/src/r3_symbols';
+import { Subscription } from 'rxjs';
 import { TableManagementService } from '../table-management.service';
 import { ReviewItemsService } from '../review-items.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -56,15 +47,18 @@ export class AllItemsComponent implements OnInit, OnDestroy {
       );
       this.headerRow = ['select', ...this.displayedColumns];
     }
-    this.itemsSub = this.itemCrudService.localItemsSubject.subscribe(() => {
-      this.dataSource = new MatTableDataSource<any>(
-        this.itemCrudService.localTableItems
-      );
-      this.displayedColumns = this.itemCrudService.localTableFields.filter(
-        (field) => field !== '_id'
-      );
-      this.headerRow = ['select', ...this.displayedColumns];
-    });
+    this.itemsSub = this.itemCrudService.localItemsChangedSubject.subscribe(
+      () => {
+        console.log('local items change');
+        this.dataSource = new MatTableDataSource<any>(
+          this.itemCrudService.localTableItems
+        );
+        this.displayedColumns = this.itemCrudService.localTableFields.filter(
+          (field) => field !== '_id'
+        );
+        this.headerRow = ['select', ...this.displayedColumns];
+      }
+    );
     this.itemChangesSub = this.tableManagmentService.localItemChangesSubject.subscribe(
       () => {
         const itemChangeCount = Object.keys(
@@ -110,6 +104,14 @@ export class AllItemsComponent implements OnInit, OnDestroy {
         relativeTo: this.route,
       }
     );
+  }
+
+  onDeleteItems() {
+    let deleteIds: string[] = [];
+    this.selection.selected.forEach((item) => {
+      deleteIds.push(item._id);
+    });
+    this.tableManagmentService.bulkDelete(deleteIds);
   }
 
   onDropChanges() {
