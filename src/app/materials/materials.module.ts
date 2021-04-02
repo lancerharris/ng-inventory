@@ -24,9 +24,10 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatStepperModule } from '@angular/material/stepper';
 
 import { SnackbarSimpleMessageComponent } from './snackbar-simple-message/snackbar-simple-message.component';
+import { SnackbarErrorMessageComponent } from './snackbar-error-message/snackbar-error-message.component';
 
 @NgModule({
-  declarations: [SnackbarSimpleMessageComponent],
+  declarations: [SnackbarSimpleMessageComponent, SnackbarErrorMessageComponent],
   imports: [
     CommonModule,
     MatToolbarModule,

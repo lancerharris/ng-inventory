@@ -49,7 +49,6 @@ export class AllItemsComponent implements OnInit, OnDestroy {
     }
     this.itemsSub = this.itemCrudService.localItemsChangedSubject.subscribe(
       () => {
-        console.log('local items change');
         this.dataSource = new MatTableDataSource<any>(
           this.itemCrudService.localTableItems
         );
