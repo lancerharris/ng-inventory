@@ -22,6 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { SnackbarSimpleMessageComponent } from './snackbar-simple-message/snackbar-simple-message.component';
 import { SnackbarErrorMessageComponent } from './snackbar-error-message/snackbar-error-message.component';
@@ -51,6 +52,7 @@ import { SnackbarErrorMessageComponent } from './snackbar-error-message/snackbar
     MatSnackBarModule,
     MatExpansionModule,
     MatStepperModule,
+    MatPaginatorModule,
   ],
   exports: [
     MatToolbarModule,
@@ -74,6 +76,7 @@ import { SnackbarErrorMessageComponent } from './snackbar-error-message/snackbar
     MatSnackBarModule,
     MatExpansionModule,
     MatStepperModule,
+    MatPaginatorModule,
   ],
 })
 export class MaterialsModule {}

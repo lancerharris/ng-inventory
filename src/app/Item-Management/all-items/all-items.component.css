@@ -1,17 +1,28 @@
-table {
-  width: 98%;
-  margin: 0 auto;
-}
-
 ul {
   list-style-type: none;
   /* margin-top: 4px; */
   padding: 0;
 }
 
+mat-sidenav-container {
+  height: 100%;
+}
+
 mat-sidenav {
-  padding: 0 0.75rem;
-  width: 12%;
+  padding: 0.8rem;
+  width: 20%;
+  height: 100%;
+  overflow: hidden;
+}
+
+mat-sidenav-content {
+  margin-top: 0.5rem;
+  padding: 0 0.5rem;
+  height: auto;
+}
+
+.container__table {
+  overflow: scroll;
 }
 
 .top-tools {
@@ -65,4 +76,27 @@ mat-sidenav {
   color: #673ab7;
 
   font-weight: 700;
+}
+
+.mat-column-filler {
+  padding: 0 8px;
+  font-size: 10px;
+  text-align: center;
+}
+
+.mat-header-cell,
+.mat-footer-cell,
+.mat-cell {
+  min-width: 80px;
+  box-sizing: border-box;
+}
+
+.mat-header-row,
+.mat-footer-row,
+.mat-row {
+  min-width: 1920px; /* 24 columns, 80px each */
+}
+
+.mat-header-row {
+  background-color: rgba(194, 178, 223, 0.5);
 }
