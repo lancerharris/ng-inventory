@@ -20,8 +20,9 @@ export class AllItemsComponent implements OnInit, OnDestroy {
   public changesMade: boolean = false;
   private cells: HTMLInputElement[] = [];
 
-  private itemsSub: Subscription;
-  private itemChangesSub: Subscription;
+  private localItemsChangedSub: Subscription;
+  private itemChangesMadeSub: Subscription;
+  private itemChangesSavedSub: Subscription;
 
   @ViewChild(MatCell) cell: MatCell;
 
@@ -47,7 +48,7 @@ export class AllItemsComponent implements OnInit, OnDestroy {
       );
       this.headerRow = ['select', ...this.displayedColumns];
     }
-    this.itemsSub = this.itemCrudService.localItemsChangedSubject.subscribe(
+    this.localItemsChangedSub = this.itemCrudService.localItemsChangedSubject.subscribe(
       () => {
         this.dataSource = new MatTableDataSource<any>(
           this.itemCrudService.localTableItems
@@ -58,12 +59,17 @@ export class AllItemsComponent implements OnInit, OnDestroy {
         this.headerRow = ['select', ...this.displayedColumns];
       }
     );
-    this.itemChangesSub = this.tableManagmentService.localItemChangesSubject.subscribe(
+    this.itemChangesMadeSub = this.tableManagmentService.localItemChangesSubject.subscribe(
       () => {
         const itemChangeCount = Object.keys(
           this.tableManagmentService.localItemChanges
         ).length;
         this.changesMade = itemChangeCount > 0 ? true : false;
+      }
+    );
+    this.itemChangesSavedSub = this.tableManagmentService.itemChangesSavedSubject.subscribe(
+      () => {
+        this.syncTableToLocalItems({ dropChanges: false });
       }
     );
   }
@@ -113,7 +119,7 @@ export class AllItemsComponent implements OnInit, OnDestroy {
     this.tableManagmentService.bulkDelete(deleteIds);
   }
 
-  onDropChanges() {
+  syncTableToLocalItems(syncConfig: { dropChanges: boolean }) {
     const localTableItems = this.itemCrudService.localTableItems;
     Object.keys(this.tableManagmentService.localItemChanges).forEach((item) => {
       const changedItemIndex = localTableItems.findIndex((el) => {
@@ -128,7 +134,10 @@ export class AllItemsComponent implements OnInit, OnDestroy {
           const cellElement = document.getElementById(
             field + '_' + rowIndex
           ) as HTMLTableCellElement;
-          cellElement.innerText = localTableItems[changedItemIndex][field];
+          // no need to run if you are saving changes since you already have the value you want
+          if (syncConfig.dropChanges) {
+            cellElement.innerText = localTableItems[changedItemIndex][field];
+          }
           cellElement.classList.remove('cell__edited');
         }
       );
@@ -136,7 +145,13 @@ export class AllItemsComponent implements OnInit, OnDestroy {
     this.tableManagmentService.localItemChanges = {};
   }
 
-  onSaveChanges() {}
+  onDropChanges() {
+    this.syncTableToLocalItems({ dropChanges: true });
+  }
+
+  onSaveChanges() {
+    this.tableManagmentService.saveItemChanges();
+  }
 
   onRowEdit(row) {
     console.log(row);
@@ -164,6 +179,8 @@ export class AllItemsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.itemsSub.unsubscribe();
+    this.localItemsChangedSub.unsubscribe();
+    this.itemChangesMadeSub.unsubscribe();
+    this.itemChangesSavedSub.unsubscribe();
   }
 }

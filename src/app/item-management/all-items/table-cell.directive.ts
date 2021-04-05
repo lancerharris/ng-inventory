@@ -56,6 +56,7 @@ export class TableCellDirective {
         if (Object.keys(localItem).length === 0) {
           delete this.tableManagmentService.localItemChanges[itemId];
         }
+        this.el.nativeElement.classList.remove('cell__edited');
       } else {
         this.tableManagmentService.localItemChanges[itemId][ev.field] = ev.text;
       }

@@ -12,6 +12,7 @@ export class TableManagementService {
   public localItemChanges = {};
 
   public localItemChangesSubject = new Subject<void>();
+  public itemChangesSavedSubject = new Subject<void>();
 
   constructor(
     private itemCrudService: ItemCrudService,
@@ -61,83 +62,71 @@ export class TableManagementService {
     return true; // shouldn't reach here if http error
   }
 
-  // saveItemChanges(): boolean {
-  //   const itemsToStore = [];
+  saveItemChanges() {
+    const itemsToStore = [];
+    // make a copy so don't overwrite in case of http fail
+    const itemsPriorToChange = {};
+    Object.keys(this.localItemChanges).forEach((itemId) => {
+      const fieldsToStore = [];
+      const valuesToStore = [];
+      Object.keys(this.localItemChanges[itemId]).forEach((field) => {
+        itemsPriorToChange[itemId] = this.itemCrudService.localItems[itemId];
+        const fieldIndex = this.itemCrudService.localItems[itemId][
+          'fields'
+        ].findIndex((el) => {
+          return el === field;
+        });
+        if (fieldIndex > -1) {
+          this.itemCrudService.localItems[itemId]['values'][
+            fieldIndex
+          ] = this.localItemChanges[itemId][field];
+        } else {
+          this.itemCrudService.localItems[itemId]['fields'].push(field);
+          this.itemCrudService.localItems[itemId]['values'].push(
+            this.localItemChanges[itemId][field]
+          );
+        }
+        fieldsToStore.push(field);
+        valuesToStore.push(this.localItemChanges[itemId][field]);
+      });
+      itemsToStore.push({
+        _id: itemId,
+        fields: fieldsToStore,
+        values: valuesToStore,
+      });
+    });
+    console.log(itemsToStore);
+    // todo: use itemsToStore to store on mongo db. try a bulkwrite
+    let graphqlQuery;
+    graphqlQuery = {
+      query: `
+            mutation updateManyItems($userId: String!, $bulkItemInput: [BulkGemItem!]!) {
+              updateManyGems(userId: $userId bulkGemInput: $bulkItemInput)
+            }
+          `,
+      variables: {
+        userId: localStorage.getItem('userId'),
+        bulkItemInput: itemsToStore,
+      },
+    };
 
-  //   // make a copy so don't overwrite in case of http fail
-  //   const localItems = { ...this.itemCrudService.localItems };
-  //   Object.keys(localItems).forEach((item) => {
-  //     Object.keys(localItems[item]).forEach((field) => {
-  //       const fieldIndex = localItems[item]['fields'].findIndex((el) => {
-  //         return el === field;
-  //       });
-  //       localItems[item]['values'][fieldIndex] = this.localItemChanges[item][
-  //         field
-  //       ];
-  //     });
-  //     itemsToStore.push({ [item]: localItems[item] });
-  //   });
-
-  //   // todo: use itemsToStore to store on mongo db. try a bulkwrite
-  //   let graphqlQuery;
-  //   graphqlQuery = {
-  //     query: `
-  //           mutation addToTemplates($userId: String!, $id: ID!, $gemInput: GemInputData!, $longFieldIndex: String, $isTemplate: Boolean!) {
-  //             replaceGem(userId: $userId, id: $id gemInput: $gemInput, longFieldIndex: $longFieldIndex, isTemplate: $isTemplate) {
-  //               fields
-  //               values
-  //             }
-  //           }
-  //         `,
-  //     variables: {
-  //       userId: localStorage.getItem('userId'),
-  //       id: id,
-  //       gemInput: { fields, values },
-  //       longFieldIndex: longFieldIndex,
-  //     },
-  //   };
-
-  //   this.http
-  //     .post<{
-  //       data: { [key: string]: { fields: string[]; values: string[] } };
-  //     }>('http://localhost:3000/graphql', JSON.stringify(graphqlQuery), {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     })
-  //     .pipe(catchError(this.handleError))
-  //     .subscribe((resData) => {
-  //       const operation = overwrite ? 'replaceGem' : 'createGem';
-  //       const idIndex = resData.data[operation].fields.findIndex(
-  //         (el) => el === '_id'
-  //       );
-
-  //       if (isTemplate) {
-  //         const templateId = resData.data[operation].values[idIndex];
-  //         this.localTemplates[templateName] = {
-  //           fields: fields.slice(1), // slice at 1 to drop the name field
-  //           values: values.slice(1),
-  //           id: templateId,
-  //         };
-
-  //         if (+longFieldIndex > -1) {
-  //           this.localTemplates[templateName][
-  //             'longFieldIndex'
-  //           ] = +longFieldIndex;
-  //         }
-  //         this.currentTemplate = templateName;
-  //         this.localTemplatesSubject.next();
-  //         this.messagingService.simpleMessage(
-  //           'The ',
-  //           templateName,
-  //           ' template has been saved'
-  //         );
-  //       } else {
-  //         this.messagingService.simpleMessage('Item Saved');
-  //       }
-  //     });
-  //   return true; // shouldn't reach here if http error
-  // }
+    this.http
+      .post<{
+        data: { updateManyGems: boolean };
+      }>('http://localhost:3000/graphql', JSON.stringify(graphqlQuery), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .pipe(catchError(this.handleError))
+      .subscribe((resData) => {
+        if (resData.data.updateManyGems) {
+          this.itemChangesSavedSubject.next();
+        } else {
+          //TODO revertlocal items
+        }
+      });
+  }
 
   private handleError(errorRes: HttpErrorResponse) {
     console.log(errorRes);
